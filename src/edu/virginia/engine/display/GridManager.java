@@ -1,6 +1,8 @@
 package edu.virginia.engine.display;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 /**
  * Created by Guillaume Bailey on 3/19/2016.
@@ -24,7 +26,13 @@ public class GridManager {
     int gridxOffset;
     int gridyOffset;
 
-    Sprite[][] sprites = null;
+    GridSprite[][] sprites = null;
+
+    float turnLength = 1000;
+    float previousTurnTime;
+    boolean turnsActive = false;
+
+    ArrayList<String> activeKeyPresses = new ArrayList<>();
 
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
@@ -38,14 +46,76 @@ public class GridManager {
         }
     }
 
+    public void update(ArrayList<String> pressedKeys){
+
+        if (turnsActive) {
+            if (!(activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT)) || activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))
+                    || activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT)) || activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN)))) {//No previous direction input this turn
+                if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))) {
+                    activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_UP));
+                }
+                if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
+                    activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_DOWN));
+                }
+                if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
+                    activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_LEFT));
+                }
+                if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
+                    activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_RIGHT));
+                }
+            }
+
+            if ((System.currentTimeMillis() - previousTurnTime) >= turnLength) {//Turn ended
+                turnUpdate();
+            }
+        }
+    }
+
+    void turnUpdate(){
+
+        //Run the turn update on each sprite, move safe
+        ArrayList<GridSprite> spriteList = new ArrayList<>();
+        for (int x = 0; x < sprites.length; x++){
+            for (int y = 0; y < sprites[x].length; y++) {
+                if (sprites[x][y] != null){
+                    spriteList.add(sprites[x][y]);
+                }
+            }
+        }
+        for (GridSprite s : spriteList)
+            s.gridTurnUpdate(activeKeyPresses);
+
+        activeKeyPresses.clear();
+    }
+
+    public void moveSprite(Point start, Point end){
+        sprites[end.x][end.y] = sprites[start.x][start.y];
+        sprites[start.x][start.y] = null;
+    }
+
+    public void startTurns(){
+        previousTurnTime = System.currentTimeMillis();
+        turnsActive = true;
+    }
+
+    public void stopTurns(){
+        turnsActive = false;
+    }
+
+    public GridSprite getSpriteAtGridPoint(Point p){
+        if (p.x >= 0 && p.x < gridX && p.y >= 0 && p.y < gridY)
+            return sprites[p.x][p.y];
+        else
+            return null;
+    }
+
     //Grid size is total, but grid points are 0-indexed, like array rules
     public void setGridSize(int gridX, int gridY, int gameX, int gameY){
         gridxScale = gameX / gridX;
         gridyScale = gameY / gridY;
         this.gridX = gridX;
         this.gridY = gridY;
-        sprites = new Sprite[gridX][gridY];
-        System.out.println("Y scale,offset: " + gridyScale + " " + gridyOffset);
+        sprites = new GridSprite[gridX][gridY];
     }
 
     //Input a screen size (same as gameX and gameY in setGridSize)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.
@@ -64,11 +134,24 @@ public class GridManager {
         return  y*gridyScale + gridxScale/2 + gridyOffset;
     }
 
+    public Point gridtoGamePoint(Point p){
+        return new Point(gridToGameX(p.x),gridToGameY(p.y));
+    }
+
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
-    public void addToGrid(Sprite s, int x, int y){
+    public void addToGrid(GridSprite s, int x, int y){
         if (x < gridX && y < gridY){
             sprites[x][y] = s;
         }
         s.setPosition(new Point(gridToGameX(x),gridToGameY(y)));
+        s.setGridPosition(new Point(x,y));
+    }
+
+    public float getTurnLength() {
+        return turnLength;
+    }
+
+    public void setTurnLength(float turnLength) {
+        this.turnLength = turnLength;
     }
 }

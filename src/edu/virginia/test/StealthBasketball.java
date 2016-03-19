@@ -2,6 +2,7 @@ package edu.virginia.test;
 
 import edu.virginia.engine.display.Game;
 import edu.virginia.engine.display.GridManager;
+import edu.virginia.engine.display.GridSprite;
 import edu.virginia.engine.display.Sprite;
 
 import java.awt.*;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class StealthBasketball extends Game {
 
     Sprite nullChecker = new Sprite("nullChecker","coin.gif");//Why do we even need this shit
-    Sprite coin = new Sprite("Coin","coin.gif");
+    GridSprite coin = new GridSprite("Coin","coin.gif");
 
     public StealthBasketball(){
         super("Stealth Basketball!",1007,530);
@@ -23,6 +24,7 @@ public class StealthBasketball extends Game {
         GridManager.getInstance().setGridSize(10,5,1000,500);
         //GridManager.getInstance().centerGridPointOnScreen(9,4,1000,500);
         GridManager.getInstance().addToGrid(coin,9,4);
+        GridManager.getInstance().startTurns();
     }
 
     /**
@@ -31,7 +33,7 @@ public class StealthBasketball extends Game {
      * */
     @Override
     public void update(ArrayList<String> pressedKeys){
-
+        GridManager.getInstance().update(pressedKeys);
     }
 
     /**
