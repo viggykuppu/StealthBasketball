@@ -6,12 +6,11 @@ import java.util.Map;
 
 public class EventDispatcher implements IEventDispatcher{
 	private Map<String,ArrayList<IEventListener>> lookup;
+
+	public EventDispatcher () { lookup = new HashMap<>(); }
 	
 	@Override
 	public void addEventListener(IEventListener listener, String eventType) {
-		if(lookup == null){
-			lookup = new HashMap<String,ArrayList<IEventListener>>();
-		}
 		if(!lookup.containsKey(eventType)){
 			ArrayList<IEventListener> temp = new ArrayList<IEventListener>();
 			temp.add(listener);

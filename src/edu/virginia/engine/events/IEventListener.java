@@ -1,5 +1,6 @@
 package edu.virginia.engine.events;
 
 public interface IEventListener {
-	public void handleEvent(Event event);
+	void handleEvent(Event event);
+	String getId();
 }
