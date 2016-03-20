@@ -26,21 +26,6 @@ public class GridSprite extends Sprite {
 
     public void gridTurnUpdate(ArrayList<String> activeKeyPresses){
 
-        System.out.println(activeKeyPresses);
-
-        //Player movement code
-        if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))) {
-            moveOnGrid(0,-1);
-        }
-        if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
-            moveOnGrid(0,-1);
-        }
-        if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
-            moveOnGrid(0,-1);
-        }
-        if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
-            moveOnGrid(0,-1);
-        }
     }
 
     void moveOnGrid(int dx, int dy){
