@@ -136,6 +136,26 @@ public class GridManager {
                 sprites[i][j] = new GridCell();
             }
         }
+
+        boolean up,left,down,right;
+        for(int i = 0; i < gridX; i++){
+            up = i > 0;
+            down = i < gridX-1;
+            for(int j = 0; j < gridY; j++){
+                left = j > 0;
+                right = j < gridY-1;
+                if(up)
+                    sprites[i][j].up = sprites[i-1][j];
+                if(down)
+                    sprites[i][j].down = sprites[i+1][j];
+                if(left)
+                    sprites[i][j].left = sprites[i][j-1];
+                if(right)
+                    sprites[i][j].right = sprites[i][j+1];
+            }
+        }
+
+
     }
 
     //Input a screen size (same as gameX and gameY in setGridSize)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.

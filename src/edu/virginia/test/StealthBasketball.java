@@ -12,7 +12,7 @@ public class StealthBasketball extends Game {
 
     Sprite nullChecker = new Sprite("nullChecker","coin.gif");//Why do we even need this shit
     PlayerSprite coin = new PlayerSprite("Coin","coin.gif");
-    GridGuardSprite guard = new GridGuardSprite("Guard","coin.gif");
+    GridGuardSprite guard = new GridGuardSprite("Guard","coin.gif",coin);
 
     public StealthBasketball(){
         super("Stealth Basketball!",1007,530);
