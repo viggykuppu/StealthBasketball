@@ -12,15 +12,17 @@ public class StealthBasketball extends Game {
 
     Sprite nullChecker = new Sprite("nullChecker","coin.gif");//Why do we even need this shit
     PlayerSprite player = new PlayerSprite("Player","mario.png");
+    GridGuardSprite guard = new GridGuardSprite("Guard","coin.gif");
 
     public StealthBasketball(){
         super("Stealth Basketball!",1007,530);
 
         player.setPivotPoint(new Point(player.getUnscaledWidth()/2,player.getUnscaledHeight()/2));
+        guard.setPivotPoint(new Point(28,28));
 
         GridManager.getInstance().setGridSize(10,5,1000,500);
-        //GridManager.getInstance().centerGridPointOnScreen(9,4,1000,500);
         GridManager.getInstance().addToGrid(player,9,4);
+        GridManager.getInstance().addToGrid(guard,0,0);
         GridManager.getInstance().startTurns();
     }
 
@@ -29,7 +31,7 @@ public class StealthBasketball extends Game {
      * the set of keys (as strings) that are currently being pressed down
      * */
     @Override
-    public void update(ArrayList<String> pressedKeys){
+    public void update(ArrayList<Integer> pressedKeys){
         GridManager.getInstance().update(pressedKeys);
     }
 

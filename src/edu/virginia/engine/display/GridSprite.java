@@ -20,11 +20,11 @@ public class GridSprite extends Sprite {
     }
 
     @Override
-    public void update(ArrayList<String> pressedKeys) {
+    public void update(ArrayList<Integer> pressedKeys) {
         super.update(pressedKeys);
     }
 
-    public void gridTurnUpdate(ArrayList<String> activeKeyPresses){
+    public void gridTurnUpdate(ArrayList<Integer> activeKeyPresses){
 
     }
 

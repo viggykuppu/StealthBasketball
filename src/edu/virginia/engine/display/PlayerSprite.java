@@ -22,13 +22,12 @@ public class PlayerSprite extends GridSprite {
     }
 
     @Override
-    public void update(ArrayList<String> pressedKeys) {
+    public void update(ArrayList<Integer> pressedKeys) {
         super.update(pressedKeys);
     }
 
     @Override
-    public void gridTurnUpdate(ArrayList<String> activeKeyPresses) {
-        System.out.println(activeKeyPresses);
+    public void gridTurnUpdate(ArrayList<Integer> activeKeyPresses) {
 
         if (state == PlayerState.DunkingUp) {
             if (GridManager.getInstance().getSpriteAtGridPoint(new Point(gridPosition.x,gridPosition.y-1)).getId() == "Guard"){
@@ -56,36 +55,36 @@ public class PlayerSprite extends GridSprite {
             //myBall.goFetch();
         } else {
             
-            if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_Z))) {
+            if (activeKeyPresses.contains(KeyEvent.VK_Z)) {
 
-                if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))) {
+                if (activeKeyPresses.contains(KeyEvent.VK_UP)) {
                     state = PlayerState.DunkingUp;
                     moveOnGrid(0, -1);
                 }
-                if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
+                if (activeKeyPresses.contains(KeyEvent.VK_DOWN)) {
                     state = PlayerState.DunkingDown;
                     moveOnGrid(0, 1);
                 }
-                if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
+                if (activeKeyPresses.contains(KeyEvent.VK_LEFT)) {
                     state = PlayerState.DunkingLeft;
                     moveOnGrid(-1, 0);
                 }
-                if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
+                if (activeKeyPresses.contains(KeyEvent.VK_RIGHT)) {
                     state = PlayerState.DunkingRight;
                     moveOnGrid(1, 0);
                 }
 
             } else {//Player movement code
-                if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))) {
+                if (activeKeyPresses.contains(KeyEvent.VK_UP)) {
                     moveOnGrid(0, -1);
                 }
-                if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
+                if (activeKeyPresses.contains(KeyEvent.VK_DOWN)) {
                     moveOnGrid(0, 1);
                 }
-                if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
+                if (activeKeyPresses.contains(KeyEvent.VK_LEFT)) {
                     moveOnGrid(-1, 0);
                 }
-                if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
+                if (activeKeyPresses.contains(KeyEvent.VK_RIGHT)) {
                     moveOnGrid(1, 0);
                 }
             }
