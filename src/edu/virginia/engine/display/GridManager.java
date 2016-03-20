@@ -39,7 +39,7 @@ public class GridManager {
 
         for (int x = 0; x < sprites.length; x++){
             for (int y = 0; y < sprites[x].length; y++){
-                if (sprites[x][y] != null)
+                if (sprites[x][y].getSprite() != null)
                     sprites[x][y].getSprite().draw(g);
                 g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
             }
@@ -80,6 +80,8 @@ public class GridManager {
         for (int x = 0; x < sprites.length; x++){
             for (int y = 0; y < sprites[x].length; y++) {
                 if (sprites[x][y].getSprite() != null){
+                    if(sprites[x][y].getSprite().getId().equals("Coin"))
+                        System.out.println(x+" "+y);
                     spriteList.add(sprites[x][y].getSprite());
                 }
             }
@@ -95,12 +97,12 @@ public class GridManager {
 
         if (start.x >= 0 && start.x < gridX && start.y >= 0 && start.y < gridY && end.x >= 0 && end.x < gridX && end.y >= 0 && end.y < gridY) {
             GridSprite temp = sprites[end.x][end.y].getSprite();
-            sprites[end.x][end.y] = sprites[start.x][start.y];
+            sprites[end.x][end.y].setSprite(sprites[start.x][start.y].getSprite());
             sprites[start.x][start.y].setSprite(temp);
-            if (sprites[end.x][end.y] != null) {
+            if (sprites[end.x][end.y].getSprite() != null) {
                 spriteToGridPosition(sprites[end.x][end.y].getSprite(), end.x, end.y);
             }
-            if (sprites[start.x][start.y] != null){
+            if (sprites[start.x][start.y].getSprite() != null){
                 spriteToGridPosition(sprites[start.x][start.y].getSprite(),start.x,start.y);
             }
         }
@@ -129,6 +131,11 @@ public class GridManager {
         this.gridX = gridX;
         this.gridY = gridY;
         sprites = new GridCell[gridX][gridY];
+        for(int i = 0; i < gridX; i++){
+            for(int j = 0; j < gridY; j++){
+                sprites[i][j] = new GridCell();
+            }
+        }
     }
 
     //Input a screen size (same as gameX and gameY in setGridSize)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.
