@@ -41,8 +41,8 @@ public class BallSprite extends Sprite {
         System.out.println(startPosition + " " + endPosition);
 
         Tween ballFollowPlayer = new Tween(this);
-        ballFollowPlayer.animate(TweenableParams.X,startPosition.x,endPosition.x,500);
-        ballFollowPlayer.animate(TweenableParams.Y,startPosition.y,endPosition.y,500);
+        ballFollowPlayer.animate(TweenableParams.X,startPosition.x,endPosition.x,5);
+        ballFollowPlayer.animate(TweenableParams.Y,startPosition.y,endPosition.y,5);
         TweenJuggler.getInstance().addTween(ballFollowPlayer);
     }
 

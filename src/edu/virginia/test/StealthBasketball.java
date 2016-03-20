@@ -1,6 +1,7 @@
 package edu.virginia.test;
 
 import edu.virginia.engine.display.*;
+import edu.virginia.engine.tween.TweenJuggler;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class StealthBasketball extends Game {
     @Override
     public void update(ArrayList<Integer> pressedKeys) {
         GridManager.getInstance().update(pressedKeys);
+        TweenJuggler.getInstance().nextFrame();
     }
 
     /**
