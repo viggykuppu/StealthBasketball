@@ -22,4 +22,8 @@ public class QuestManager implements IEventListener{
 			}
 		}
 	}
+
+	public String getId(){
+		return "questManager";
+	}
 }
