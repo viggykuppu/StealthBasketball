@@ -133,7 +133,7 @@ public class GridManager {
         sprites = new GridCell[gridX][gridY];
         for(int i = 0; i < gridX; i++){
             for(int j = 0; j < gridY; j++){
-                sprites[i][j] = new GridCell();
+                sprites[i][j] = new GridCell(i,j);
             }
         }
 

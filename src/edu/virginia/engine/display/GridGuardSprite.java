@@ -9,6 +9,12 @@ import java.util.ArrayList;
 public class GridGuardSprite extends GridSprite{
     PlayerSprite player;
     double sightRadius = 4;
+    Point lastKnownPlayerLocation;
+    GridGuardState guardState = GridGuardState.idle;
+
+    private enum GridGuardState{
+        playerVisible,lostPlayer,idle;
+    }
 
 
     public GridGuardSprite(String id,PlayerSprite player) {
@@ -29,18 +35,26 @@ public class GridGuardSprite extends GridSprite{
     @Override
     public void gridTurnUpdate(ArrayList<Integer> activeKeyPresses){
         if(this.canDetectPlayer()){
+            this.guardState = GridGuardState.playerVisible;
             aStar(player.getGridPosition());
         } else {
-            randomMove();
+            if(this.guardState == GridGuardState.playerVisible)
+                this.guardState = GridGuardState.lostPlayer;
+            aStar(lastKnownPlayerLocation);
         }
     }
 
-    public void randomMove(){
+    public void aStar(Point PlayerPosition){
+        GridCell[][] graph = GridManager.getInstance().sprites;
+        Point curr = this.getGridPosition();
+        while(true){
+            
+        }
 
     }
 
-    public void aStar(Point PlayerPosition){
-
+    public int getMDistance(Point a, Point b){
+        return Math.abs(a.x-b.x) + Math.abs(a.y-b.y);
     }
 
     public void setSightRadius(double sightRadius){
