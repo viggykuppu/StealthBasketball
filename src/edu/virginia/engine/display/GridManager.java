@@ -29,7 +29,7 @@ public class GridManager {
     GridSprite[][] sprites = null;
 
     float turnLength = 1000;
-    float previousTurnTime;
+    long previousTurnTime;
     boolean turnsActive = false;
 
     ArrayList<String> activeKeyPresses = new ArrayList<>();
@@ -54,13 +54,13 @@ public class GridManager {
                 if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))) {
                     activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_UP));
                 }
-                if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
+                else if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
                     activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_DOWN));
                 }
-                if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
+                else if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
                     activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_LEFT));
                 }
-                if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
+                else if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
                     activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_RIGHT));
                 }
             }
@@ -75,7 +75,6 @@ public class GridManager {
     void turnUpdate(){
 
         System.out.println("Turn go!");
-
         //Run the turn update on each sprite, move safe
         ArrayList<GridSprite> spriteList = new ArrayList<>();
         for (int x = 0; x < sprites.length; x++){
@@ -91,8 +90,12 @@ public class GridManager {
         activeKeyPresses.clear();
     }
 
+
     public void moveSprite(Point start, Point end){
         sprites[end.x][end.y] = sprites[start.x][start.y];
+        if (sprites[end.x][end.y] != null){
+            spriteToGridPosition(sprites[end.x][end.y],end.x,end.y);
+        }
         sprites[start.x][start.y] = null;
     }
 
@@ -146,6 +149,10 @@ public class GridManager {
         if (x < gridX && y < gridY){
             sprites[x][y] = s;
         }
+        spriteToGridPosition(s,x,y);
+    }
+
+    void spriteToGridPosition(GridSprite s, int x, int y){
         s.setPosition(new Point(gridToGameX(x),gridToGameY(y)));
         s.setGridPosition(new Point(x,y));
     }

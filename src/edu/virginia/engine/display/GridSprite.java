@@ -26,37 +26,35 @@ public class GridSprite extends Sprite {
 
     public void gridTurnUpdate(ArrayList<String> activeKeyPresses){
 
+        System.out.println(activeKeyPresses);
+
         //Player movement code
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))) {
             Point destination = gridPosition;
             destination.translate(0,-1);
-            if (GridManager.getInstance().getSpriteAtGridPoint(destination) != null){
+            if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
                 GridManager.getInstance().moveSprite(gridPosition,destination);
-                gridPosition = destination;
             }
         }
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
             Point destination = gridPosition;
             destination.translate(0,1);
-            if (GridManager.getInstance().getSpriteAtGridPoint(destination) != null){
+            if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
                 GridManager.getInstance().moveSprite(gridPosition,destination);
-                gridPosition = destination;
             }
         }
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
             Point destination = gridPosition;
             destination.translate(-1,0);
-            if (GridManager.getInstance().getSpriteAtGridPoint(destination) != null){
+            if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
                 GridManager.getInstance().moveSprite(gridPosition,destination);
-                gridPosition = destination;
             }
         }
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
             Point destination = gridPosition;
             destination.translate(1,0);
-            if (GridManager.getInstance().getSpriteAtGridPoint(destination) != null){
+            if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
                 GridManager.getInstance().moveSprite(gridPosition,destination);
-                gridPosition = destination;
             }
         }
     }
