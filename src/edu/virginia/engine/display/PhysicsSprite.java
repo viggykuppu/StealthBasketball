@@ -63,7 +63,7 @@ public class PhysicsSprite extends AnimatedSprite{
 	}
 	
 	@Override
-	public void update(ArrayList<String> pressedKeys){
+	public void update(ArrayList<Integer> pressedKeys){
 		t = System.currentTimeMillis()/10;
 		dT = t-t0;
 //		System.out.println(dT);

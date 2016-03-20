@@ -32,7 +32,7 @@ public class GridManager {
     long previousTurnTime;
     boolean turnsActive = false;
 
-    ArrayList<String> activeKeyPresses = new ArrayList<>();
+    ArrayList<Integer> activeKeyPresses = new ArrayList<>();
 
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
@@ -46,22 +46,22 @@ public class GridManager {
         }
     }
 
-    public void update(ArrayList<String> pressedKeys){
+    public void update(ArrayList<Integer> pressedKeys){
 
         if (turnsActive) {
-            if (!(activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT)) || activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))
-                    || activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT)) || activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN)))) {//No previous direction input this turn
-                if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))) {
-                    activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_UP));
+            if (!(activeKeyPresses.contains(KeyEvent.VK_LEFT) || activeKeyPresses.contains((KeyEvent.VK_UP))
+                    || activeKeyPresses.contains( (KeyEvent.VK_RIGHT)) || activeKeyPresses.contains( (KeyEvent.VK_DOWN)))) {//No previous direction input this turn
+                if (pressedKeys.contains( (KeyEvent.VK_UP))) {
+                    activeKeyPresses.add( (KeyEvent.VK_UP));
                 }
-                else if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
-                    activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_DOWN));
+                else if (pressedKeys.contains( (KeyEvent.VK_DOWN))) {
+                    activeKeyPresses.add( (KeyEvent.VK_DOWN));
                 }
-                else if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
-                    activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_LEFT));
+                else if (pressedKeys.contains( (KeyEvent.VK_LEFT))) {
+                    activeKeyPresses.add( (KeyEvent.VK_LEFT));
                 }
-                else if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
-                    activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_RIGHT));
+                else if (pressedKeys.contains( (KeyEvent.VK_RIGHT))) {
+                    activeKeyPresses.add( (KeyEvent.VK_RIGHT));
                 }
             }
 
