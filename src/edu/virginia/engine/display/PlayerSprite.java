@@ -8,12 +8,13 @@ import java.util.ArrayList;
  */
 public class PlayerSprite extends GridSprite {
 
-    public PlayerSprite(String id, String imageFileName) {
-        super(id, imageFileName);
-    }
+
+
+    public PlayerSprite(String id, String imageFileName) { super(id, imageFileName); }
 
     public PlayerSprite(String id, String imageFileName, Sprite myBall) {
         super(id, imageFileName);
+
     }
 
     @Override
