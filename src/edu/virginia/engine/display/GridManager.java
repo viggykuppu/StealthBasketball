@@ -67,11 +67,14 @@ public class GridManager {
 
             if ((System.currentTimeMillis() - previousTurnTime) >= turnLength) {//Turn ended
                 turnUpdate();
+                previousTurnTime = System.currentTimeMillis();
             }
         }
     }
 
     void turnUpdate(){
+
+        System.out.println("Turn go!");
 
         //Run the turn update on each sprite, move safe
         ArrayList<GridSprite> spriteList = new ArrayList<>();
