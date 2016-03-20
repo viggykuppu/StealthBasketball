@@ -8,13 +8,14 @@ import java.util.ArrayList;
  */
 public class PlayerSprite extends GridSprite {
 
-
+    BallSprite myBall;
+    PlayerState state = PlayerState.NEUTRAL;
 
     public PlayerSprite(String id, String imageFileName) { super(id, imageFileName); }
 
-    public PlayerSprite(String id, String imageFileName, Sprite myBall) {
+    public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
         super(id, imageFileName);
-
+        this.myBall = myBall;
     }
 
     @Override
@@ -39,5 +40,14 @@ public class PlayerSprite extends GridSprite {
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
             moveOnGrid(1,0);
         }
+        if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_Z))){
+
+            state = PlayerState.DUNKING;
+
+        }
     }
 }
+
+enum PlayerState{
+    NEUTRAL,DUNKING,THROWING
+        }

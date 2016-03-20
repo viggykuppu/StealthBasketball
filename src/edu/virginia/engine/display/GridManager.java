@@ -64,6 +64,9 @@ public class GridManager {
                     activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_RIGHT));
                 }
             }
+            if (!activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_Z))){
+                activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_Z));
+            }
 
             if ((System.currentTimeMillis() - previousTurnTime) >= turnLength) {//Turn ended
                 turnUpdate();
@@ -90,8 +93,8 @@ public class GridManager {
         activeKeyPresses.clear();
     }
 
-
-    public void moveSprite(Point start, Point end) {
+    //Returns true if successful move, false otherwise
+    public boolean moveSprite(Point start, Point end) {
 
         if (start.x >= 0 && start.x < gridX && start.y >= 0 && start.y < gridY && end.x >= 0 && end.x < gridX && end.y >= 0 && end.y < gridY) {
             GridSprite temp = sprites[end.x][end.y];
@@ -103,7 +106,9 @@ public class GridManager {
             if (sprites[start.x][start.y] != null){
                 spriteToGridPosition(sprites[start.x][start.y],start.x,start.y);
             }
+            return true;
         }
+        return false;
     }
 
     public void startTurns(){

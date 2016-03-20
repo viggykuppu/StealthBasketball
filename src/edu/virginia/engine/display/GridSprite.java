@@ -28,15 +28,18 @@ public class GridSprite extends Sprite {
 
     }
 
-    void moveOnGrid(int dx, int dy){
+    //Returns true if successful move, false if not
+    boolean moveOnGrid(int dx, int dy){
 
         Point destination = new Point();
         destination.x = gridPosition.x;
         destination.y = gridPosition.y;
         destination.translate(dx,dy);
         if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
-            GridManager.getInstance().moveSprite(gridPosition,destination);
+            if (GridManager.getInstance().moveSprite(gridPosition,destination))
+                return true;
         }
+        return false;
     }
 
     public Point getGridPosition() {
