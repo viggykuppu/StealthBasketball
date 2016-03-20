@@ -26,7 +26,7 @@ public class GridManager {
     int gridxOffset;
     int gridyOffset;
 
-    GridSprite[][] sprites = null;
+    GridCell[][] sprites = null;
 
     float turnLength = 1000;
     long previousTurnTime;
@@ -39,8 +39,8 @@ public class GridManager {
 
         for (int x = 0; x < sprites.length; x++){
             for (int y = 0; y < sprites[x].length; y++){
-                if (sprites[x][y] != null)
-                    sprites[x][y].draw(g);
+                if (sprites[x][y].getSprite() != null)
+                    sprites[x][y].getSprite().draw(g);
                 g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
             }
         }
@@ -79,8 +79,10 @@ public class GridManager {
         ArrayList<GridSprite> spriteList = new ArrayList<>();
         for (int x = 0; x < sprites.length; x++){
             for (int y = 0; y < sprites[x].length; y++) {
-                if (sprites[x][y] != null){
-                    spriteList.add(sprites[x][y]);
+                if (sprites[x][y].getSprite() != null){
+                    if(sprites[x][y].getSprite().getId().equals("Coin"))
+                        System.out.println(x+" "+y);
+                    spriteList.add(sprites[x][y].getSprite());
                 }
             }
         }
@@ -94,14 +96,14 @@ public class GridManager {
     public void moveSprite(Point start, Point end) {
 
         if (start.x >= 0 && start.x < gridX && start.y >= 0 && start.y < gridY && end.x >= 0 && end.x < gridX && end.y >= 0 && end.y < gridY) {
-            GridSprite temp = sprites[end.x][end.y];
-            sprites[end.x][end.y] = sprites[start.x][start.y];
-            sprites[start.x][start.y] = temp;
-            if (sprites[end.x][end.y] != null) {
-                spriteToGridPosition(sprites[end.x][end.y], end.x, end.y);
+            GridSprite temp = sprites[end.x][end.y].getSprite();
+            sprites[end.x][end.y].setSprite(sprites[start.x][start.y].getSprite());
+            sprites[start.x][start.y].setSprite(temp);
+            if (sprites[end.x][end.y].getSprite() != null) {
+                spriteToGridPosition(sprites[end.x][end.y].getSprite(), end.x, end.y);
             }
-            if (sprites[start.x][start.y] != null){
-                spriteToGridPosition(sprites[start.x][start.y],start.x,start.y);
+            if (sprites[start.x][start.y].getSprite() != null){
+                spriteToGridPosition(sprites[start.x][start.y].getSprite(),start.x,start.y);
             }
         }
     }
@@ -117,7 +119,7 @@ public class GridManager {
 
     public GridSprite getSpriteAtGridPoint(Point p){
         if (p.x >= 0 && p.x < gridX && p.y >= 0 && p.y < gridY)
-            return sprites[p.x][p.y];
+            return sprites[p.x][p.y].getSprite();
         else
             return null;
     }
@@ -128,7 +130,12 @@ public class GridManager {
         gridyScale = gameY / gridY;
         this.gridX = gridX;
         this.gridY = gridY;
-        sprites = new GridSprite[gridX][gridY];
+        sprites = new GridCell[gridX][gridY];
+        for(int i = 0; i < gridX; i++){
+            for(int j = 0; j < gridY; j++){
+                sprites[i][j] = new GridCell();
+            }
+        }
     }
 
     //Input a screen size (same as gameX and gameY in setGridSize)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.
@@ -154,7 +161,7 @@ public class GridManager {
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
     public void addToGrid(GridSprite s, int x, int y){
         if (x < gridX && y < gridY){
-            sprites[x][y] = s;
+            sprites[x][y].setSprite(s);
         }
         spriteToGridPosition(s,x,y);
     }
