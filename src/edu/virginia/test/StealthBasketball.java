@@ -1,9 +1,6 @@
 package edu.virginia.test;
 
-import edu.virginia.engine.display.Game;
-import edu.virginia.engine.display.GridManager;
-import edu.virginia.engine.display.GridSprite;
-import edu.virginia.engine.display.Sprite;
+import edu.virginia.engine.display.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +11,7 @@ import java.util.ArrayList;
 public class StealthBasketball extends Game {
 
     Sprite nullChecker = new Sprite("nullChecker","coin.gif");//Why do we even need this shit
-    GridSprite coin = new GridSprite("Coin","coin.gif");
+    PlayerSprite coin = new PlayerSprite("Coin","coin.gif");
 
     public StealthBasketball(){
         super("Stealth Basketball!",1007,530);

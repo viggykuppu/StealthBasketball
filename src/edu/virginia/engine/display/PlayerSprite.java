@@ -8,12 +8,11 @@ import java.util.ArrayList;
  */
 public class PlayerSprite extends GridSprite {
 
-
-    public PlayerSprite(String id) {
-        super(id);
+    public PlayerSprite(String id, String imageFileName) {
+        super(id, imageFileName);
     }
 
-    public PlayerSprite(String id, String imageFileName) {
+    public PlayerSprite(String id, String imageFileName, Sprite myBall) {
         super(id, imageFileName);
     }
 
@@ -31,13 +30,13 @@ public class PlayerSprite extends GridSprite {
             moveOnGrid(0,-1);
         }
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
-            moveOnGrid(0,-1);
+            moveOnGrid(0,1);
         }
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
-            moveOnGrid(0,-1);
+            moveOnGrid(-1,0);
         }
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
-            moveOnGrid(0,-1);
+            moveOnGrid(1,0);
         }
     }
 }
