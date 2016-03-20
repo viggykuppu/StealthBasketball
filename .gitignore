@@ -3,6 +3,8 @@
 
 # User-specific stuff:
 .idea/workspace.xml
+.idea/encodings.xml
+.idea/misc.xml
 .idea/tasks.xml
 .idea/dictionaries
 .idea/vcs.xml

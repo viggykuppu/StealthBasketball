@@ -35,5 +35,9 @@ public class TweenJuggler implements IEventListener{
 	public void handleEvent(Event event) {
 		this.tweens.remove(event.getSource());		
 	}
+
+	public String getId() {
+		return "Juggler";
+	}
 	
 }
