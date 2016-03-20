@@ -11,16 +11,16 @@ import java.util.ArrayList;
 public class StealthBasketball extends Game {
 
     Sprite nullChecker = new Sprite("nullChecker","coin.gif");//Why do we even need this shit
-    PlayerSprite coin = new PlayerSprite("Coin","coin.gif");
+    PlayerSprite player = new PlayerSprite("Player","mario.png");
 
     public StealthBasketball(){
         super("Stealth Basketball!",1007,530);
 
-        coin.setPivotPoint(new Point(28,28));
+        player.setPivotPoint(new Point(player.getUnscaledWidth()/2,player.getUnscaledHeight()/2));
 
         GridManager.getInstance().setGridSize(10,5,1000,500);
         //GridManager.getInstance().centerGridPointOnScreen(9,4,1000,500);
-        GridManager.getInstance().addToGrid(coin,9,4);
+        GridManager.getInstance().addToGrid(player,9,4);
         GridManager.getInstance().startTurns();
     }
 

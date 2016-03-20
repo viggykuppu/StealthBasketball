@@ -64,7 +64,7 @@ public class GridManager {
                     activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_RIGHT));
                 }
             }
-            if (!activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_Z))){
+            if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_Z))){
                 activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_Z));
             }
 
