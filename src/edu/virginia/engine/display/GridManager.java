@@ -91,12 +91,19 @@ public class GridManager {
     }
 
 
-    public void moveSprite(Point start, Point end){
-        sprites[end.x][end.y] = sprites[start.x][start.y];
-        if (sprites[end.x][end.y] != null){
-            spriteToGridPosition(sprites[end.x][end.y],end.x,end.y);
+    public void moveSprite(Point start, Point end) {
+
+        if (start.x >= 0 && start.x < gridX && start.y >= 0 && start.y < gridY && end.x >= 0 && end.x < gridX && end.y >= 0 && end.y < gridY) {
+            GridSprite temp = sprites[end.x][end.y];
+            sprites[end.x][end.y] = sprites[start.x][start.y];
+            sprites[start.x][start.y] = temp;
+            if (sprites[end.x][end.y] != null) {
+                spriteToGridPosition(sprites[end.x][end.y], end.x, end.y);
+            }
+            if (sprites[start.x][start.y] != null){
+                spriteToGridPosition(sprites[start.x][start.y],start.x,start.y);
+            }
         }
-        sprites[start.x][start.y] = null;
     }
 
     public void startTurns(){

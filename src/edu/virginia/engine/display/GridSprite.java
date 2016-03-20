@@ -30,32 +30,27 @@ public class GridSprite extends Sprite {
 
         //Player movement code
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))) {
-            Point destination = gridPosition;
-            destination.translate(0,-1);
-            if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
-                GridManager.getInstance().moveSprite(gridPosition,destination);
-            }
+            moveOnGrid(0,-1);
         }
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
-            Point destination = gridPosition;
-            destination.translate(0,1);
-            if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
-                GridManager.getInstance().moveSprite(gridPosition,destination);
-            }
+            moveOnGrid(0,-1);
         }
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
-            Point destination = gridPosition;
-            destination.translate(-1,0);
-            if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
-                GridManager.getInstance().moveSprite(gridPosition,destination);
-            }
+            moveOnGrid(0,-1);
         }
         if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
-            Point destination = gridPosition;
-            destination.translate(1,0);
-            if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
-                GridManager.getInstance().moveSprite(gridPosition,destination);
-            }
+            moveOnGrid(0,-1);
+        }
+    }
+
+    void moveOnGrid(int dx, int dy){
+
+        Point destination = new Point();
+        destination.x = gridPosition.x;
+        destination.y = gridPosition.y;
+        destination.translate(dx,dy);
+        if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
+            GridManager.getInstance().moveSprite(gridPosition,destination);
         }
     }
 
