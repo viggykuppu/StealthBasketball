@@ -64,8 +64,8 @@ public class GridManager {
                     activeKeyPresses.add( (KeyEvent.VK_RIGHT));
                 }
             }
-            if (pressedKeys.contains(KeyEvent.getKeyText(KeyEvent.VK_Z))){
-                activeKeyPresses.add(KeyEvent.getKeyText(KeyEvent.VK_Z));
+            if (pressedKeys.contains(KeyEvent.VK_Z)){
+                activeKeyPresses.add(KeyEvent.VK_Z);
             }
 
             if ((System.currentTimeMillis() - previousTurnTime) >= turnLength) {//Turn ended

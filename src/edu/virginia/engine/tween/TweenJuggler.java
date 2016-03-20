@@ -7,16 +7,13 @@ import java.util.ArrayList;
 
 public class TweenJuggler implements IEventListener{
 	ArrayList<Tween> tweens;
-	static TweenJuggler instance;
+	private static TweenJuggler instance = new TweenJuggler();
 	
 	protected TweenJuggler(){
 		tweens = new ArrayList<Tween>();
 	}
 	
 	public static TweenJuggler getInstance(){
-		if(instance == null){
-			instance = new TweenJuggler();
-		}
 		return instance;
 	}
 	
