@@ -23,7 +23,7 @@ public class PlayerSprite extends GridSprite {
 
     @Override
     public void gridTurnUpdate(ArrayList<Integer> activeKeyPresses){
-        System.out.println(activeKeyPresses);
+//        System.out.println(activeKeyPresses);
 
         //Player movement code
         if (activeKeyPresses.contains(KeyEvent.VK_UP)) {

@@ -1,17 +1,21 @@
 package edu.virginia.engine.display;
 
 import java.awt.*;
+import java.util.HashSet;
 
 /**
  * Created by vignesh on 3/20/16.
  */
 public class GridCell {
     Point location;
-    GridCell up = null;
-    GridCell down = null;
-    GridCell right = null;
-    GridCell left  = null;
+    //f = g + h
+    int f;
+    int g;
+    int h;
+    GridCell cameFrom;
+    HashSet<GridCell> neighbors= new HashSet<GridCell>();
     private GridSprite sprite = null;
+
 
     public GridCell(int x, int y){
         location = new Point(x,y);

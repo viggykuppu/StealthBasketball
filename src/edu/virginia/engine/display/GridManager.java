@@ -3,6 +3,7 @@ package edu.virginia.engine.display;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Created by Guillaume Bailey on 3/19/2016.
@@ -36,12 +37,13 @@ public class GridManager {
 
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
-
-        for (int x = 0; x < sprites.length; x++){
-            for (int y = 0; y < sprites[x].length; y++){
-                if (sprites[x][y].getSprite() != null)
-                    sprites[x][y].getSprite().draw(g);
-                g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
+        if(sprites !=null){
+            for (int x = 0; x < sprites.length; x++){
+                for (int y = 0; y < sprites[x].length; y++){
+                    if (sprites[x][y].getSprite() != null)
+                        sprites[x][y].getSprite().draw(g);
+                    g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
+                }
             }
         }
     }
@@ -74,20 +76,23 @@ public class GridManager {
 
     void turnUpdate(){
 
-        System.out.println("Turn go!");
+//        System.out.println("Turn go!");
         //Run the turn update on each sprite, move safe
-        ArrayList<GridSprite> spriteList = new ArrayList<>();
+        ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
         for (int x = 0; x < sprites.length; x++){
             for (int y = 0; y < sprites[x].length; y++) {
                 if (sprites[x][y].getSprite() != null){
-                    if(sprites[x][y].getSprite().getId().equals("Coin"))
-                        System.out.println(x+" "+y);
+//                    if(sprites[x][y].getSprite().getId().equals("Coin"))
+//                        System.out.println(x+" "+y);
                     spriteList.add(sprites[x][y].getSprite());
                 }
             }
         }
-        for (GridSprite s : spriteList)
+        for (GridSprite s : spriteList){
+            System.out.println(s.getId());
             s.gridTurnUpdate(activeKeyPresses);
+        }
+
 
         activeKeyPresses.clear();
     }
@@ -145,13 +150,13 @@ public class GridManager {
                 left = j > 0;
                 right = j < gridY-1;
                 if(up)
-                    sprites[i][j].up = sprites[i-1][j];
+                    sprites[i][j].neighbors.add(sprites[i-1][j]);
                 if(down)
-                    sprites[i][j].down = sprites[i+1][j];
+                    sprites[i][j].neighbors.add(sprites[i+1][j]);
                 if(left)
-                    sprites[i][j].left = sprites[i][j-1];
+                    sprites[i][j].neighbors.add(sprites[i][j-1]);
                 if(right)
-                    sprites[i][j].right = sprites[i][j+1];
+                    sprites[i][j].neighbors.add(sprites[i][j+1]);
             }
         }
 
