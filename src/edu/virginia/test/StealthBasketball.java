@@ -11,10 +11,16 @@ import java.util.ArrayList;
  */
 public class StealthBasketball extends Game {
 
+<<<<<<< HEAD
     BallSprite ball = new BallSprite("Ball", "coin.gif");
     PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
     GridGuardSprite guard = new GridGuardSprite("Guard", "coin.gif");
     Sprite nullChecker = new Sprite("nullChecker", "coin.gif");//Why do we even need this shit
+=======
+    Sprite nullChecker = new Sprite("nullChecker","coin.gif");//Why do we even need this shit
+    PlayerSprite coin = new PlayerSprite("Coin","coin.gif");
+    GridGuardSprite guard = new GridGuardSprite("Guard","coin.gif",coin);
+>>>>>>> refs/remotes/origin/master
 
     public StealthBasketball() {
         super("Stealth Basketball!", 1007, 530);

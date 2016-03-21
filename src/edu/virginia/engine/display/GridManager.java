@@ -3,6 +3,7 @@ package edu.virginia.engine.display;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Created by Guillaume Bailey on 3/19/2016.
@@ -36,12 +37,13 @@ public class GridManager {
 
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
-
-        for (int x = 0; x < sprites.length; x++){
-            for (int y = 0; y < sprites[x].length; y++){
-                if (sprites[x][y].getSprite() != null)
-                    sprites[x][y].getSprite().draw(g);
-                g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
+        if(sprites !=null){
+            for (int x = 0; x < sprites.length; x++){
+                for (int y = 0; y < sprites[x].length; y++){
+                    if (sprites[x][y].getSprite() != null)
+                        sprites[x][y].getSprite().draw(g);
+                    g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
+                }
             }
         }
     }
@@ -77,9 +79,9 @@ public class GridManager {
 
     void turnUpdate(){
 
-        System.out.println("Turn go!");
+//        System.out.println("Turn go!");
         //Run the turn update on each sprite, move safe
-        ArrayList<GridSprite> spriteList = new ArrayList<>();
+        ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
         for (int x = 0; x < sprites.length; x++){
             for (int y = 0; y < sprites[x].length; y++) {
                 if (sprites[x][y].getSprite() != null){
@@ -87,8 +89,10 @@ public class GridManager {
                 }
             }
         }
-        for (GridSprite s : spriteList)
+        for (GridSprite s : spriteList){
             s.gridTurnUpdate(activeKeyPresses);
+        }
+
 
         activeKeyPresses.clear();
     }
@@ -136,9 +140,29 @@ public class GridManager {
         sprites = new GridCell[gridX][gridY];
         for(int i = 0; i < gridX; i++){
             for(int j = 0; j < gridY; j++){
-                sprites[i][j] = new GridCell();
+                sprites[i][j] = new GridCell(i,j);
             }
         }
+
+        boolean up,left,down,right;
+        for(int i = 0; i < gridX; i++){
+            up = i > 0;
+            down = i < gridX-1;
+            for(int j = 0; j < gridY; j++){
+                left = j > 0;
+                right = j < gridY-1;
+                if(up)
+                    sprites[i][j].neighbors.add(sprites[i-1][j]);
+                if(down)
+                    sprites[i][j].neighbors.add(sprites[i+1][j]);
+                if(left)
+                    sprites[i][j].neighbors.add(sprites[i][j-1]);
+                if(right)
+                    sprites[i][j].neighbors.add(sprites[i][j+1]);
+            }
+        }
+
+
     }
 
     //Input a screen size (same as gameX and gameY in setGridSize)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.
@@ -172,6 +196,14 @@ public class GridManager {
     void spriteToGridPosition(GridSprite s, int x, int y){
         s.setPosition(new Point(gridToGameX(x),gridToGameY(y)));
         s.setGridPosition(new Point(x,y));
+    }
+
+    void resetAStarGrid(){
+        for(int i = 0; i < gridX; i++){
+            for(int j = 0; j < gridY; j++){
+                sprites[i][j].resetAStarValues();
+            }
+        }
     }
 
     public float getTurnLength() {

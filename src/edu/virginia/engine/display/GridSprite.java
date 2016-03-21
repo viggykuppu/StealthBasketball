@@ -36,8 +36,11 @@ public class GridSprite extends Sprite {
         destination.y = gridPosition.y;
         destination.translate(dx,dy);
         if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
-            if (GridManager.getInstance().moveSprite(gridPosition,destination))
+            if (GridManager.getInstance().moveSprite(gridPosition,destination)) {
+                gridPosition.x = destination.x;
+                gridPosition.y = destination.y;
                 return true;
+            }
         }
         return false;
     }
