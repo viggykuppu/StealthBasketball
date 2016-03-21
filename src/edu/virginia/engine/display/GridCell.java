@@ -12,7 +12,6 @@ public class GridCell {
     int f;
     int g;
     int h;
-    GridCell cameFrom;
     HashSet<GridCell> neighbors= new HashSet<GridCell>();
     private GridSprite sprite = null;
 
@@ -37,6 +36,5 @@ public class GridCell {
         f = 0;
         g = 0;
         h = 0;
-        cameFrom = null;
     }
 }
