@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class GridGuardSprite extends GridSprite{
     PlayerSprite player;
-    double sightRadius = 4;
+    double sightRadius = 16;
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
 
@@ -29,12 +29,12 @@ public class GridGuardSprite extends GridSprite{
 
     public boolean canDetectPlayer(){
         double distance = this.getGridPosition().distanceSq(player.getGridPosition());
-        return distance <= 4;
+        return distance <= this.sightRadius;
     }
 
     @Override
     public void gridTurnUpdate(ArrayList<Integer> activeKeyPresses){
-        if(this.canDetectPlayer() || true){
+        if(this.canDetectPlayer()){
             this.guardState = GridGuardState.playerVisible;
             aStar(player.getGridPosition());
         } else {
@@ -49,7 +49,6 @@ public class GridGuardSprite extends GridSprite{
     public void aStar(Point playerPosition){
         GridCell[][] graph = GridManager.getInstance().sprites;
         GridCell curr = graph[this.getGridPosition().x][this.getGridPosition().y];
-        curr.cameFrom = null;
         PriorityQueue<GridCell> q = new PriorityQueue<GridCell>(new Comparator<GridCell>() {
             @Override
             public int compare(GridCell gridCell, GridCell t1) {
