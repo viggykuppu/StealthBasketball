@@ -31,8 +31,8 @@ public class BallSprite extends Sprite {
         endPosition.y += playerOffset.y;
 
         Tween ballFollowPlayer = new Tween(this);
-        ballFollowPlayer.animate(TweenableParams.X,getPosition().x,endPosition.x,5);
-        ballFollowPlayer.animate(TweenableParams.Y,getPosition().y,endPosition.y,5);
+        ballFollowPlayer.animate(TweenableParams.X,getPosition().x,endPosition.x,1);
+        ballFollowPlayer.animate(TweenableParams.Y,getPosition().y,endPosition.y,1);
         TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer,this);
     }
 

@@ -83,8 +83,6 @@ public class GridManager {
         for (int x = 0; x < sprites.length; x++){
             for (int y = 0; y < sprites[x].length; y++) {
                 if (sprites[x][y].getSprite() != null){
-                    if(sprites[x][y].getSprite().getId().equals("Coin"))
-                        System.out.println(x+" "+y);
                     spriteList.add(sprites[x][y].getSprite());
                 }
             }
