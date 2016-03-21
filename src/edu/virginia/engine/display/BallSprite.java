@@ -15,10 +15,6 @@ public class BallSprite extends Sprite {
 
     Point playerOffset = new Point(0,-25);
 
-    public BallSprite(String id) {
-        super(id);
-    }
-
     public BallSprite(String id, String imageFileName) {
         super(id, imageFileName);
     }
@@ -28,22 +24,16 @@ public class BallSprite extends Sprite {
         super.update(pressedKeys);
     }
 
-    public void followPlayer(Point gridStart, Point gridEnd) {
-        Point startPosition = new Point(gridStart);
-        startPosition = GridManager.getInstance().gridtoGamePoint(startPosition);
-        startPosition.x += playerOffset.x;
-        startPosition.y += playerOffset.y;
-        Point endPosition = new Point(gridEnd);
+    public void pathToGridPoint(Point gridDest) {
+        Point endPosition = new Point(gridDest);
         endPosition = GridManager.getInstance().gridtoGamePoint(endPosition);
         endPosition.x += playerOffset.x;
         endPosition.y += playerOffset.y;
 
-        System.out.println(startPosition + " " + endPosition);
-
         Tween ballFollowPlayer = new Tween(this);
-        ballFollowPlayer.animate(TweenableParams.X,startPosition.x,endPosition.x,5);
-        ballFollowPlayer.animate(TweenableParams.Y,startPosition.y,endPosition.y,5);
-        TweenJuggler.getInstance().addTween(ballFollowPlayer);
+        ballFollowPlayer.animate(TweenableParams.X,getPosition().x,endPosition.x,5);
+        ballFollowPlayer.animate(TweenableParams.Y,getPosition().y,endPosition.y,5);
+        TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer,this);
     }
 
     public Point getPlayerOffset() {

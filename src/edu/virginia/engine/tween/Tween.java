@@ -68,8 +68,8 @@ public class Tween extends EventDispatcher{
 		if(dT>time){
 			dT = time;
 			this.complete = true;
-			TweenEvent startTween = new TweenEvent("tweenEnd",this);
-			this.dispatchEvent(startTween);
+			TweenEvent endTween = new TweenEvent("tweenEnd",this);
+			this.dispatchEvent(endTween);
 		}
 		double percent = (double)dT/(double)time;
 		return transition.applyTransition(percent, this.transitionIndex);
@@ -85,7 +85,11 @@ public class Tween extends EventDispatcher{
 			this.processTween(tp);
 		}
 	}
-	
+
+	public DisplayObject getDisplayObject(){
+		return object;
+	}
+
 	public boolean isComplete(){
 		return this.complete;
 	}

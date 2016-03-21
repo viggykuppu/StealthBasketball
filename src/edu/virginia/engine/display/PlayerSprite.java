@@ -77,20 +77,20 @@ public class PlayerSprite extends GridSprite {
             } else {//Player movement code
                 if (activeKeyPresses.contains(KeyEvent.VK_UP)) {
                     if (moveOnGrid(0, -1)){
-                        myBall.followPlayer(gridPosition,new Point(gridPosition.x,gridPosition.y+1));
+                        myBall.pathToGridPoint(gridPosition);
                     }
                 }
                 if (activeKeyPresses.contains(KeyEvent.VK_DOWN)) {
                     moveOnGrid(0, 1);
-                    myBall.followPlayer(gridPosition,new Point(gridPosition.x,gridPosition.y-1));
+                    myBall.pathToGridPoint(gridPosition);
                 }
                 if (activeKeyPresses.contains(KeyEvent.VK_LEFT)) {
                     moveOnGrid(-1, 0);
-                    myBall.followPlayer(gridPosition,new Point(gridPosition.x+1,gridPosition.y));
+                    myBall.pathToGridPoint(gridPosition);
                 }
                 if (activeKeyPresses.contains(KeyEvent.VK_RIGHT)) {
                     moveOnGrid(1, 0);
-                    myBall.followPlayer(gridPosition,new Point(gridPosition.x-1,gridPosition.y));
+                    myBall.pathToGridPoint(gridPosition);
                 }
             }
         }
