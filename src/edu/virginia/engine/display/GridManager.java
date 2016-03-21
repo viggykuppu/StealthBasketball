@@ -89,7 +89,7 @@ public class GridManager {
             }
         }
         for (GridSprite s : spriteList){
-            System.out.println(s.getId());
+//            System.out.println(s.getId());
             s.gridTurnUpdate(activeKeyPresses);
         }
 

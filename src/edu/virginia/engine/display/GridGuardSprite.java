@@ -1,11 +1,7 @@
 package edu.virginia.engine.display;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * Created by vignesh on 3/20/16.
@@ -62,6 +58,8 @@ public class GridGuardSprite extends GridSprite{
         });
         HashSet<Point> closedSet = new HashSet<Point>();
         HashSet<Point> seen = new HashSet<Point>();
+        HashMap<Point,Point> cameFrom = new HashMap<Point,Point>();
+
         q.add(curr);
         seen.add(curr.location);
         curr.g = 0;
@@ -78,17 +76,19 @@ public class GridGuardSprite extends GridSprite{
                 if(!closedSet.contains(node.location)){
                     if(!seen.contains(node.location)){
                         seen.add(node.location);
-                        q.add(node);
                         node.g = curr.g+1;
-                        node.h = this.getMDistance(playerPosition,node.location);
+                        node.h = Math.abs(playerPosition.x-node.location.x) + Math.abs(playerPosition.y-node.location.y);
                         node.f = node.h+node.g;
-                        node.cameFrom = curr;
+                        q.add(node);
+//                        System.out.println(node.g + " "+node.location);
+                        cameFrom.put(node.location,curr.location);
                     } else {
-                        int tentative_g = curr.g + 1;
-                        if(tentative_g < node.g){
+                        if(curr.g+1 < node.g){
                             node.g = curr.g+1;
                             node.f = node.h+node.g;
-                            node.cameFrom = curr;
+                            q.remove(node);
+                            q.add(node);
+                            cameFrom.put(node.location,curr.location);
                         }
                     }
                 }
@@ -96,30 +96,23 @@ public class GridGuardSprite extends GridSprite{
         }
         //Now we need to retrace our path back to the start.
         ArrayList<Point> path = new ArrayList<Point>();
-        while(curr != null){
-            path.add(curr.location);
-            curr = curr.cameFrom;
+        Point p = curr.location;
+        while(p != null){
+            path.add(p);
+            p = cameFrom.get(p);
         }
+
         Collections.reverse(path);
         //Code for checking path if you would like to do that
-//        for(int i = 0; i < path.size(); i++){
-//            System.out.print("x: "+path.get(i).x+", y: "+path.get(i).y+"-> ");
-//        }
-        System.out.println(path.size());
         resetAStarGrid();
         Point nextPosition = path.get(1);
-        System.out.println(nextPosition);
         if(nextPosition.x > this.getGridPosition().x){
-            System.out.println("1");
             moveOnGrid(1,0);
         } else if(nextPosition.x < this.getGridPosition().x){
-            System.out.println("2");
             moveOnGrid(-1,0);
         } else if(nextPosition.y > this.getGridPosition().y){
-            System.out.println("3");
             moveOnGrid(0,1);
         } else if(nextPosition.y < this.getGridPosition().y){
-            System.out.println("4");
             moveOnGrid(0,-1);
         }
     }
