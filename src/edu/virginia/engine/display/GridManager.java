@@ -66,6 +66,9 @@ public class GridManager {
                     activeKeyPresses.add( (KeyEvent.VK_RIGHT));
                 }
             }
+            if (pressedKeys.contains(KeyEvent.VK_Z)){
+                activeKeyPresses.add(KeyEvent.VK_Z);
+            }
 
             if ((System.currentTimeMillis() - previousTurnTime) >= turnLength) {//Turn ended
                 turnUpdate();
@@ -82,14 +85,11 @@ public class GridManager {
         for (int x = 0; x < sprites.length; x++){
             for (int y = 0; y < sprites[x].length; y++) {
                 if (sprites[x][y].getSprite() != null){
-//                    if(sprites[x][y].getSprite().getId().equals("Coin"))
-//                        System.out.println(x+" "+y);
                     spriteList.add(sprites[x][y].getSprite());
                 }
             }
         }
         for (GridSprite s : spriteList){
-//            System.out.println(s.getId());
             s.gridTurnUpdate(activeKeyPresses);
         }
 
@@ -97,8 +97,8 @@ public class GridManager {
         activeKeyPresses.clear();
     }
 
-
-    public void moveSprite(Point start, Point end) {
+    //Returns true if successful move, false otherwise
+    public boolean moveSprite(Point start, Point end) {
 
         if (start.x >= 0 && start.x < gridX && start.y >= 0 && start.y < gridY && end.x >= 0 && end.x < gridX && end.y >= 0 && end.y < gridY) {
             GridSprite temp = sprites[end.x][end.y].getSprite();
@@ -110,7 +110,9 @@ public class GridManager {
             if (sprites[start.x][start.y].getSprite() != null){
                 spriteToGridPosition(sprites[start.x][start.y].getSprite(),start.x,start.y);
             }
+            return true;
         }
+        return false;
     }
 
     public void startTurns(){
