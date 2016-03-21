@@ -196,6 +196,14 @@ public class GridManager {
         s.setGridPosition(new Point(x,y));
     }
 
+    void resetAStarGrid(){
+        for(int i = 0; i < gridX; i++){
+            for(int j = 0; j < gridY; j++){
+                sprites[i][j].resetAStarValues();
+            }
+        }
+    }
+
     public float getTurnLength() {
         return turnLength;
     }

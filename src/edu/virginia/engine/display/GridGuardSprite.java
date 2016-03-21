@@ -3,6 +3,7 @@ package edu.virginia.engine.display;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
@@ -50,7 +51,6 @@ public class GridGuardSprite extends GridSprite{
     }
 
     public void aStar(Point playerPosition){
-        System.out.println("star");
         GridCell[][] graph = GridManager.getInstance().sprites;
         GridCell curr = graph[this.getGridPosition().x][this.getGridPosition().y];
         curr.cameFrom = null;
@@ -65,9 +65,11 @@ public class GridGuardSprite extends GridSprite{
         q.add(curr);
         seen.add(curr.location);
         curr.g = 0;
-        while(!curr.equals(playerPosition)){
+        while(!q.isEmpty()){
             curr = q.poll();
-            System.out.println(curr.location);
+            if(curr.location.equals(playerPosition)){
+                break;
+            }
             if(curr == null){
                 System.err.println("A* failed");
             }
@@ -83,9 +85,7 @@ public class GridGuardSprite extends GridSprite{
                         node.cameFrom = curr;
                     } else {
                         int tentative_g = curr.g + 1;
-                        if(tentative_g >= node.g){
-                            continue;
-                        } else {
+                        if(tentative_g < node.g){
                             node.g = curr.g+1;
                             node.f = node.h+node.g;
                             node.cameFrom = curr;
@@ -94,7 +94,38 @@ public class GridGuardSprite extends GridSprite{
                 }
             }
         }
+        //Now we need to retrace our path back to the start.
+        ArrayList<Point> path = new ArrayList<Point>();
+        while(curr != null){
+            path.add(curr.location);
+            curr = curr.cameFrom;
+        }
+        Collections.reverse(path);
+        //Code for checking path if you would like to do that
+//        for(int i = 0; i < path.size(); i++){
+//            System.out.print("x: "+path.get(i).x+", y: "+path.get(i).y+"-> ");
+//        }
+        System.out.println(path.size());
+        resetAStarGrid();
+        Point nextPosition = path.get(1);
+        System.out.println(nextPosition);
+        if(nextPosition.x > this.getGridPosition().x){
+            System.out.println("1");
+            moveOnGrid(1,0);
+        } else if(nextPosition.x < this.getGridPosition().x){
+            System.out.println("2");
+            moveOnGrid(-1,0);
+        } else if(nextPosition.y > this.getGridPosition().y){
+            System.out.println("3");
+            moveOnGrid(0,1);
+        } else if(nextPosition.y < this.getGridPosition().y){
+            System.out.println("4");
+            moveOnGrid(0,-1);
+        }
+    }
 
+    public void resetAStarGrid(){
+        GridManager.getInstance().resetAStarGrid();
     }
 
     public int getMDistance(Point a, Point b){
