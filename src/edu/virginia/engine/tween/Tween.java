@@ -7,30 +7,23 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static edu.virginia.engine.tween.TweenTransitionIndex.LINEAR;
+
 public class Tween extends EventDispatcher{
 	private DisplayObject object;
 	private long startTime;
-	private Map<TweenableParams,TweenParam> params = new HashMap<TweenableParams,TweenParam>();
+	private Map<TweenableParams,TweenParam> params = new HashMap<>();
 	private TweenTransitions transition;
-	private int transitionIndex;
 	private boolean complete = false;
 	
-	public Tween(DisplayObject object){
+	public Tween(DisplayObject object) {
 		this.object = object;
 		this.transition = new TweenTransitions();
-		this.transitionIndex = 0;
 		this.startTime = -1;
 	}
 	
-	public Tween(DisplayObject object, int transitionIndex){
-		this.object = object;
-		this.transition = new TweenTransitions();
-		this.transitionIndex = transitionIndex;
-		this.startTime = -1;
-	}
-	
-	public void animate(TweenableParams fieldToAnimate, double startVal, double endVal, long time){
-		TweenParam tp = new TweenParam(fieldToAnimate,startVal,endVal,time);
+	public void animate(TweenableParams fieldToAnimate, double startVal, double endVal, long timems){
+		TweenParam tp = new TweenParam(fieldToAnimate,startVal,endVal,timems);
 		params.put(fieldToAnimate, tp);
 	}
 	
@@ -40,7 +33,7 @@ public class Tween extends EventDispatcher{
 		double endVal = tp.getEndVal();
 		long time = tp.getTweenTime();
 		double val = endVal - startVal;
-		val = getPercentDone(time)*val+startVal;
+		val = getPercentDone(time,tp.getTransitionIndex())*val+startVal;
 		switch (fieldToAnimate){
 			case SCALE_X:
 				object.setScaleX(val);
@@ -63,7 +56,7 @@ public class Tween extends EventDispatcher{
 		}
 	}
 	
-	public double getPercentDone(long time){
+	public double getPercentDone(long time, TweenTransitionIndex transitionIndex){
 		long dT = System.nanoTime()-this.startTime;
 		if(dT>time){
 			dT = time;
@@ -72,7 +65,7 @@ public class Tween extends EventDispatcher{
 			this.dispatchEvent(endTween);
 		}
 		double percent = (double)dT/(double)time;
-		return transition.applyTransition(percent, this.transitionIndex);
+		return this.transition.applyTransition(percent, transitionIndex);
 	}
 	
 	public void update(){
