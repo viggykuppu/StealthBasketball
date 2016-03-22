@@ -7,12 +7,12 @@ public class TweenParam {
 	private double endVal;
 	private long time;
 	
-	public TweenParam(TweenableParams paramToTween, double startVal, double endVal, long time){
+	public TweenParam(TweenableParams paramToTween, double startVal, double endVal, long timems){
 		this.paramToTween = paramToTween;
 		this.startVal = startVal;
 		this.currentVal = startVal;
 		this.endVal = endVal;
-		this.time = time*1000*1000*1000;
+		this.time = timems*1000*1000;
 	}
 	
 	public TweenableParams getParam(){

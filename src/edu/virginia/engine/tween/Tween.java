@@ -29,8 +29,8 @@ public class Tween extends EventDispatcher{
 		this.startTime = -1;
 	}
 	
-	public void animate(TweenableParams fieldToAnimate, double startVal, double endVal, long time){
-		TweenParam tp = new TweenParam(fieldToAnimate,startVal,endVal,time);
+	public void animate(TweenableParams fieldToAnimate, double startVal, double endVal, long timems){
+		TweenParam tp = new TweenParam(fieldToAnimate,startVal,endVal,timems);
 		params.put(fieldToAnimate, tp);
 	}
 	
