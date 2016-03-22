@@ -12,6 +12,10 @@ public class PlayerSprite extends GridSprite {
     BallSprite myBall;
     PlayerState state = PlayerState.NEUTRAL;
 
+    private enum PlayerState {
+        NEUTRAL, DunkingLeft, DunkingRight, DunkingUp, DunkingDown, NoBall, THROWING
+    }
+
     public PlayerSprite(String id, String imageFileName) {
         super(id, imageFileName);
     }
@@ -47,7 +51,7 @@ public class PlayerSprite extends GridSprite {
             }
             state = PlayerState.NoBall;
             //myBall.goFetch();
-        }else if (state == PlayerState.DunkingUp){
+        }else if (state == PlayerState.DunkingRight){
             if (GridManager.getInstance().getSpriteAtGridPoint(new Point(gridPosition.x+1,gridPosition.y)).getId() == "Guard"){
                 //Event code here
             }
@@ -77,26 +81,22 @@ public class PlayerSprite extends GridSprite {
             } else {//Player movement code
                 if (activeKeyPresses.contains(KeyEvent.VK_UP)) {
                     if (moveOnGrid(0, -1)){
-                        myBall.pathToGridPoint(gridPosition);
+                        myBall.pathToGridPoint(gridPosition,500);
                     }
                 }
                 if (activeKeyPresses.contains(KeyEvent.VK_DOWN)) {
                     moveOnGrid(0, 1);
-                    myBall.pathToGridPoint(gridPosition);
+                    myBall.pathToGridPoint(gridPosition,500);
                 }
                 if (activeKeyPresses.contains(KeyEvent.VK_LEFT)) {
                     moveOnGrid(-1, 0);
-                    myBall.pathToGridPoint(gridPosition);
+                    myBall.pathToGridPoint(gridPosition,500);
                 }
                 if (activeKeyPresses.contains(KeyEvent.VK_RIGHT)) {
                     moveOnGrid(1, 0);
-                    myBall.pathToGridPoint(gridPosition);
+                    myBall.pathToGridPoint(gridPosition,500);
                 }
             }
         }
     }
-}
-
-enum PlayerState {
-    NEUTRAL, DunkingLeft, DunkingRight, DunkingUp, DunkingDown, NoBall, THROWING
 }

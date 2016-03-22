@@ -24,15 +24,15 @@ public class BallSprite extends Sprite {
         super.update(pressedKeys);
     }
 
-    public void pathToGridPoint(Point gridDest) {
+    public void pathToGridPoint(Point gridDest, long timems) {
         Point endPosition = new Point(gridDest);
         endPosition = GridManager.getInstance().gridtoGamePoint(endPosition);
         endPosition.x += playerOffset.x;
         endPosition.y += playerOffset.y;
 
         Tween ballFollowPlayer = new Tween(this);
-        ballFollowPlayer.animate(TweenableParams.X,getPosition().x,endPosition.x,1);
-        ballFollowPlayer.animate(TweenableParams.Y,getPosition().y,endPosition.y,1);
+        ballFollowPlayer.animate(TweenableParams.X,getPosition().x,endPosition.x,timems);
+        ballFollowPlayer.animate(TweenableParams.Y,getPosition().y,endPosition.y,timems);
         TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer,this);
     }
 

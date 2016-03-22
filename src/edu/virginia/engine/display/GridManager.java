@@ -1,5 +1,7 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.util.Direction;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -183,6 +185,20 @@ public class GridManager {
 
     public Point gridtoGamePoint(Point p){
         return new Point(gridToGameX(p.x),gridToGameY(p.y));
+    }
+
+    public Point directionToGridVector(Direction d){
+        switch (d) {
+            case UP:
+                return new Point(0,-1);
+            case DOWN:
+                return new Point(0,1);
+            case LEFT:
+                return new Point(-1,0);
+            case RIGHT:
+                return new Point(1,0);
+        }
+        return null;
     }
 
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
