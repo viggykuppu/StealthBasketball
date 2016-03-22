@@ -11,7 +11,7 @@ public class TweenJuggler implements IEventListener{
 	private static TweenJuggler instance = new TweenJuggler();
 	
 	protected TweenJuggler(){
-		tweens = new ArrayList<Tween>();
+		tweens = new ArrayList<>();
 	}
 	
 	public static TweenJuggler getInstance(){
@@ -44,12 +44,11 @@ public class TweenJuggler implements IEventListener{
 
 	@Override
 	public void handleEvent(Event event) {
-		this.tweens.remove(event.getSource());		
+		if (event.getEventType() == "tweenEnd")
+			this.tweens.remove(event.getSource());
 	}
-
 
 	public String getId() {
 		return "Juggler";
 	}
-	
 }
