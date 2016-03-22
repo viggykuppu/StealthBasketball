@@ -38,25 +38,25 @@ public class PlayerSprite extends GridSprite {
                 //Event code here
             }
             state = PlayerState.NoBall;
-            //myBall.goFetch();
+
         }else if (state == PlayerState.DunkingDown){
             if (GridManager.getInstance().getSpriteAtGridPoint(new Point(gridPosition.x,gridPosition.y+1)).getId() == "Guard"){
                 //Event code here
             }
             state = PlayerState.NoBall;
-            //myBall.goFetch();
+
         }else if (state == PlayerState.DunkingLeft){
             if (GridManager.getInstance().getSpriteAtGridPoint(new Point(gridPosition.x-1,gridPosition.y)).getId() == "Guard"){
                 //Event code here
             }
             state = PlayerState.NoBall;
-            //myBall.goFetch();
+
         }else if (state == PlayerState.DunkingRight){
             if (GridManager.getInstance().getSpriteAtGridPoint(new Point(gridPosition.x+1,gridPosition.y)).getId() == "Guard"){
                 //Event code here
             }
             state = PlayerState.NoBall;
-            //myBall.goFetch();
+
         } else {
             
             if (activeKeyPresses.contains(KeyEvent.VK_Z)) {
@@ -80,20 +80,20 @@ public class PlayerSprite extends GridSprite {
 
             } else {//Player movement code
                 if (activeKeyPresses.contains(KeyEvent.VK_UP)) {
-                    if (moveOnGrid(0, -1)){
+                    if (moveOnGrid(0, -1,500)){
                         myBall.pathToGridPoint(gridPosition,500);
                     }
                 }
                 if (activeKeyPresses.contains(KeyEvent.VK_DOWN)) {
-                    moveOnGrid(0, 1);
+                    moveOnGrid(0, 1,500);
                     myBall.pathToGridPoint(gridPosition,500);
                 }
                 if (activeKeyPresses.contains(KeyEvent.VK_LEFT)) {
-                    moveOnGrid(-1, 0);
+                    moveOnGrid(-1, 0,500);
                     myBall.pathToGridPoint(gridPosition,500);
                 }
                 if (activeKeyPresses.contains(KeyEvent.VK_RIGHT)) {
-                    moveOnGrid(1, 0);
+                    moveOnGrid(1, 0,500);
                     myBall.pathToGridPoint(gridPosition,500);
                 }
             }
