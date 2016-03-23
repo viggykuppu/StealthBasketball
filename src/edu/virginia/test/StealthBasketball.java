@@ -36,9 +36,9 @@ public class StealthBasketball extends Game {
      * the set of keys (as strings) that are currently being pressed down
      */
     @Override
-    public void update(ArrayList<Integer> pressedKeys) {
+    public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
         if (nullChecker != null) {
-            GridManager.getInstance().update(pressedKeys);
+            GridManager.getInstance().update(pressedKeys,heldKeys);
             TweenJuggler.getInstance().nextFrame();
         }
     }

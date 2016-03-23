@@ -63,11 +63,11 @@ public class PhysicsSprite extends AnimatedSprite{
 	}
 	
 	@Override
-	public void update(ArrayList<Integer> pressedKeys){
+	public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys){
 		t = System.currentTimeMillis()/10;
 		dT = t-t0;
 //		System.out.println(dT);
-		super.update(pressedKeys);
+		super.update(pressedKeys,heldKeys);
 		int x = this.getPosition().x;
 		int y = this.getPosition().y;
 		pX = x;
