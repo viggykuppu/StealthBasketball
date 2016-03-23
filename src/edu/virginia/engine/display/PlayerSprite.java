@@ -1,5 +1,6 @@
 package edu.virginia.engine.display;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -8,36 +9,110 @@ import java.util.ArrayList;
  */
 public class PlayerSprite extends GridSprite {
 
+    BallSprite myBall;
+    PlayerState state = PlayerState.NEUTRAL;
 
-    public PlayerSprite(String id) {
-        super(id);
+    boolean movedThisTurn = false;
+    boolean dunkKeyed = false;
+
+    private enum PlayerState {
+        NEUTRAL, DUNKING, NoBall, THROWING
     }
 
     public PlayerSprite(String id, String imageFileName) {
         super(id, imageFileName);
     }
 
-    @Override
-    public void update(ArrayList<String> pressedKeys) {
-        super.update(pressedKeys);
+    public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
+        super(id, imageFileName);
+        this.myBall = myBall;
     }
 
     @Override
-    public void gridTurnUpdate(ArrayList<String> activeKeyPresses){
-        System.out.println(activeKeyPresses);
+    public void update(ArrayList<Integer> pressedKeys) {
+        super.update(pressedKeys);
 
-        //Player movement code
-        if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_UP))) {
-            moveOnGrid(0,-1);
+        if (!movedThisTurn) {
+            if (state == PlayerState.NEUTRAL) {
+                if (pressedKeys.contains(KeyEvent.VK_Z)) {
+                    dunkKeyed = true;
+                }
+
+                if (!dunkKeyed) {//Normal Movement
+
+                    if (pressedKeys.contains(KeyEvent.VK_UP)) {
+                        if (moveOnGrid(0, -1, 500)) {
+                            myBall.pathToGridPoint(gridPosition, 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                        if (moveOnGrid(0, 1, 500)) {
+                            myBall.pathToGridPoint(gridPosition, 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                        if (moveOnGrid(-1, 0, 500)) {
+                            myBall.pathToGridPoint(gridPosition, 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                        if (moveOnGrid(1, 0, 500)) {
+                            myBall.pathToGridPoint(gridPosition, 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                }else {//Dunking action
+
+                    if (pressedKeys.contains(KeyEvent.VK_UP)) {
+                        if (moveOnGrid(0, -1, 500)) {
+                            myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y-1), 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                        if (moveOnGrid(0, 1, 500)) {
+                            myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y+1), 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                        if (moveOnGrid(-1, 0, 500)) {
+                            myBall.pathToGridPoint(new Point(gridPosition.x-1, gridPosition.y), 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                        if (moveOnGrid(1, 0, 500)) {
+                            myBall.pathToGridPoint(new Point(gridPosition.x+1, gridPosition.y), 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                }
+            }
+            else if (state == PlayerState.NoBall){
+
+                if (pressedKeys.contains(KeyEvent.VK_UP)) {
+                    moveOnGrid(0, -1, 500);
+                }
+                if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                    moveOnGrid(0, 1, 500);
+                }
+                if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                    moveOnGrid(-1, 0, 500);
+                }
+                if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                    moveOnGrid(1, 0, 500);
+                }
+            }
         }
-        if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_DOWN))) {
-            moveOnGrid(0,-1);
-        }
-        if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_LEFT))) {
-            moveOnGrid(0,-1);
-        }
-        if (activeKeyPresses.contains(KeyEvent.getKeyText(KeyEvent.VK_RIGHT))) {
-            moveOnGrid(0,-1);
-        }
+    }
+
+    @Override
+    public void gridTurnUpdate() {
+        movedThisTurn = false;
+        dunkKeyed = false;
     }
 }

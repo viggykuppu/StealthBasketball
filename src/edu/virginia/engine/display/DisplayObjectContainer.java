@@ -64,7 +64,7 @@ public class DisplayObjectContainer extends DisplayObject{
 	}
 	
 	@Override
-	protected void update(ArrayList<String> pressedKeys) {
+	protected void update(ArrayList<Integer> pressedKeys) {
 		super.update(pressedKeys);
 		for(DisplayObject child : children){
 			if(child !=null){
