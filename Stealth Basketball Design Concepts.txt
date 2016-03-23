@@ -22,6 +22,7 @@ Action Grid Based:
 
 Sound:
 	All actions make some amount of sound, represented as a circular guard alert creator. Dribbling is less than dunking, for instance.
+	Sound circular radius randomized to some extent
 
 Guard AI:
 	Guard alertness and general movement patterns currently unestablished. Guards move after the player.
