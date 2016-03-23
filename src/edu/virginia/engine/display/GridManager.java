@@ -50,7 +50,9 @@ public class GridManager {
             }
         }
         for(GridWallSprite wall : walls){
-            wall.draw(g);
+            if(wall != null) {
+                wall.draw(g);
+            }
         }
     }
 
