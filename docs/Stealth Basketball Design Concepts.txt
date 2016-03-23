@@ -10,7 +10,7 @@ Action Grid Based:
 	Grid singleton allows units to be spawned and moved on the grid, and can respond to queries about what is in a given space, and manage the timer/turn system.
 	Grid calls a GridUpdate() function on all components (which are presumably GridSprite types) 
 	Sprites can get the current status of the turn (50% through) and their previous and target positions for the turn, so they can then tween appropriately.
-	Units have a 
+	Player moves any time during the turn, once per turn. Guards and world react at the turn barrier, and the game may require the player to throw early in the turn to 		not get dodged, for instance.
 
 	+-+-+-+-+-+
 	|P| | | |W|
@@ -22,6 +22,7 @@ Action Grid Based:
 
 Sound:
 	All actions make some amount of sound, represented as a circular guard alert creator. Dribbling is less than dunking, for instance.
+	Sound circular radius randomized to some extent
 
 Guard AI:
 	Guard alertness and general movement patterns currently unestablished. Guards move after the player.
