@@ -51,6 +51,19 @@ public class GridManager {
 
     public void update(ArrayList<Integer> pressedKeys){
 
+        //Run the frame update on each sprite, move safe
+        ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
+        for (int x = 0; x < sprites.length; x++){
+            for (int y = 0; y < sprites[x].length; y++) {
+                if (sprites[x][y].getSprite() != null){
+                    spriteList.add(sprites[x][y].getSprite());
+                }
+            }
+        }
+        for (GridSprite s : spriteList){
+            s.update(pressedKeys);
+        }
+
         if (turnsActive) {
             if ((System.currentTimeMillis() - previousTurnTime) >= turnLength) {//Turn ended
                 turnUpdate();
