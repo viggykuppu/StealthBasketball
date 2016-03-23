@@ -17,7 +17,7 @@ public class Sprite extends DisplayObjectContainer {
 	}
 	
 	@Override
-	public void update(ArrayList<Integer> pressedKeys) {
-		super.update(pressedKeys);
+	public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
+		super.update(pressedKeys,heldKeys);
 	}
 }

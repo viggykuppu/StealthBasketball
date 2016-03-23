@@ -64,11 +64,11 @@ public class DisplayObjectContainer extends DisplayObject{
 	}
 	
 	@Override
-	protected void update(ArrayList<Integer> pressedKeys) {
-		super.update(pressedKeys);
+	protected void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
+		super.update(pressedKeys,heldKeys);
 		for(DisplayObject child : children){
 			if(child !=null){
-				child.update(pressedKeys);
+				child.update(pressedKeys,heldKeys);
 			}
 		}
 	}

@@ -49,7 +49,7 @@ public class GridManager {
         }
     }
 
-    public void update(ArrayList<Integer> pressedKeys){
+    public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys){
 
         //Run the frame update on each sprite, move safe
         ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
@@ -61,7 +61,7 @@ public class GridManager {
             }
         }
         for (GridSprite s : spriteList){
-            s.update(pressedKeys);
+            s.update(pressedKeys,heldKeys);
         }
 
         if (turnsActive) {
