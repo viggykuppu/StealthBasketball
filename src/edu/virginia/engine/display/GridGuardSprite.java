@@ -53,7 +53,6 @@ public class GridGuardSprite extends GridSprite{
     }
 
     public void aStar(Point playerPosition){
-        System.out.println(playerPosition);
         //Begin A*, get the graph we're working on
         GridCell[][] graph = GridManager.getInstance().sprites;
         GridCell curr = graph[this.getGridPosition().x][this.getGridPosition().y];
