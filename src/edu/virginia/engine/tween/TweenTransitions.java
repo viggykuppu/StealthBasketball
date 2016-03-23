@@ -3,11 +3,11 @@ package edu.virginia.engine.tween;
 public class TweenTransitions {
 	
 	
-	public double applyTransition(double percentDone, int index){
-		switch (index){
-			case 0:
+	public double applyTransition(double percentDone, TweenTransitionIndex transition){
+		switch (transition){
+			case LINEAR:
 				return linear(percentDone);
-			case 1:
+			case QUAD:
 				return quad(percentDone);
 		}
 		return -1;

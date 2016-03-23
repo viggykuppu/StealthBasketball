@@ -1,5 +1,7 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.util.Direction;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -33,7 +35,6 @@ public class GridManager {
     long previousTurnTime;
     boolean turnsActive = false;
 
-    ArrayList<Integer> activeKeyPresses = new ArrayList<>();
 
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
@@ -50,23 +51,20 @@ public class GridManager {
 
     public void update(ArrayList<Integer> pressedKeys){
 
-        if (turnsActive) {
-            if (!(activeKeyPresses.contains(KeyEvent.VK_LEFT) || activeKeyPresses.contains((KeyEvent.VK_UP))
-                    || activeKeyPresses.contains( (KeyEvent.VK_RIGHT)) || activeKeyPresses.contains( (KeyEvent.VK_DOWN)))) {//No previous direction input this turn
-                if (pressedKeys.contains( (KeyEvent.VK_UP))) {
-                    activeKeyPresses.add( (KeyEvent.VK_UP));
-                }
-                else if (pressedKeys.contains( (KeyEvent.VK_DOWN))) {
-                    activeKeyPresses.add( (KeyEvent.VK_DOWN));
-                }
-                else if (pressedKeys.contains( (KeyEvent.VK_LEFT))) {
-                    activeKeyPresses.add( (KeyEvent.VK_LEFT));
-                }
-                else if (pressedKeys.contains( (KeyEvent.VK_RIGHT))) {
-                    activeKeyPresses.add( (KeyEvent.VK_RIGHT));
+        //Run the frame update on each sprite, move safe
+        ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
+        for (int x = 0; x < sprites.length; x++){
+            for (int y = 0; y < sprites[x].length; y++) {
+                if (sprites[x][y].getSprite() != null){
+                    spriteList.add(sprites[x][y].getSprite());
                 }
             }
+        }
+        for (GridSprite s : spriteList){
+            s.update(pressedKeys);
+        }
 
+        if (turnsActive) {
             if ((System.currentTimeMillis() - previousTurnTime) >= turnLength) {//Turn ended
                 turnUpdate();
                 previousTurnTime = System.currentTimeMillis();
@@ -82,35 +80,52 @@ public class GridManager {
         for (int x = 0; x < sprites.length; x++){
             for (int y = 0; y < sprites[x].length; y++) {
                 if (sprites[x][y].getSprite() != null){
-//                    if(sprites[x][y].getSprite().getId().equals("Coin"))
-//                        System.out.println(x+" "+y);
                     spriteList.add(sprites[x][y].getSprite());
                 }
             }
         }
         for (GridSprite s : spriteList){
-//            System.out.println(s.getId());
-            s.gridTurnUpdate(activeKeyPresses);
+            s.gridTurnUpdate();
         }
-
-
-        activeKeyPresses.clear();
     }
 
-
-    public void moveSprite(Point start, Point end) {
+    //Returns true if successful move, false otherwise
+    public boolean swapSprites(Point start, Point end) {
 
         if (start.x >= 0 && start.x < gridX && start.y >= 0 && start.y < gridY && end.x >= 0 && end.x < gridX && end.y >= 0 && end.y < gridY) {
             GridSprite temp = sprites[end.x][end.y].getSprite();
             sprites[end.x][end.y].setSprite(sprites[start.x][start.y].getSprite());
             sprites[start.x][start.y].setSprite(temp);
             if (sprites[end.x][end.y].getSprite() != null) {
-                spriteToGridPosition(sprites[end.x][end.y].getSprite(), end.x, end.y);
+                sprites[end.x][end.y].getSprite().setPosition(gridtoGamePoint(end));
+                sprites[end.x][end.y].getSprite().setGridPosition(end);
             }
             if (sprites[start.x][start.y].getSprite() != null){
-                spriteToGridPosition(sprites[start.x][start.y].getSprite(),start.x,start.y);
+                sprites[start.x][start.y].getSprite().setPosition(gridtoGamePoint(start));
+                sprites[start.x][start.y].getSprite().setGridPosition(start);
             }
+            return true;
         }
+        return false;
+    }
+
+    public boolean swapSprites(Point start, Point end, long timems) {
+
+        if (start.x >= 0 && start.x < gridX && start.y >= 0 && start.y < gridY && end.x >= 0 && end.x < gridX && end.y >= 0 && end.y < gridY) {
+            GridSprite temp = sprites[end.x][end.y].getSprite();
+            sprites[end.x][end.y].setSprite(sprites[start.x][start.y].getSprite());
+            sprites[start.x][start.y].setSprite(temp);
+            if (sprites[end.x][end.y].getSprite() != null) {
+                sprites[end.x][end.y].getSprite().moveToPosition(gridtoGamePoint(end),timems);
+                sprites[end.x][end.y].getSprite().setGridPosition(end);
+            }
+            if (sprites[start.x][start.y].getSprite() != null){
+                sprites[start.x][start.y].getSprite().moveToPosition(gridtoGamePoint(start),timems);
+                sprites[start.x][start.y].getSprite().setGridPosition(start);
+            }
+            return true;
+        }
+        return false;
     }
 
     public void startTurns(){
@@ -183,16 +198,27 @@ public class GridManager {
         return new Point(gridToGameX(p.x),gridToGameY(p.y));
     }
 
+    public Point directionToGridVector(Direction d){
+        switch (d) {
+            case UP:
+                return new Point(0,-1);
+            case DOWN:
+                return new Point(0,1);
+            case LEFT:
+                return new Point(-1,0);
+            case RIGHT:
+                return new Point(1,0);
+        }
+        return null;
+    }
+
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
     public void addToGrid(GridSprite s, int x, int y){
         if (x < gridX && y < gridY){
             sprites[x][y].setSprite(s);
         }
-        spriteToGridPosition(s,x,y);
-    }
 
-    void spriteToGridPosition(GridSprite s, int x, int y){
-        s.setPosition(new Point(gridToGameX(x),gridToGameY(y)));
+        s.setPosition(gridtoGamePoint(new Point(x,y)));
         s.setGridPosition(new Point(x,y));
     }
 

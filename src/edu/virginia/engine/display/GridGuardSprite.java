@@ -33,7 +33,7 @@ public class GridGuardSprite extends GridSprite{
     }
 
     @Override
-    public void gridTurnUpdate(ArrayList<Integer> activeKeyPresses){
+    public void gridTurnUpdate(){
         if(this.canDetectPlayer()){
             this.guardState = GridGuardState.playerVisible;
             aStar(player.getGridPosition());
@@ -42,7 +42,6 @@ public class GridGuardSprite extends GridSprite{
                 this.guardState = GridGuardState.lostPlayer;
                 aStar(lastKnownPlayerLocation);
             }
-
         }
     }
 

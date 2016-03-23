@@ -1,5 +1,9 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.tween.Tween;
+import edu.virginia.engine.tween.TweenJuggler;
+import edu.virginia.engine.tween.TweenableParams;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -24,21 +28,47 @@ public class GridSprite extends Sprite {
         super.update(pressedKeys);
     }
 
-    public void gridTurnUpdate(ArrayList<Integer> activeKeyPresses){
-
+    public void gridTurnUpdate(){
     }
 
-    void moveOnGrid(int dx, int dy){
+    //Returns true if successful move, false if not
+    boolean moveOnGrid(int dx, int dy){
 
         Point destination = new Point();
         destination.x = gridPosition.x;
         destination.y = gridPosition.y;
         destination.translate(dx,dy);
         if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
-            GridManager.getInstance().moveSprite(gridPosition,destination);
-            gridPosition.x = destination.x;
-            gridPosition.y = destination.y;
+            if (GridManager.getInstance().swapSprites(gridPosition,destination)) {
+                gridPosition.x = destination.x;
+                gridPosition.y = destination.y;
+                return true;
+            }
         }
+        return false;
+    }
+
+    boolean moveOnGrid(int dx, int dy, long timems){
+
+        Point destination = new Point();
+        destination.x = gridPosition.x;
+        destination.y = gridPosition.y;
+        destination.translate(dx,dy);
+        if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
+            if (GridManager.getInstance().swapSprites(gridPosition,destination,timems)) {
+                gridPosition.x = destination.x;
+                gridPosition.y = destination.y;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void moveToPosition(Point dest, long timems){
+        Tween t = new Tween(this);
+        t.animate(TweenableParams.X,getPosition().x,dest.x,timems);
+        t.animate(TweenableParams.Y,getPosition().y,dest.y,timems);
+        TweenJuggler.getInstance().addTweenNonRedundant(t,this);
     }
 
     public Point getGridPosition() {
