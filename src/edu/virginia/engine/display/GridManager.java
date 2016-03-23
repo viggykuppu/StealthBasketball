@@ -35,6 +35,8 @@ public class GridManager {
     long previousTurnTime;
     boolean turnsActive = false;
 
+    ArrayList<GridWallSprite> walls = new ArrayList<GridWallSprite>();
+
 
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;

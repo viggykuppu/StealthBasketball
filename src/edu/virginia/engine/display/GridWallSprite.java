@@ -5,13 +5,16 @@ package edu.virginia.engine.display;
  */
 public class GridWallSprite extends GridSprite{
 
+    private boolean horizontal;
 
-    public GridWallSprite(String id) {
-        super(id);
+    public GridWallSprite(String id, boolean horizontal) {
+        super(id,"wall.png");
+        this.horizontal = horizontal;
     }
 
-    public GridWallSprite(String id, String imageFileName) {
-        super(id, imageFileName);
+    public void toggleDirection(){
+        this.horizontal = !this.horizontal;
     }
+
 
 }
