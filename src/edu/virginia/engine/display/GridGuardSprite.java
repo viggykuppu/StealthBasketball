@@ -46,6 +46,7 @@ public class GridGuardSprite extends GridSprite{
     }
 
     public void aStar(Point playerPosition){
+        //Begin A*, get the graph we're working on
         GridCell[][] graph = GridManager.getInstance().sprites;
         GridCell curr = graph[this.getGridPosition().x][this.getGridPosition().y];
         PriorityQueue<GridCell> q = new PriorityQueue<GridCell>(new Comparator<GridCell>() {
@@ -70,13 +71,7 @@ public class GridGuardSprite extends GridSprite{
                 System.err.println("A* failed");
             }
             closedSet.add(curr.location);
-            Set<GridCell> neighbors = new HashSet<GridCell>();
-            for(int i = 0; i < curr.neighbors.length; i++){
-                if(curr.neighbors[i] != null){
-                    neighbors.add(curr.neighbors[i]);
-                }
-            }
-            for(GridCell node : neighbors){
+            for(GridCell node : curr.neighbors.values()){
                 if(!closedSet.contains(node.location)){
                     if(!seen.contains(node.location)){
                         seen.add(node.location);

@@ -165,13 +165,13 @@ public class GridManager {
                 left = j > 0;
                 right = j < gridY-1;
                 if(up)
-                    sprites[i][j].neighbors[] = sprites[i-1][j];
+                    sprites[i][j].neighbors.put(Direction.UP,sprites[i-1][j]);
                 if(down)
-                    sprites[i][j].neighbors[] = sprites[i+1][j];
+                    sprites[i][j].neighbors.put(Direction.DOWN,sprites[i+1][j]);
                 if(left)
-                    sprites[i][j].neighbors[] = sprites[i][j-1];
+                    sprites[i][j].neighbors.put(Direction.LEFT,sprites[i][j-1]);
                 if(right)
-                    sprites[i][j].neighbors[] = sprites[i][j+1];
+                    sprites[i][j].neighbors.put(Direction.RIGHT,sprites[i][j+1]);
             }
         }
 

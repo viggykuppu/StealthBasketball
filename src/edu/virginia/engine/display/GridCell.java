@@ -1,7 +1,10 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.util.Direction;
+
 import java.awt.*;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by vignesh on 3/20/16.
@@ -12,7 +15,7 @@ public class GridCell {
     int f;
     int g;
     int h;
-    GridCell[] neighbors= new GridCell[4];
+    Map<Direction,GridCell> neighbors =  new HashMap<Direction,GridCell>();
     private GridSprite sprite = null;
 
 
