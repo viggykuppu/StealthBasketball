@@ -35,6 +35,8 @@ public class GridManager {
     long previousTurnTime;
     boolean turnsActive = false;
 
+    ArrayList<GridWallSprite> walls = new ArrayList<GridWallSprite>();
+
 
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
@@ -46,6 +48,9 @@ public class GridManager {
                     g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
                 }
             }
+        }
+        for(GridWallSprite wall : walls){
+            wall.draw(g);
         }
     }
 
@@ -217,14 +222,6 @@ public class GridManager {
         return true;
     }
 
-    public void addWall(Point initial, Direction direction){
-        GridCell original = sprites[initial.x][initial.y];
-        GridCell pointer = original.neighbors.get(direction);
-        if(pointer !=null){
-            original.neighbors.remove(direction);
-            pointer.neighbors.remove(direction.opposite());
-        }
-    }
 
     public Direction gridVectorToDirection(Point p){
         if (p.equals(new Point(0,-1)))
@@ -252,6 +249,22 @@ public class GridManager {
     public void addWall(Point first, Point second){
         GridCell original = sprites[first.x][first.y];
         GridCell pointer = sprites[second.x][second.y];
+    }
+
+    public void addWall(Point initial, Direction direction){
+        GridCell original = sprites[initial.x][initial.y];
+        GridCell pointer = original.neighbors.get(direction);
+        if(pointer !=null){
+            original.neighbors.remove(direction);
+            pointer.neighbors.remove(direction.opposite());
+            //Now add wall to array at right position
+            boolean horizontal  = direction == Direction.DOWN || direction == Direction.UP ? true : false;
+            int x = (gridToGameX(original.location.x) + gridToGameX(pointer.location.x)) /2;
+            int y = (gridToGameY(original.location.y) + gridToGameY(pointer.location.y)) / 2;
+            Point wallPosition = new Point(x,y);
+            GridWallSprite wall = new GridWallSprite("wall",horizontal, wallPosition);
+            walls.add(wall);
+        }
     }
 
     void resetAStarGrid(){

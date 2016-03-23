@@ -27,9 +27,10 @@ public class StealthBasketball extends Game {
         GridManager.getInstance().setGridSize(10, 5, 1000, 500);
         GridManager.getInstance().addToGrid(player, 9, 4);
         GridManager.getInstance().addToGrid(guard, 0, 0);
-        for(int i = 0; i < 8; i++) {
+        for(int i = 0; i < 9; i++) {
             GridManager.getInstance().addWall(new Point(i, 0), Direction.DOWN);
         }
+        GridManager.getInstance().addWall(new Point(9,1),Direction.LEFT);
         GridManager.getInstance().startTurns();
 
         ball.setPosition(new Point (player.getPosition().x+ball.getPlayerOffset().x,player.getPosition().y+ball.getPlayerOffset().y));
