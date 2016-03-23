@@ -71,7 +71,13 @@ public class GridGuardSprite extends GridSprite{
                 System.err.println("A* failed");
             }
             closedSet.add(curr.location);
-            for(GridCell node : curr.neighbors){
+            Set<GridCell> neighbors = new HashSet<GridCell>();
+            for(int i = 0; i < curr.neighbors.length; i++){
+                if(curr.neighbors[i] != null){
+                    neighbors.add(curr.neighbors[i]);
+                }
+            }
+            for(GridCell node : neighbors){
                 if(!closedSet.contains(node.location)){
                     if(!seen.contains(node.location)){
                         seen.add(node.location);

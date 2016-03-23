@@ -12,7 +12,7 @@ public class GridCell {
     int f;
     int g;
     int h;
-    HashSet<GridCell> neighbors= new HashSet<GridCell>();
+    GridCell[] neighbors= new GridCell[4];
     private GridSprite sprite = null;
 
 
