@@ -38,16 +38,21 @@ public class GridGuardSprite extends GridSprite{
             this.guardState = GridGuardState.playerVisible;
             lastKnownPlayerLocation = player.getGridPosition();
             aStar(player.getGridPosition());
-        } else {
-            if(this.guardState == GridGuardState.playerVisible){
-                this.guardState = GridGuardState.lostPlayer;
-                aStar(lastKnownPlayerLocation);
-            }
-            if(this.guardState.equals(GridGuardState.lostPlayer)){
-                aStar(lastKnownPlayerLocation);
-                if(this.getGridPosition().equals(lastKnownPlayerLocation)){
-                    this.guardState = GridGuardState.idle;
-                }
+        }
+        else {
+            //playerMissingBehavior();
+        }
+    }
+
+    public void playerMissingBehavior(){
+        if(this.guardState == GridGuardState.playerVisible){
+            this.guardState = GridGuardState.lostPlayer;
+            aStar(lastKnownPlayerLocation);
+        }
+        if(this.guardState.equals(GridGuardState.lostPlayer)){
+            aStar(lastKnownPlayerLocation);
+            if(this.getGridPosition().equals(lastKnownPlayerLocation)){
+                this.guardState = GridGuardState.idle;
             }
         }
     }
