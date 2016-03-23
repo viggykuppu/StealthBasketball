@@ -13,7 +13,7 @@ public class StealthBasketball extends Game {
 
     BallSprite ball = new BallSprite("Ball", "coin.gif");
     PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
-    GridGuardSprite guard = new GridGuardSprite("Guard", "coin.gif",player);
+    GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png",player);
     Sprite nullChecker = new Sprite("nullChecker", "coin.gif");//Why do we even need this shit
 
     public StealthBasketball() {
@@ -21,7 +21,7 @@ public class StealthBasketball extends Game {
 
         player.setPivotPoint(new Point(player.getUnscaledWidth() / 2, player.getUnscaledHeight() / 2));
         ball.setPivotPoint(new Point(28, 28));
-        guard.setPivotPoint(new Point(28, 28));
+        guard.setPivotPoint(new Point(34, 46));
 
         GridManager.getInstance().setGridSize(10, 5, 1000, 500);
         GridManager.getInstance().addToGrid(player, 9, 4);
