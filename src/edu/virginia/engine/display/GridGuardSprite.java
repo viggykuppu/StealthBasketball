@@ -112,13 +112,13 @@ public class GridGuardSprite extends GridSprite{
         resetAStarGrid();
         Point nextPosition = path.get(1);
         if(nextPosition.x > this.getGridPosition().x){
-            moveOnGrid(1,0);
+            moveOnGrid(1,0,500);
         } else if(nextPosition.x < this.getGridPosition().x){
-            moveOnGrid(-1,0);
+            moveOnGrid(-1,0,500);
         } else if(nextPosition.y > this.getGridPosition().y){
-            moveOnGrid(0,1);
+            moveOnGrid(0,1,500);
         } else if(nextPosition.y < this.getGridPosition().y){
-            moveOnGrid(0,-1);
+            moveOnGrid(0,-1,500);
         }
     }
 
