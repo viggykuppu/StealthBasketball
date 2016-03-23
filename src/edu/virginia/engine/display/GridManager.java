@@ -222,6 +222,19 @@ public class GridManager {
         s.setGridPosition(new Point(x,y));
     }
 
+    //TODO: Finish writing this function
+    public void addWall(Point first, Point second){
+        GridCell original = sprites[first.x][first.y];
+        GridCell pointer = sprites[second.x][second.y];
+    }
+
+    public void addWall(Point point, Direction direction){
+        GridCell original = sprites[point.x][point.y];
+        GridCell pointer = original.neighbors.get(direction);
+        original.neighbors.remove(direction);
+        original.neighbors.remove(direction.getOppositeDirection());
+    }
+
     void resetAStarGrid(){
         for(int i = 0; i < gridX; i++){
             for(int j = 0; j < gridY; j++){
