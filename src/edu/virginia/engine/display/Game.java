@@ -160,10 +160,16 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
 	}
 
 	ArrayList<Integer> pressedKeys = new ArrayList<>();
+	ArrayList<Integer> heldKeys = new ArrayList<>();
+
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(!pressedKeys.contains(e.getKeyCode()))
+		if(!heldKeys.contains(e.getKeyCode())) {
+			heldKeys.add(e.getKeyCode());
 			pressedKeys.add(e.getKeyCode());
+		}
+		else
+			pressedKeys.remove(e.getKeyCode());
 	}
 
 
@@ -171,6 +177,8 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
 	public void keyReleased(KeyEvent e) {
 		if(pressedKeys.contains(e.getKeyCode()))
 			pressedKeys.remove((Integer)e.getKeyCode());
+		if (heldKeys.contains(e.getKeyCode()))
+			heldKeys.remove((Integer)e.getKeyCode());
 		
 	}
 
