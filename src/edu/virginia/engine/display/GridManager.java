@@ -212,6 +212,18 @@ public class GridManager {
         return null;
     }
 
+    public Direction gridVectorToDirection(Point p){
+        if (p.equals(new Point(0,-1)))
+            return Direction.UP;
+        else if (p.equals(new Point(0,1)))
+            return Direction.DOWN;
+        else if (p.equals(new Point(-1,0)))
+            return Direction.LEFT;
+        else if (p.equals(new Point(1,0)))
+            return Direction.RIGHT;
+        return null;
+    }
+
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
     public void addToGrid(GridSprite s, int x, int y){
         if (x < gridX && y < gridY){
