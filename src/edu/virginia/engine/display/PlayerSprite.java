@@ -34,7 +34,6 @@ public class PlayerSprite extends GridSprite {
     @Override
     public void update(ArrayList<Integer> pressedKeys) {
         super.update(pressedKeys);
-
         if (!movedThisTurn) {
             if (state == PlayerState.NEUTRAL) {
                 if (pressedKeys.contains(KeyEvent.VK_Z)) {

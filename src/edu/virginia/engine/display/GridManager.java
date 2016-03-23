@@ -159,23 +159,21 @@ public class GridManager {
 
         boolean up,left,down,right;
         for(int i = 0; i < gridX; i++){
-            up = i > 0;
-            down = i < gridX-1;
-            for(int j = 0; j < gridY; j++){
-                left = j > 0;
-                right = j < gridY-1;
-                if(up)
-                    sprites[i][j].neighbors.put(Direction.UP,sprites[i-1][j]);
-                if(down)
-                    sprites[i][j].neighbors.put(Direction.DOWN,sprites[i+1][j]);
-                if(left)
-                    sprites[i][j].neighbors.put(Direction.LEFT,sprites[i][j-1]);
-                if(right)
-                    sprites[i][j].neighbors.put(Direction.RIGHT,sprites[i][j+1]);
+            left = i> 0;
+            right = i < gridX-1;
+            for(int j = 0; j < gridY; j++) {
+                up = j > 0;
+                down = j < gridY - 1;
+                if (up)
+                    sprites[i][j].neighbors.put(Direction.UP, sprites[i][j-1]);
+                if (down)
+                    sprites[i][j].neighbors.put(Direction.DOWN, sprites[i][j+1]);
+                if (left)
+                    sprites[i][j].neighbors.put(Direction.LEFT, sprites[i-1][j]);
+                if (right)
+                    sprites[i][j].neighbors.put(Direction.RIGHT, sprites[i+1][j]);
             }
         }
-
-
     }
 
     //Input a screen size (same as gameX and gameY in setGridSize)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.
@@ -210,6 +208,22 @@ public class GridManager {
                 return new Point(1,0);
         }
         return null;
+    }
+
+    public boolean existsValidPath(Point first, Direction direction){
+        if(sprites[first.x][first.y].neighbors.get(direction) == null){
+            return false;
+        }
+        return true;
+    }
+
+    public void addWall(Point initial, Direction direction){
+        GridCell original = sprites[initial.x][initial.y];
+        GridCell pointer = original.neighbors.get(direction);
+        if(pointer !=null){
+            original.neighbors.remove(direction);
+            pointer.neighbors.remove(direction.opposite());
+        }
     }
 
     public Direction gridVectorToDirection(Point p){
