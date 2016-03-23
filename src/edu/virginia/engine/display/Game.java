@@ -125,7 +125,7 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
 
         try {
 			/* Update all objects on the stage */
-            this.update(pressedKeys);
+            this.update(pressedKeys,heldKeys);
             for (int key : heldKeys){
                 if (pressedKeys.contains(key))
                     pressedKeys.remove((Integer) key);
