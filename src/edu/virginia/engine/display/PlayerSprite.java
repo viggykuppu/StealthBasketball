@@ -12,8 +12,11 @@ public class PlayerSprite extends GridSprite {
     BallSprite myBall;
     PlayerState state = PlayerState.NEUTRAL;
 
+    boolean movedThisTurn = false;
+    boolean dunkKeyed = false;
+
     private enum PlayerState {
-        NEUTRAL, DunkingLeft, DunkingRight, DunkingUp, DunkingDown, NoBall, THROWING
+        NEUTRAL, DUNKING, NoBall, THROWING
     }
 
     public PlayerSprite(String id, String imageFileName) {
@@ -28,75 +31,88 @@ public class PlayerSprite extends GridSprite {
     @Override
     public void update(ArrayList<Integer> pressedKeys) {
         super.update(pressedKeys);
-    }
 
-    @Override
-    public void gridTurnUpdate(ArrayList<Integer> activeKeyPresses) {
-
-        if (state == PlayerState.DunkingUp) {
-            if (GridManager.getInstance().getSpriteAtGridPoint(new Point(gridPosition.x,gridPosition.y-1)).getId() == "Guard"){
-                //Event code here
-            }
-            state = PlayerState.NoBall;
-
-        }else if (state == PlayerState.DunkingDown){
-            if (GridManager.getInstance().getSpriteAtGridPoint(new Point(gridPosition.x,gridPosition.y+1)).getId() == "Guard"){
-                //Event code here
-            }
-            state = PlayerState.NoBall;
-
-        }else if (state == PlayerState.DunkingLeft){
-            if (GridManager.getInstance().getSpriteAtGridPoint(new Point(gridPosition.x-1,gridPosition.y)).getId() == "Guard"){
-                //Event code here
-            }
-            state = PlayerState.NoBall;
-
-        }else if (state == PlayerState.DunkingRight){
-            if (GridManager.getInstance().getSpriteAtGridPoint(new Point(gridPosition.x+1,gridPosition.y)).getId() == "Guard"){
-                //Event code here
-            }
-            state = PlayerState.NoBall;
-
-        } else {
-            
-            if (activeKeyPresses.contains(KeyEvent.VK_Z)) {
-
-                if (activeKeyPresses.contains(KeyEvent.VK_UP)) {
-                    state = PlayerState.DunkingUp;
-                    moveOnGrid(0, -1);
-                }
-                if (activeKeyPresses.contains(KeyEvent.VK_DOWN)) {
-                    state = PlayerState.DunkingDown;
-                    moveOnGrid(0, 1);
-                }
-                if (activeKeyPresses.contains(KeyEvent.VK_LEFT)) {
-                    state = PlayerState.DunkingLeft;
-                    moveOnGrid(-1, 0);
-                }
-                if (activeKeyPresses.contains(KeyEvent.VK_RIGHT)) {
-                    state = PlayerState.DunkingRight;
-                    moveOnGrid(1, 0);
+        if (!movedThisTurn) {
+            if (state == PlayerState.NEUTRAL) {
+                if (pressedKeys.contains(KeyEvent.VK_Z)) {
+                    dunkKeyed = true;
                 }
 
-            } else {//Player movement code
-                if (activeKeyPresses.contains(KeyEvent.VK_UP)) {
-                    if (moveOnGrid(0, -1,500)){
-                        myBall.pathToGridPoint(gridPosition,500);
+                if (!dunkKeyed) {//Normal Movement
+
+                    if (pressedKeys.contains(KeyEvent.VK_UP)) {
+                        if (moveOnGrid(0, -1, 500)) {
+                            myBall.pathToGridPoint(gridPosition, 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                        if (moveOnGrid(0, 1, 500)) {
+                            myBall.pathToGridPoint(gridPosition, 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                        if (moveOnGrid(-1, 0, 500)) {
+                            myBall.pathToGridPoint(gridPosition, 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                        if (moveOnGrid(1, 0, 500)) {
+                            myBall.pathToGridPoint(gridPosition, 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                }else {//Dunking action
+
+                    if (pressedKeys.contains(KeyEvent.VK_UP)) {
+                        if (moveOnGrid(0, -1, 500)) {
+                            myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y-1), 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                        if (moveOnGrid(0, 1, 500)) {
+                            myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y+1), 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                        if (moveOnGrid(-1, 0, 500)) {
+                            myBall.pathToGridPoint(new Point(gridPosition.x-1, gridPosition.y), 500);
+                            movedThisTurn = true;
+                        }
+                    }
+                    if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                        if (moveOnGrid(1, 0, 500)) {
+                            myBall.pathToGridPoint(new Point(gridPosition.x+1, gridPosition.y), 500);
+                            movedThisTurn = true;
+                        }
                     }
                 }
-                if (activeKeyPresses.contains(KeyEvent.VK_DOWN)) {
-                    moveOnGrid(0, 1,500);
-                    myBall.pathToGridPoint(gridPosition,500);
+            }
+            else if (state == PlayerState.NoBall){
+
+                if (pressedKeys.contains(KeyEvent.VK_UP)) {
+                    moveOnGrid(0, -1, 500);
                 }
-                if (activeKeyPresses.contains(KeyEvent.VK_LEFT)) {
-                    moveOnGrid(-1, 0,500);
-                    myBall.pathToGridPoint(gridPosition,500);
+                if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                    moveOnGrid(0, 1, 500);
                 }
-                if (activeKeyPresses.contains(KeyEvent.VK_RIGHT)) {
-                    moveOnGrid(1, 0,500);
-                    myBall.pathToGridPoint(gridPosition,500);
+                if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                    moveOnGrid(-1, 0, 500);
+                }
+                if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                    moveOnGrid(1, 0, 500);
                 }
             }
         }
+    }
+
+    @Override
+    public void gridTurnUpdate() {
+        movedThisTurn = false;
+        dunkKeyed = false;
     }
 }

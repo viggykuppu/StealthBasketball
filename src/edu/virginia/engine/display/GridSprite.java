@@ -28,8 +28,7 @@ public class GridSprite extends Sprite {
         super.update(pressedKeys);
     }
 
-    public void gridTurnUpdate(ArrayList<Integer> activeKeyPresses){
-
+    public void gridTurnUpdate(){
     }
 
     //Returns true if successful move, false if not
