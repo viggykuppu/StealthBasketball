@@ -8,14 +8,14 @@ import java.util.*;
  */
 public class GridGuardSprite extends GridSprite{
     PlayerSprite player;
-    double sightRadius = 16;
+    //This should be the distance^2
+    double sightRadius = 9;
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
 
     private enum GridGuardState{
         playerVisible,lostPlayer,idle;
     }
-
 
     public GridGuardSprite(String id,PlayerSprite player) {
         super(id);
@@ -36,16 +36,24 @@ public class GridGuardSprite extends GridSprite{
     public void gridTurnUpdate(){
         if(this.canDetectPlayer()){
             this.guardState = GridGuardState.playerVisible;
+            lastKnownPlayerLocation = player.getGridPosition();
             aStar(player.getGridPosition());
         } else {
             if(this.guardState == GridGuardState.playerVisible){
                 this.guardState = GridGuardState.lostPlayer;
                 aStar(lastKnownPlayerLocation);
             }
+            if(this.guardState.equals(GridGuardState.lostPlayer)){
+                aStar(lastKnownPlayerLocation);
+                if(this.getGridPosition().equals(lastKnownPlayerLocation)){
+                    this.guardState = GridGuardState.idle;
+                }
+            }
         }
     }
 
     public void aStar(Point playerPosition){
+        System.out.println(playerPosition);
         //Begin A*, get the graph we're working on
         GridCell[][] graph = GridManager.getInstance().sprites;
         GridCell curr = graph[this.getGridPosition().x][this.getGridPosition().y];
@@ -76,7 +84,6 @@ public class GridGuardSprite extends GridSprite{
                     if(!seen.contains(node.location)){
                         seen.add(node.location);
                         node.g = curr.g+1;
-                        node.h = Math.abs(playerPosition.x-node.location.x) + Math.abs(playerPosition.y-node.location.y);
                         node.f = node.h+node.g;
                         q.add(node);
 //                        System.out.println(node.g + " "+node.location);
