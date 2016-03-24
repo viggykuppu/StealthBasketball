@@ -14,8 +14,7 @@ public class PhysicsSprite extends AnimatedSprite{
 	private long t;
 	private long dT;
 	private long g;
-	
-	
+
 	public PhysicsSprite(String id, String imageFileName) {
 		super(id, imageFileName);
 		vX = 0;
@@ -83,7 +82,6 @@ public class PhysicsSprite extends AnimatedSprite{
 		aY = decrease(aY);
 		vX = decrease(vX);
 		vY = decrease(vY);
-		
 	}
 	
 	public int getpX() {
@@ -109,6 +107,4 @@ public class PhysicsSprite extends AnimatedSprite{
 	public void place(DisplayObject o){
 		this.setPosition(new Point(this.getPosition().x,o.getPosition().y-this.getPivotPoint().y));
 	}
-	
-
 }
