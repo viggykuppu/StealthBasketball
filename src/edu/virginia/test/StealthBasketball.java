@@ -2,6 +2,7 @@ package edu.virginia.test;
 
 import edu.virginia.engine.display.*;
 import edu.virginia.engine.tween.TweenJuggler;
+import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +15,9 @@ public class StealthBasketball extends Game {
     BallSprite ball = new BallSprite("Ball", "coin.gif");
     PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
     GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png",player);
-    Sprite nullChecker = new Sprite("nullChecker", "coin.gif");//Why do we even need this shit
+
+    //Instantiate all sprites prior to the nullChecker
+    Sprite nullChecker = new Sprite("nullChecker", "coin.gif");
 
     public StealthBasketball() {
         super("Stealth Basketball!", 1007, 530);
@@ -26,6 +29,10 @@ public class StealthBasketball extends Game {
         GridManager.getInstance().setGridSize(10, 5, 1000, 500);
         GridManager.getInstance().addToGrid(player, 9, 4);
         GridManager.getInstance().addToGrid(guard, 0, 0);
+        for(int i = 0; i < 9; i++) {
+            GridManager.getInstance().addWall(new Point(i, 0), Direction.DOWN);
+        }
+        GridManager.getInstance().addWall(new Point(9,1),Direction.LEFT);
         GridManager.getInstance().startTurns();
 
         ball.setPosition(new Point (player.getPosition().x+ball.getPlayerOffset().x,player.getPosition().y+ball.getPlayerOffset().y));
@@ -36,9 +43,9 @@ public class StealthBasketball extends Game {
      * the set of keys (as strings) that are currently being pressed down
      */
     @Override
-    public void update(ArrayList<Integer> pressedKeys) {
+    public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
         if (nullChecker != null) {
-            GridManager.getInstance().update(pressedKeys);
+            GridManager.getInstance().update(pressedKeys,heldKeys);
             TweenJuggler.getInstance().nextFrame();
         }
     }
@@ -52,7 +59,6 @@ public class StealthBasketball extends Game {
         super.draw(g);
         if (nullChecker != null) {
             GridManager.getInstance().draw(g);
-            ball.draw(g);
         }
     }
 

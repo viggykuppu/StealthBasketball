@@ -1,5 +1,7 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.util.Direction;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ public class PlayerSprite extends GridSprite {
 
     boolean movedThisTurn = false;
     boolean dunkKeyed = false;
+    Direction dunkDir;
 
     private enum PlayerState {
         NEUTRAL, DUNKING, NoBall, THROWING
@@ -29,14 +32,15 @@ public class PlayerSprite extends GridSprite {
     }
 
     @Override
-    public void update(ArrayList<Integer> pressedKeys) {
-        super.update(pressedKeys);
-
+    public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
+        super.update(pressedKeys,heldKeys);
         if (!movedThisTurn) {
             if (state == PlayerState.NEUTRAL) {
-                if (pressedKeys.contains(KeyEvent.VK_Z)) {
+                if (heldKeys.contains(KeyEvent.VK_Z)) {
                     dunkKeyed = true;
                 }
+                else
+                    dunkKeyed = false;
 
                 if (!dunkKeyed) {//Normal Movement
 
@@ -46,19 +50,19 @@ public class PlayerSprite extends GridSprite {
                             movedThisTurn = true;
                         }
                     }
-                    if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                    else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
                         if (moveOnGrid(0, 1, 500)) {
                             myBall.pathToGridPoint(gridPosition, 500);
                             movedThisTurn = true;
                         }
                     }
-                    if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                    else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
                         if (moveOnGrid(-1, 0, 500)) {
                             myBall.pathToGridPoint(gridPosition, 500);
                             movedThisTurn = true;
                         }
                     }
-                    if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                    else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
                         if (moveOnGrid(1, 0, 500)) {
                             myBall.pathToGridPoint(gridPosition, 500);
                             movedThisTurn = true;
@@ -68,26 +72,30 @@ public class PlayerSprite extends GridSprite {
 
                     if (pressedKeys.contains(KeyEvent.VK_UP)) {
                         if (moveOnGrid(0, -1, 500)) {
-                            myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y-1), 500);
+                            myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y-2), 500);
                             movedThisTurn = true;
+                            state = PlayerState.NoBall;
                         }
                     }
-                    if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                    else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
                         if (moveOnGrid(0, 1, 500)) {
-                            myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y+1), 500);
+                            myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y+2), 500);
                             movedThisTurn = true;
+                            state = PlayerState.NoBall;
                         }
                     }
-                    if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                    else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
                         if (moveOnGrid(-1, 0, 500)) {
-                            myBall.pathToGridPoint(new Point(gridPosition.x-1, gridPosition.y), 500);
+                            myBall.pathToGridPoint(new Point(gridPosition.x-2, gridPosition.y), 500);
                             movedThisTurn = true;
+                            state = PlayerState.NoBall;
                         }
                     }
-                    if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                    else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
                         if (moveOnGrid(1, 0, 500)) {
-                            myBall.pathToGridPoint(new Point(gridPosition.x+1, gridPosition.y), 500);
+                            myBall.pathToGridPoint(new Point(gridPosition.x+2, gridPosition.y), 500);
                             movedThisTurn = true;
+                            state = PlayerState.NoBall;
                         }
                     }
                 }
@@ -97,13 +105,13 @@ public class PlayerSprite extends GridSprite {
                 if (pressedKeys.contains(KeyEvent.VK_UP)) {
                     moveOnGrid(0, -1, 500);
                 }
-                if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
                     moveOnGrid(0, 1, 500);
                 }
-                if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
                     moveOnGrid(-1, 0, 500);
                 }
-                if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
                     moveOnGrid(1, 0, 500);
                 }
             }
@@ -111,8 +119,13 @@ public class PlayerSprite extends GridSprite {
     }
 
     @Override
+    public void draw(Graphics g){
+        super.draw(g);
+        myBall.draw(g);
+    }
+
+    @Override
     public void gridTurnUpdate() {
         movedThisTurn = false;
-        dunkKeyed = false;
     }
 }

@@ -51,8 +51,6 @@ public class DisplayObject extends EventDispatcher{
 		Area ra = new Area(rect);
 		
 		ra = ra.createTransformedArea(transform);
-
-		
 		return ra;
 	}
 	
@@ -244,7 +242,7 @@ public class DisplayObject extends EventDispatcher{
 	 * objects state before the draw occurs. Should be overridden if necessary
 	 * to update objects appropriately.
 	 * */
-	protected void update(ArrayList<Integer> pressedKeys) {
+	protected void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
 		
 	}
 

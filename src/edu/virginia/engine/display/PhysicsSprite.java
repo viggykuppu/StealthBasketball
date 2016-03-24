@@ -14,8 +14,7 @@ public class PhysicsSprite extends AnimatedSprite{
 	private long t;
 	private long dT;
 	private long g;
-	
-	
+
 	public PhysicsSprite(String id, String imageFileName) {
 		super(id, imageFileName);
 		vX = 0;
@@ -63,11 +62,11 @@ public class PhysicsSprite extends AnimatedSprite{
 	}
 	
 	@Override
-	public void update(ArrayList<Integer> pressedKeys){
+	public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys){
 		t = System.currentTimeMillis()/10;
 		dT = t-t0;
 //		System.out.println(dT);
-		super.update(pressedKeys);
+		super.update(pressedKeys,heldKeys);
 		int x = this.getPosition().x;
 		int y = this.getPosition().y;
 		pX = x;
@@ -83,7 +82,6 @@ public class PhysicsSprite extends AnimatedSprite{
 		aY = decrease(aY);
 		vX = decrease(vX);
 		vY = decrease(vY);
-		
 	}
 	
 	public int getpX() {
@@ -109,6 +107,4 @@ public class PhysicsSprite extends AnimatedSprite{
 	public void place(DisplayObject o){
 		this.setPosition(new Point(this.getPosition().x,o.getPosition().y-this.getPivotPoint().y));
 	}
-	
-
 }

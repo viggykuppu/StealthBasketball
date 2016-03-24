@@ -33,6 +33,7 @@ Possible player actions:
 	4-directional ball throw (maybe attacks the closest guard in a 90-degree angle area)
 	Movement without dribbling (toggled) might protect the ball, or prevent sound, but counts as a travel--possibly tied to a ref following the player.
 	Shoot on the net! Guards can try to block the ball.
+	Hit switches! Change the maze
 
 Visuals:
 	Black-outlined high-res photos, black outlined from a green screen
