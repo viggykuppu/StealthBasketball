@@ -51,8 +51,6 @@ public class DisplayObject extends EventDispatcher{
 		Area ra = new Area(rect);
 		
 		ra = ra.createTransformedArea(transform);
-
-		
 		return ra;
 	}
 	

@@ -15,7 +15,9 @@ public class StealthBasketball extends Game {
     BallSprite ball = new BallSprite("Ball", "coin.gif");
     PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
     GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png",player);
-    Sprite nullChecker = new Sprite("nullChecker", "coin.gif");//Why do we even need this shit
+
+    //Instantiate all sprites prior to the nullChecker
+    Sprite nullChecker = new Sprite("nullChecker", "coin.gif");
 
     public StealthBasketball() {
         super("Stealth Basketball!", 1007, 530);
@@ -57,7 +59,6 @@ public class StealthBasketball extends Game {
         super.draw(g);
         if (nullChecker != null) {
             GridManager.getInstance().draw(g);
-            ball.draw(g);
         }
     }
 
