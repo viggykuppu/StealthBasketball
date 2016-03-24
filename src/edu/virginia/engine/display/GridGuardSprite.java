@@ -8,14 +8,14 @@ import java.util.*;
  */
 public class GridGuardSprite extends GridSprite{
     PlayerSprite player;
-    double sightRadius = 16;
+    //This should be the distance^2
+    double sightRadius = 9;
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
 
     private enum GridGuardState{
         playerVisible,lostPlayer,idle;
     }
-
 
     public GridGuardSprite(String id,PlayerSprite player) {
         super(id);
@@ -36,11 +36,23 @@ public class GridGuardSprite extends GridSprite{
     public void gridTurnUpdate(){
         if(this.canDetectPlayer()){
             this.guardState = GridGuardState.playerVisible;
+            lastKnownPlayerLocation = player.getGridPosition();
             aStar(player.getGridPosition());
-        } else {
-            if(this.guardState == GridGuardState.playerVisible){
-                this.guardState = GridGuardState.lostPlayer;
-                aStar(lastKnownPlayerLocation);
+        }
+        else {
+            //playerMissingBehavior();
+        }
+    }
+
+    public void playerMissingBehavior(){
+        if(this.guardState == GridGuardState.playerVisible){
+            this.guardState = GridGuardState.lostPlayer;
+            aStar(lastKnownPlayerLocation);
+        }
+        if(this.guardState.equals(GridGuardState.lostPlayer)){
+            aStar(lastKnownPlayerLocation);
+            if(this.getGridPosition().equals(lastKnownPlayerLocation)){
+                this.guardState = GridGuardState.idle;
             }
         }
     }
@@ -76,7 +88,6 @@ public class GridGuardSprite extends GridSprite{
                     if(!seen.contains(node.location)){
                         seen.add(node.location);
                         node.g = curr.g+1;
-                        node.h = Math.abs(playerPosition.x-node.location.x) + Math.abs(playerPosition.y-node.location.y);
                         node.f = node.h+node.g;
                         q.add(node);
 //                        System.out.println(node.g + " "+node.location);
@@ -106,13 +117,13 @@ public class GridGuardSprite extends GridSprite{
         resetAStarGrid();
         Point nextPosition = path.get(1);
         if(nextPosition.x > this.getGridPosition().x){
-            moveOnGrid(1,0);
+            moveOnGrid(1,0,500);
         } else if(nextPosition.x < this.getGridPosition().x){
-            moveOnGrid(-1,0);
+            moveOnGrid(-1,0,500);
         } else if(nextPosition.y > this.getGridPosition().y){
-            moveOnGrid(0,1);
+            moveOnGrid(0,1,500);
         } else if(nextPosition.y < this.getGridPosition().y){
-            moveOnGrid(0,-1);
+            moveOnGrid(0,-1,500);
         }
     }
 

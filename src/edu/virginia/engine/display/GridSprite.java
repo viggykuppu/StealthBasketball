@@ -3,6 +3,7 @@ package edu.virginia.engine.display;
 import edu.virginia.engine.tween.Tween;
 import edu.virginia.engine.tween.TweenJuggler;
 import edu.virginia.engine.tween.TweenableParams;
+import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -24,9 +25,7 @@ public class GridSprite extends Sprite {
     }
 
     @Override
-    public void update(ArrayList<Integer> pressedKeys) {
-        super.update(pressedKeys);
-    }
+    public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) { super.update(pressedKeys,heldKeys); }
 
     public void gridTurnUpdate(){
     }
@@ -38,7 +37,8 @@ public class GridSprite extends Sprite {
         destination.x = gridPosition.x;
         destination.y = gridPosition.y;
         destination.translate(dx,dy);
-        if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
+        Direction direction = GridManager.getInstance().gridVectorToDirection(new Point(dx,dy));
+        if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null && GridManager.getInstance().existsValidPath(gridPosition,direction)){
             if (GridManager.getInstance().swapSprites(gridPosition,destination)) {
                 gridPosition.x = destination.x;
                 gridPosition.y = destination.y;
@@ -54,7 +54,8 @@ public class GridSprite extends Sprite {
         destination.x = gridPosition.x;
         destination.y = gridPosition.y;
         destination.translate(dx,dy);
-        if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null){
+        Direction direction = GridManager.getInstance().gridVectorToDirection(new Point(dx,dy));
+        if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null && GridManager.getInstance().existsValidPath(gridPosition,direction)){
             if (GridManager.getInstance().swapSprites(gridPosition,destination,timems)) {
                 gridPosition.x = destination.x;
                 gridPosition.y = destination.y;

@@ -5,6 +5,7 @@ import edu.virginia.engine.util.Direction;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 
 /**
@@ -35,21 +36,39 @@ public class GridManager {
     long previousTurnTime;
     boolean turnsActive = false;
 
+    ArrayList<GridSprite> walls = new ArrayList<GridSprite>();
+
 
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
+
+
+        ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
+        spriteList.addAll(walls);
+
         if(sprites !=null){
             for (int x = 0; x < sprites.length; x++){
                 for (int y = 0; y < sprites[x].length; y++){
                     if (sprites[x][y].getSprite() != null)
-                        sprites[x][y].getSprite().draw(g);
+                        spriteList.add(sprites[x][y].getSprite());
                     g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
                 }
             }
         }
+
+        spriteList.sort(new Comparator<GridSprite>() {
+            @Override
+            public int compare(GridSprite o1, GridSprite o2) {
+                return o1.getPosition().y - o2.getPosition().y;
+            }
+        });
+
+        for(GridSprite s : spriteList){
+            s.draw(g);
+        }
     }
 
-    public void update(ArrayList<Integer> pressedKeys){
+    public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys){
 
         //Run the frame update on each sprite, move safe
         ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
@@ -61,7 +80,7 @@ public class GridManager {
             }
         }
         for (GridSprite s : spriteList){
-            s.update(pressedKeys);
+            s.update(pressedKeys,heldKeys);
         }
 
         if (turnsActive) {
@@ -159,23 +178,21 @@ public class GridManager {
 
         boolean up,left,down,right;
         for(int i = 0; i < gridX; i++){
-            up = i > 0;
-            down = i < gridX-1;
-            for(int j = 0; j < gridY; j++){
-                left = j > 0;
-                right = j < gridY-1;
-                if(up)
-                    sprites[i][j].neighbors.put(Direction.UP,sprites[i-1][j]);
-                if(down)
-                    sprites[i][j].neighbors.put(Direction.DOWN,sprites[i+1][j]);
-                if(left)
-                    sprites[i][j].neighbors.put(Direction.LEFT,sprites[i][j-1]);
-                if(right)
-                    sprites[i][j].neighbors.put(Direction.RIGHT,sprites[i][j+1]);
+            left = i> 0;
+            right = i < gridX-1;
+            for(int j = 0; j < gridY; j++) {
+                up = j > 0;
+                down = j < gridY - 1;
+                if (up)
+                    sprites[i][j].neighbors.put(Direction.UP, sprites[i][j-1]);
+                if (down)
+                    sprites[i][j].neighbors.put(Direction.DOWN, sprites[i][j+1]);
+                if (left)
+                    sprites[i][j].neighbors.put(Direction.LEFT, sprites[i-1][j]);
+                if (right)
+                    sprites[i][j].neighbors.put(Direction.RIGHT, sprites[i+1][j]);
             }
         }
-
-
     }
 
     //Input a screen size (same as gameX and gameY in setGridSize)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.
@@ -212,6 +229,26 @@ public class GridManager {
         return null;
     }
 
+    public boolean existsValidPath(Point first, Direction direction){
+        if(sprites[first.x][first.y].neighbors.get(direction) == null){
+            return false;
+        }
+        return true;
+    }
+
+
+    public Direction gridVectorToDirection(Point p){
+        if (p.equals(new Point(0,-1)))
+            return Direction.UP;
+        else if (p.equals(new Point(0,1)))
+            return Direction.DOWN;
+        else if (p.equals(new Point(-1,0)))
+            return Direction.LEFT;
+        else if (p.equals(new Point(1,0)))
+            return Direction.RIGHT;
+        return null;
+    }
+
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
     public void addToGrid(GridSprite s, int x, int y){
         if (x < gridX && y < gridY){
@@ -220,6 +257,28 @@ public class GridManager {
 
         s.setPosition(gridtoGamePoint(new Point(x,y)));
         s.setGridPosition(new Point(x,y));
+    }
+
+    //TODO: Finish writing this function
+    public void addWall(Point first, Point second){
+        GridCell original = sprites[first.x][first.y];
+        GridCell pointer = sprites[second.x][second.y];
+    }
+
+    public void addWall(Point initial, Direction direction){
+        GridCell original = sprites[initial.x][initial.y];
+        GridCell pointer = original.neighbors.get(direction);
+        if(pointer !=null){
+            original.neighbors.remove(direction);
+            pointer.neighbors.remove(direction.opposite());
+            //Now add wall to array at right position
+            boolean horizontal  = direction == Direction.DOWN || direction == Direction.UP ? true : false;
+            int x = (gridToGameX(original.location.x) + gridToGameX(pointer.location.x)) /2;
+            int y = (gridToGameY(original.location.y) + gridToGameY(pointer.location.y)) / 2;
+            Point wallPosition = new Point(x,y);
+            GridWallSprite wall = new GridWallSprite("wall",horizontal, wallPosition);
+            walls.add(wall);
+        }
     }
 
     void resetAStarGrid(){
