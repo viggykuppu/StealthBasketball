@@ -5,6 +5,7 @@ import edu.virginia.engine.util.Direction;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 
 /**
@@ -35,24 +36,35 @@ public class GridManager {
     long previousTurnTime;
     boolean turnsActive = false;
 
-    ArrayList<GridWallSprite> walls = new ArrayList<GridWallSprite>();
+    ArrayList<GridSprite> walls = new ArrayList<GridSprite>();
 
 
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
+
+
+        ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
+        spriteList.addAll(walls);
+
         if(sprites !=null){
             for (int x = 0; x < sprites.length; x++){
                 for (int y = 0; y < sprites[x].length; y++){
                     if (sprites[x][y].getSprite() != null)
-                        sprites[x][y].getSprite().draw(g);
+                        spriteList.add(sprites[x][y].getSprite());
                     g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
                 }
             }
         }
-        for(GridWallSprite wall : walls){
-            if(wall != null) {
-                wall.draw(g);
+
+        spriteList.sort(new Comparator<GridSprite>() {
+            @Override
+            public int compare(GridSprite o1, GridSprite o2) {
+                return o1.getPosition().y - o2.getPosition().y;
             }
+        });
+
+        for(GridSprite s : spriteList){
+            s.draw(g);
         }
     }
 

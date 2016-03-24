@@ -32,7 +32,6 @@ public class PlayerSprite extends GridSprite {
     }
 
     @Override
-
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
         super.update(pressedKeys,heldKeys);
         if (!movedThisTurn) {
@@ -117,6 +116,12 @@ public class PlayerSprite extends GridSprite {
                 }
             }
         }
+    }
+
+    @Override
+    public void draw(Graphics g){
+        super.draw(g);
+        myBall.draw(g);
     }
 
     @Override
