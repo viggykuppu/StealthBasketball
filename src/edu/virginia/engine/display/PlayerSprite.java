@@ -104,15 +104,19 @@ public class PlayerSprite extends GridSprite {
 
                 if (pressedKeys.contains(KeyEvent.VK_UP)) {
                     moveOnGrid(0, -1, 500);
+                    movedThisTurn = true;
                 }
                 else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
                     moveOnGrid(0, 1, 500);
+                    movedThisTurn = true;
                 }
                 else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
                     moveOnGrid(-1, 0, 500);
+                    movedThisTurn = true;
                 }
                 else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
                     moveOnGrid(1, 0, 500);
+                    movedThisTurn = true;
                 }
             }
         }
