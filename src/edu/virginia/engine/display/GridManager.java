@@ -1,5 +1,8 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.tween.Tween;
+import edu.virginia.engine.tween.TweenJuggler;
+import edu.virginia.engine.tween.TweenableParams;
 import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
@@ -11,15 +14,16 @@ import java.util.HashSet;
 /**
  * Created by Guillaume Bailey on 3/19/2016.
  */
-public class GridManager {
+public class GridManager extends DisplayObjectContainer{
     //Singleton stuff
-    private static GridManager ourInstance = new GridManager();
+    private static GridManager ourInstance = new GridManager("gridManager");
 
     public static GridManager getInstance() {
         return ourInstance;
     }
 
-    private GridManager() {
+    private GridManager(String id) {
+        super(id);
     }
 
     //Overall grid scalers and size
@@ -27,8 +31,8 @@ public class GridManager {
     int gridY;
     int gridxScale;
     int gridyScale;
-    int gridxOffset;
-    int gridyOffset;
+    int screenX;
+    int screenY;
 
     GridCell[][] sprites = null;
 
@@ -36,52 +40,35 @@ public class GridManager {
     long previousTurnTime;
     boolean turnsActive = false;
 
-    ArrayList<GridSprite> walls = new ArrayList<GridSprite>();
+    long scrollSpeed = 200;//Milliseconds to tween screen scrolling
 
 
+    @Override
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
-
-
-        ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
-        spriteList.addAll(walls);
 
         if(sprites !=null){
             for (int x = 0; x < sprites.length; x++){
                 for (int y = 0; y < sprites[x].length; y++){
-                    if (sprites[x][y].getSprite() != null)
-                        spriteList.add(sprites[x][y].getSprite());
-                    g2d.drawRect(gridToGameX(x)-gridxScale/2,gridToGameY(y)-gridyScale/2,gridxScale,gridyScale);
+                    g2d.drawRect(x*gridxScale + getPosition().x, y*gridyScale + getPosition().y, gridxScale, gridyScale);
                 }
             }
         }
 
-        spriteList.sort(new Comparator<GridSprite>() {
+        getChildren().sort(new Comparator<DisplayObject>() {
             @Override
-            public int compare(GridSprite o1, GridSprite o2) {
+            public int compare(DisplayObject o1, DisplayObject o2) {
                 return o1.getPosition().y - o2.getPosition().y;
             }
         });
 
-        for(GridSprite s : spriteList){
-            s.draw(g);
-        }
+        super.draw(g);
     }
 
+    @Override
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys){
 
-        //Run the frame update on each sprite, move safe
-        ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
-        for (int x = 0; x < sprites.length; x++){
-            for (int y = 0; y < sprites[x].length; y++) {
-                if (sprites[x][y].getSprite() != null){
-                    spriteList.add(sprites[x][y].getSprite());
-                }
-            }
-        }
-        for (GridSprite s : spriteList){
-            s.update(pressedKeys,heldKeys);
-        }
+        super.update(pressedKeys,heldKeys);
 
         if (turnsActive) {
             if ((System.currentTimeMillis() - previousTurnTime) >= turnLength) {//Turn ended
@@ -105,6 +92,8 @@ public class GridManager {
         }
         for (GridSprite s : spriteList){
             s.gridTurnUpdate();
+            if (s.getId() == "Player"){}
+                centerPointOnScreen(s.getPosition().x,s.getPosition().y);
         }
     }
 
@@ -164,11 +153,13 @@ public class GridManager {
     }
 
     //Grid size is total, but grid points are 0-indexed, like array rules
-    public void setGridSize(int gridX, int gridY, int gameX, int gameY){
+    public void setUpGrid(int gridX, int gridY, int gameX, int gameY, int screenX, int screenY){
         gridxScale = gameX / gridX;
         gridyScale = gameY / gridY;
         this.gridX = gridX;
         this.gridY = gridY;
+        this.screenX = screenX;
+        this.screenY = screenY;
         sprites = new GridCell[gridX][gridY];
         for(int i = 0; i < gridX; i++){
             for(int j = 0; j < gridY; j++){
@@ -195,20 +186,36 @@ public class GridManager {
         }
     }
 
-    //Input a screen size (same as gameX and gameY in setGridSize)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.
-    public void centerGridPointOnScreen(int x,int y, int screenX, int screenY){
-        gridxOffset = screenX/2 - (x)*gridxScale - gridxScale/2;
-        //gridxOffset -= gridxOffset%gridxScale;
-        gridyOffset = screenY/2 - (y)*gridyScale - gridyScale/2;
-        //gridyOffset -= gridyOffset%gridyScale;
+    //Input a screen size (same as gameX and gameY in setUpGrid)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.
+    public void centerPointOnScreen(int x,int y){
+
+        int xOffset = screenX/2 - x;
+        int yOffset = screenY/2 - y;
+
+        if (xOffset > 0)
+            xOffset = 0;
+        else if (screenX - xOffset > gridX*gridxScale) {
+            xOffset = screenX - gridX * gridxScale;
+        }
+
+        if (yOffset > 0)
+            yOffset = 0;
+        else if (screenY - yOffset > gridY*gridyScale)
+            yOffset = screenY - gridY*gridyScale;
+
+        //TODO Change this to work and add tweening
+        Tween t = new Tween(this);
+        t.animate(TweenableParams.X,getPosition().x,xOffset,scrollSpeed);
+        t.animate(TweenableParams.Y,getPosition().y,yOffset,scrollSpeed);
+        TweenJuggler.getInstance().addTweenNonRedundant(t,this);
     }
 
     public int gridToGameX(int x){
-        return x*gridyScale + gridyScale/2 + gridxOffset;
+        return x*gridxScale + gridxScale/2;
     }
 
     public int gridToGameY(int y){
-        return  y*gridyScale + gridxScale/2 + gridyOffset;
+        return  y*gridyScale + gridyScale/2;
     }
 
     public Point gridtoGamePoint(Point p){
@@ -251,18 +258,14 @@ public class GridManager {
 
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
     public void addToGrid(GridSprite s, int x, int y){
-        if (x < gridX && y < gridY){
+        if (x > 0 && x < gridX && y > 0 && y < gridY){
             sprites[x][y].setSprite(s);
+
+            s.setPosition(gridtoGamePoint(new Point(x,y)));
+            s.setGridPosition(new Point(x,y));
+
+            addChild(s);
         }
-
-        s.setPosition(gridtoGamePoint(new Point(x,y)));
-        s.setGridPosition(new Point(x,y));
-    }
-
-    //TODO: Finish writing this function
-    public void addWall(Point first, Point second){
-        GridCell original = sprites[first.x][first.y];
-        GridCell pointer = sprites[second.x][second.y];
     }
 
     public void addWall(Point initial, Direction direction){
@@ -277,7 +280,7 @@ public class GridManager {
             int y = (gridToGameY(original.location.y) + gridToGameY(pointer.location.y)) / 2;
             Point wallPosition = new Point(x,y);
             GridWallSprite wall = new GridWallSprite("wall",horizontal, wallPosition);
-            walls.add(wall);
+            addChild(wall);
         }
     }
 

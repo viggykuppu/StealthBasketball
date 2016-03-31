@@ -26,7 +26,7 @@ public class StealthBasketball extends Game {
         ball.setPivotPoint(new Point(28, 28));
         guard.setPivotPoint(new Point(34, 46));
 
-        GridManager.getInstance().setGridSize(10, 5, 1000, 500);
+        GridManager.getInstance().setUpGrid(15, 7, 1500, 500,1000,500);
         GridManager.getInstance().addToGrid(player, 9, 4);
         GridManager.getInstance().addToGrid(guard, 0, 0);
         for(int i = 0; i < 9; i++) {
