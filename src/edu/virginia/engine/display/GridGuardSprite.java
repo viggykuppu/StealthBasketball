@@ -1,5 +1,7 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.util.Direction;
+
 import java.awt.Point;
 import java.util.*;
 

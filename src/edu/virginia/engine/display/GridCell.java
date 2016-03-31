@@ -15,7 +15,7 @@ public class GridCell {
     int f;
     int g;
     int h;
-    Map<Direction,GridCell> neighbors =  new HashMap<Direction,GridCell>();
+    public Map<Direction,GridCell> neighbors =  new HashMap<Direction,GridCell>();
     private GridSprite sprite = null;
 
 

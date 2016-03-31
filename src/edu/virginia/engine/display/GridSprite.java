@@ -24,14 +24,6 @@ public class GridSprite extends Sprite {
         super(id, imageFileName);
     }
 
-
-    public void draw(Graphics g, int xOffset, int yOffset){
-        Point p = getPosition();
-        setPosition(new Point(p.x + xOffset,p.y + yOffset));
-        super.draw(g);
-        setPosition(p);
-    }
-
     @Override
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) { super.update(pressedKeys,heldKeys); }
 
