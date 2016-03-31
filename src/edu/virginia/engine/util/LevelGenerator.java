@@ -29,6 +29,8 @@ import java.util.Scanner;
 
 public class LevelGenerator {
 
+    public Point screenSize = new Point(1000,500);
+
     private BallSprite ball = new BallSprite("Ball", "coin.gif");
     private PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
@@ -56,7 +58,7 @@ public class LevelGenerator {
                 String line = s.nextLine();
                 String[] cells = line.split(";");
                 x = cells.length;
-                GridManager.getInstance().setGridSize(x, y, x*100, y*100);
+                GridManager.getInstance().setUpGrid(x, y, x*100, y*100,screenSize.x,screenSize.y);
                 for(int i = 0; i < x; i++){
                     String[] cellContents = cells[i].split(",");
                     for(int j = 0; j < cellContents.length; j++){

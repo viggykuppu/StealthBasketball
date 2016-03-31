@@ -22,6 +22,7 @@ public class StealthBasketball extends Game {
 
     public StealthBasketball() {
         super("Stealth Basketball!", 1007, 530);
+
         LevelGenerator level = new LevelGenerator("levels/level1.csv");
         level.generateLevel();
 //        player.setPivotPoint(new Point(player.getUnscaledWidth() / 2, player.getUnscaledHeight() / 2));
@@ -31,6 +32,7 @@ public class StealthBasketball extends Game {
 //        GridManager.getInstance().setGridSize(10, 5, 1000, 500);
 //        GridManager.getInstance().addToGrid(player, 8, 3);
 //        GridManager.getInstance().addToGrid(guard, 0, 0);
+
         GridManager.getInstance().startTurns();
 ////
 //        ball.setPosition(new Point (player.getPosition().x+ball.getPlayerOffset().x,player.getPosition().y+ball.getPlayerOffset().y));
