@@ -30,7 +30,7 @@ public class GridManager {
     int gridxOffset;
     int gridyOffset;
 
-    GridCell[][] sprites = null;
+    public GridCell[][] sprites = null;
 
     float turnLength = 1000;
     long previousTurnTime;
@@ -257,12 +257,6 @@ public class GridManager {
 
         s.setPosition(gridtoGamePoint(new Point(x,y)));
         s.setGridPosition(new Point(x,y));
-    }
-
-    //TODO: Finish writing this function
-    public void addWall(Point first, Point second){
-        GridCell original = sprites[first.x][first.y];
-        GridCell pointer = sprites[second.x][second.y];
     }
 
     public void addWall(Point initial, Direction direction){
