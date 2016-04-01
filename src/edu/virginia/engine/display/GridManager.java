@@ -293,6 +293,14 @@ public class GridManager extends DisplayObjectContainer{
         }
     }
 
+    public void resetLevel(){
+        sprites = null;
+        turnsActive = false;
+        for(int i = 0; i < this.getChildren().size(); i+=0){
+            this.removeChildByIndex(0);
+        }
+    }
+
     public float getTurnLength() {
         return turnLength;
     }

@@ -6,6 +6,7 @@ import edu.virginia.engine.util.Direction;
 import edu.virginia.engine.util.LevelGenerator;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 /**
@@ -16,6 +17,8 @@ public class StealthBasketball extends Game {
     BallSprite ball = new BallSprite("Ball", "coin.gif");
     PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
     GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png",player);
+
+
 
     //Instantiate all sprites prior to the nullChecker
     Sprite nullChecker = new Sprite("nullChecker", "coin.gif");
@@ -47,6 +50,9 @@ public class StealthBasketball extends Game {
         if (nullChecker != null) {
             GridManager.getInstance().update(pressedKeys,heldKeys);
             TweenJuggler.getInstance().nextFrame();
+            if(pressedKeys.contains(KeyEvent.VK_SPACE)){
+                GridManager.getInstance().resetLevel();
+            }
         }
     }
 
