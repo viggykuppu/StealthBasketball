@@ -78,16 +78,6 @@ public class GridManager extends DisplayObjectContainer{
                 previousTurnTime = System.currentTimeMillis();
             }
         }
-
-        ArrayList<DisplayObject> spriteList = this.getChildren();
-
-        BallSprite playerBall = player.getBall();
-        for (DisplayObject obj : spriteList) {
-            GridSprite s = (GridSprite) obj;
-            if (playerBall.collidesWith(s) && s.getId() != "Player") {
-                playerBall.rebound();
-            }
-        }
     }
 
     void turnUpdate(){
