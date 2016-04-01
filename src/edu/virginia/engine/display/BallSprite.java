@@ -4,8 +4,12 @@ import edu.virginia.engine.tween.Tween;
 import edu.virginia.engine.tween.TweenJuggler;
 import edu.virginia.engine.tween.TweenTransitions;
 import edu.virginia.engine.tween.TweenableParams;
+import javafx.scene.shape.Ellipse;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
 /**
@@ -14,8 +18,10 @@ import java.util.ArrayList;
 public class BallSprite extends Sprite {
 
     Point playerOffset = new Point(0,-25);
+    Tween ballFollowPlayer;
 
     public BallSprite(String id, String imageFileName) {
+
         super(id, imageFileName);
     }
 
@@ -30,10 +36,17 @@ public class BallSprite extends Sprite {
         endPosition.x += playerOffset.x;
         endPosition.y += playerOffset.y;
 
-        Tween ballFollowPlayer = new Tween(this);
+        ballFollowPlayer = new Tween(this);
         ballFollowPlayer.animate(TweenableParams.X,getPosition().x,endPosition.x,timems);
         ballFollowPlayer.animate(TweenableParams.Y,getPosition().y,endPosition.y,timems);
         TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer,this);
+    }
+
+    /*
+        Either stops the ball or reverses vector
+     */
+    public void rebound() {
+
     }
 
     public Point getPlayerOffset() {

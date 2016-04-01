@@ -4,6 +4,7 @@ import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Area;
 import java.util.ArrayList;
 
 /**
@@ -126,6 +127,8 @@ public class PlayerSprite extends GridSprite {
     public void draw(Graphics g){
         super.draw(g);
         myBall.draw(g);
+        Rectangle ballBox = myBall.getHitCircle().getBounds();
+        g.drawOval(ballBox.x, ballBox.y, ballBox.width, ballBox.height);
     }
 
     @Override

@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,19 +38,36 @@ public class DisplayObject extends EventDispatcher{
 	private double rotation = 0;
 	/* Var that keeps track of transparency, values on the interval [0,1]*/
 	private float alpha = 1;
-	
+
 	public Area getHitbox(){
 		Point globalL = this.globalize(this.getPosition());
 		int pX = globalL.x;
 		int pY = globalL.y;
-		
+
 		Rectangle rect = new Rectangle(-this.getPivotPoint().x,-this.getPivotPoint().y,this.getUnscaledWidth(),this.getUnscaledHeight());
 		AffineTransform transform = new AffineTransform();
 		transform.translate(pX, pY);
-		transform.rotate(Math.PI*this.getRotation()/180);	
+		transform.rotate(Math.PI*this.getRotation()/180);
 		transform.scale(Math.abs(this.getScaleX()), Math.abs(this.getScaleY()));
 		Area ra = new Area(rect);
-		
+
+		ra = ra.createTransformedArea(transform);
+		return ra;
+	}
+
+	public Area getHitCircle(){
+		Point globalL = this.globalize(this.getPosition());
+		int pX = globalL.x;
+		int pY = globalL.y;
+
+		Ellipse2D rect = new Ellipse2D.Double(-this.getPivotPoint().x,-this.getPivotPoint().y,this.getUnscaledWidth(),this.getUnscaledHeight());
+		AffineTransform transform = new AffineTransform();
+		transform.translate(pX, pY);
+		transform.rotate(Math.PI*this.getRotation()/180);
+		transform.scale(Math.abs(this.getScaleX()), Math.abs(this.getScaleY()));
+		Area ra = new Area(rect);
+
+
 		ra = ra.createTransformedArea(transform);
 		return ra;
 	}
