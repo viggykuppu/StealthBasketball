@@ -18,7 +18,7 @@ public class PlayerSprite extends GridSprite {
     boolean movedThisTurn = false;
     boolean dunkKeyed = false;
     Direction dunkDir;
-
+    GridManager gridManager;
     private enum PlayerState {
         NEUTRAL, DUNKING, NoBall, THROWING
     }
@@ -29,7 +29,9 @@ public class PlayerSprite extends GridSprite {
 
     public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
         super(id, imageFileName);
+        gridManager = GridManager.getInstance();
         this.myBall = myBall;
+        gridManager.setPlayer(this);
     }
 
     @Override
@@ -134,5 +136,9 @@ public class PlayerSprite extends GridSprite {
     @Override
     public void gridTurnUpdate() {
         movedThisTurn = false;
+    }
+
+    public BallSprite getBall() {
+        return myBall;
     }
 }
