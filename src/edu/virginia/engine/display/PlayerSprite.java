@@ -101,6 +101,7 @@ public class PlayerSprite extends GridSprite {
                 moveOnGrid(1, 0, 500);
             }
         }
+        myBall.update(pressedKeys, heldKeys);
     }
 
     @Override
