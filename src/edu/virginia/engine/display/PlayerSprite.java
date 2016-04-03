@@ -37,7 +37,7 @@ public class PlayerSprite extends GridSprite {
     @Override
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
         super.update(pressedKeys,heldKeys);
-        if (!movedThisTurn) {
+        //if (!movedThisTurn) {
             if (state == PlayerState.NEUTRAL) {
                 if (heldKeys.contains(KeyEvent.VK_Z)) {
                     dunkKeyed = true;
@@ -122,7 +122,7 @@ public class PlayerSprite extends GridSprite {
                     movedThisTurn = true;
                 }
             }
-        }
+
     }
 
     @Override
