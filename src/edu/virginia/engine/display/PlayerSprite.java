@@ -69,22 +69,22 @@ public class PlayerSprite extends GridSprite {
 
                 if (pressedKeys.contains(KeyEvent.VK_UP)) {
                     if (moveOnGrid(0, -1, 500)) {
-                        myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y - 2), 500);
+                        myBall.dunk(Direction.UP);
                         state = PlayerState.NoBall;
                     }
                 } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
                     if (moveOnGrid(0, 1, 500)) {
-                        myBall.pathToGridPoint(new Point(gridPosition.x, gridPosition.y + 2), 500);
+                        myBall.dunk(Direction.DOWN);
                         state = PlayerState.NoBall;
                     }
                 } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
                     if (moveOnGrid(-1, 0, 500)) {
-                        myBall.pathToGridPoint(new Point(gridPosition.x - 2, gridPosition.y), 500);
+                        myBall.dunk(Direction.LEFT);
                         state = PlayerState.NoBall;
                     }
                 } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
                     if (moveOnGrid(1, 0, 500)) {
-                        myBall.pathToGridPoint(new Point(gridPosition.x + 2, gridPosition.y), 500);
+                        myBall.dunk(Direction.RIGHT);
                         state = PlayerState.NoBall;
                     }
                 }

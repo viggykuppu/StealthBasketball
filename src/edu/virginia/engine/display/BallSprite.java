@@ -16,11 +16,13 @@ import java.util.ArrayList;
 /**
  * Created by Guillaume Bailey on 3/20/2016.
  */
-public class BallSprite extends Sprite {
+public class BallSprite extends PhysicsSprite {
 
     Point playerOffset = new Point(0,-25);
     Tween ballFollowPlayer;
     GridManager gridManager;
+    static int VELOCITY = 5;
+    //static int DEACCEL = -1;
 
     public BallSprite(String id, String imageFileName) {
 
@@ -36,7 +38,8 @@ public class BallSprite extends Sprite {
         for (DisplayObject obj : spriteList) {
             GridSprite s = (GridSprite) obj;
             if (this.collidesWith(s) && s.getId() != "Player") {
-                this.getCollisionNormal(s);
+                Direction reflection = this.getCollisionNormal(s);
+                this.reflect(reflection);
             }
         }
     }
@@ -52,6 +55,31 @@ public class BallSprite extends Sprite {
         ballFollowPlayer.animate(TweenableParams.X,getPosition().x,endPosition.x,timems);
         ballFollowPlayer.animate(TweenableParams.Y,getPosition().y,endPosition.y,timems);
         TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer,this);
+    }
+
+
+    /*
+        Gets the current position and gives the ball physics
+     */
+    public void dunk(Direction vector) {
+        switch (vector) {
+            case UP:
+                this.setvY(-VELOCITY);
+                //this.setaX(-DEACCEL);
+                break;
+            case DOWN:
+                this.setvY(VELOCITY);
+                //this.setaY(DEACCEL);
+                break;
+            case LEFT:
+                this.setvX(-VELOCITY);
+                //this.setaX(-DEACCEL);
+                break;
+            case RIGHT:
+                this.setvX(VELOCITY);
+                //this.setaY(DEACCEL);
+                break;
+        }
     }
 
     /*
@@ -98,6 +126,10 @@ public class BallSprite extends Sprite {
         }
 
         return ret;
+    }
+
+    public void reflect(Direction reflection) {
+
     }
 
     public Point getPlayerOffset() {
