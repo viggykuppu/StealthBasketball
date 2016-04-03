@@ -76,7 +76,12 @@ public class DisplayObject extends EventDispatcher{
 		Area a = this.getHitbox();
 		a.intersect(other.getHitbox());
 		return !a.isEmpty();
-		
+	}
+
+	public boolean collidesWith(Area a){
+		Area b = this.getHitbox();
+		b.intersect(a);
+		return !b.isEmpty();
 	}
 	
 	public Point globalize(Point p){

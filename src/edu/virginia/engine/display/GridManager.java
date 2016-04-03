@@ -239,7 +239,6 @@ public class GridManager extends DisplayObjectContainer{
         return true;
     }
 
-
     public Direction gridVectorToDirection(Point p){
         if (p.equals(new Point(0,-1)))
             return Direction.UP;
