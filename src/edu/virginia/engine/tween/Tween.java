@@ -1,6 +1,7 @@
 package edu.virginia.engine.tween;
 
 import edu.virginia.engine.display.DisplayObject;
+import edu.virginia.engine.display.PlayerPingEffect;
 import edu.virginia.engine.events.EventDispatcher;
 
 import java.awt.*;
@@ -52,6 +53,9 @@ public class Tween extends EventDispatcher{
 				break;
 			case Y:
 				object.setPosition(new Point(object.getPosition().x,(int)val));
+				break;
+			case PING_RADIUS:
+				((PlayerPingEffect)object).setRadius((int)val);
 				break;
 		}
 	}
