@@ -7,6 +7,7 @@ import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -42,6 +43,7 @@ public class GridManager extends DisplayObjectContainer{
 
     long scrollSpeed = 200;//Milliseconds to tween screen scrolling
 
+    PlayerSprite player; //this is the player sprite
 
     @Override
     public void draw(Graphics g){
@@ -82,15 +84,9 @@ public class GridManager extends DisplayObjectContainer{
 
 //        System.out.println("Turn go!");
         //Run the turn update on each sprite, move safe
-        ArrayList<GridSprite> spriteList = new ArrayList<GridSprite>();
-        for (int x = 0; x < sprites.length; x++){
-            for (int y = 0; y < sprites[x].length; y++) {
-                if (sprites[x][y].getSprite() != null){
-                    spriteList.add(sprites[x][y].getSprite());
-                }
-            }
-        }
-        for (GridSprite s : spriteList){
+        ArrayList<DisplayObject> spriteList = this.getChildren();
+        for (DisplayObject obj : spriteList){
+            GridSprite s = (GridSprite) obj;
             s.gridTurnUpdate();
             if (s.getId() == "Player"){}
                 centerPointOnScreen(s.getPosition().x,s.getPosition().y);
@@ -257,7 +253,7 @@ public class GridManager extends DisplayObjectContainer{
 
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
     public void addToGrid(GridSprite s, int x, int y){
-        if (x > 0 && x < gridX && y > 0 && y < gridY){
+        if (x >= 0 && x < gridX && y >= 0 && y < gridY){
             sprites[x][y].setSprite(s);
 
             s.setPosition(gridtoGamePoint(new Point(x,y)));
@@ -292,11 +288,23 @@ public class GridManager extends DisplayObjectContainer{
         }
     }
 
+    public void resetLevel(){
+        sprites = null;
+        turnsActive = false;
+        for(int i = 0; i < this.getChildren().size(); i+=0){
+            this.removeChildByIndex(0);
+        }
+    }
+
     public float getTurnLength() {
         return turnLength;
     }
 
     public void setTurnLength(float turnLength) {
         this.turnLength = turnLength;
+    }
+
+    public void setPlayer(PlayerSprite player) {
+        this.player = player;
     }
 }

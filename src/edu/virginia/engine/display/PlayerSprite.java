@@ -4,6 +4,7 @@ import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Area;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +18,7 @@ public class PlayerSprite extends GridSprite {
     boolean movedThisTurn = false;
     boolean dunkKeyed = false;
     Direction dunkDir;
-
+    GridManager gridManager;
     private enum PlayerState {
         NEUTRAL, DUNKING, NoBall, THROWING
     }
@@ -28,7 +29,9 @@ public class PlayerSprite extends GridSprite {
 
     public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
         super(id, imageFileName);
+        gridManager = GridManager.getInstance();
         this.myBall = myBall;
+        gridManager.setPlayer(this);
     }
 
     @Override
@@ -126,10 +129,16 @@ public class PlayerSprite extends GridSprite {
     public void draw(Graphics g){
         super.draw(g);
         myBall.draw(g);
+        Rectangle ballBox = myBall.getHitCircle().getBounds();
+        g.drawOval(ballBox.x, ballBox.y, ballBox.width, ballBox.height);
     }
 
     @Override
     public void gridTurnUpdate() {
         movedThisTurn = false;
+    }
+
+    public BallSprite getBall() {
+        return myBall;
     }
 }
