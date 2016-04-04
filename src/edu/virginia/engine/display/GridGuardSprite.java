@@ -114,7 +114,12 @@ public class GridGuardSprite extends GridSprite{
         Collections.reverse(path);
         //Code for checking path if you would like to do that
         resetAStarGrid();
-        Point nextPosition = path.get(1);
+        Point nextPosition;
+        if(path.size() == 1){
+            nextPosition = path.get(0);
+        } else {
+            nextPosition = path.get(1);
+        }
         if(nextPosition.x > this.getGridPosition().x){
             moveOnGrid(1,0,500);
         } else if(nextPosition.x < this.getGridPosition().x){

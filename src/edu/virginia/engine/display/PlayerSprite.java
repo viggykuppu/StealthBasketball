@@ -107,12 +107,12 @@ public class PlayerSprite extends GridSprite {
         ArrayList<DisplayObject> sprites = GridManager.getInstance().getChildren();
         ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
         for(DisplayObject d : sprites){
-            if(d.getId().equals("guard")){
+            if(d.getId().equals("Guard")){
                 guards.add((GridGuardSprite)d);
             }
         }
         for(GridGuardSprite g : guards){
-            if(this.getGridPosition().distance(g.getGridPosition()) <= radius*radius){
+            if(this.getPosition().distance(g.getPosition()) <= radius){
                 g.updatePlayerLocation(this.getGridPosition());
             }
         }
@@ -130,6 +130,7 @@ public class PlayerSprite extends GridSprite {
     @Override
     public void gridTurnUpdate() {
         Tween t = new Tween(pingEffect);
+        this.generateSound(pingRadius);
         t.animate(TweenableParams.PING_RADIUS,0,pingRadius,300);
         t.animate(TweenableParams.ALPHA,1.0,0.0,300);
         TweenJuggler.getInstance().addTween(t);

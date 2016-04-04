@@ -1,7 +1,5 @@
 package edu.virginia.engine.display;
 
-import javafx.scene.shape.Circle;
-
 import java.awt.*;
 
 /**

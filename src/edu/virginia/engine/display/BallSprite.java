@@ -4,7 +4,6 @@ import edu.virginia.engine.tween.Tween;
 import edu.virginia.engine.tween.TweenJuggler;
 import edu.virginia.engine.tween.TweenTransitions;
 import edu.virginia.engine.tween.TweenableParams;
-import javafx.scene.shape.Ellipse;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
