@@ -36,13 +36,10 @@ public class GridGuardSprite extends GridSprite{
 
     @Override
     public void gridTurnUpdate(){
-        if(this.canDetectPlayer()){
-            this.guardState = GridGuardState.playerVisible;
-            lastKnownPlayerLocation = player.getGridPosition();
-            aStar(player.getGridPosition());
-        }
-        else {
-            //playerMissingBehavior();
+        if(guardState == GridGuardState.idle){
+
+        } else {
+            aStar(lastKnownPlayerLocation);
         }
     }
 
@@ -143,6 +140,11 @@ public class GridGuardSprite extends GridSprite{
 
     public double getSightRadius(){
         return this.sightRadius;
+    }
+
+    public void updatePlayerLocation(Point position){
+        this.guardState = GridGuardState.lostPlayer.playerVisible;
+        this.lastKnownPlayerLocation = position;
     }
 
 }

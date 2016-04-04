@@ -258,12 +258,11 @@ public class GridManager extends DisplayObjectContainer{
 
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
     public void addToGrid(GridSprite s, int x, int y){
-        if (x > 0 && x < gridX && y > 0 && y < gridY){
+        if (x >= 0 && x < gridX && y >= 0 && y < gridY){
             sprites[x][y].setSprite(s);
 
             s.setPosition(gridtoGamePoint(new Point(x,y)));
             s.setGridPosition(new Point(x,y));
-
             addChild(s);
         }
     }

@@ -122,6 +122,21 @@ public class PlayerSprite extends GridSprite {
         }
     }
 
+    public void generateSound(int radius){
+        ArrayList<DisplayObject> sprites = GridManager.getInstance().getChildren();
+        ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
+        for(DisplayObject d : sprites){
+            if(d.getId().equals("guard")){
+                guards.add((GridGuardSprite)d);
+            }
+        }
+        for(GridGuardSprite g : guards){
+            if(this.getGridPosition().distance(g.getGridPosition()) <= radius*radius){
+                g.updatePlayerLocation(this.getGridPosition());
+            }
+        }
+    }
+
     @Override
     public void draw(Graphics g){
         super.draw(g);
