@@ -104,6 +104,21 @@ public class PlayerSprite extends GridSprite {
         myBall.update(pressedKeys, heldKeys);
     }
 
+    public void generateSound(int radius){
+        ArrayList<DisplayObject> sprites = GridManager.getInstance().getChildren();
+        ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
+        for(DisplayObject d : sprites){
+            if(d.getId().equals("Guard")){
+                guards.add((GridGuardSprite)d);
+            }
+        }
+        for(GridGuardSprite g : guards){
+            if(this.getPosition().distance(g.getPosition()) <= radius){
+                g.updatePlayerLocation(this.getGridPosition());
+            }
+        }
+    }
+
     @Override
     public void draw(Graphics g) {
         super.draw(g);
@@ -116,6 +131,7 @@ public class PlayerSprite extends GridSprite {
     @Override
     public void gridTurnUpdate() {
         Tween t = new Tween(pingEffect);
+        this.generateSound(pingRadius);
         t.animate(TweenableParams.PING_RADIUS,0,pingRadius,300);
         t.animate(TweenableParams.ALPHA,1.0,0.0,300);
         TweenJuggler.getInstance().addTween(t);
