@@ -23,48 +23,51 @@ public class BallSprite extends PhysicsSprite {
     Tween ballFollowPlayer;
     GridManager gridManager;
     static int VELOCITY = 5;
-    boolean shouldCollide;
+    boolean didCollide;
+    boolean prevCollide; // this boolean exists solely to manage shouldCollide in loops
     //static int DEACCEL = -1;
 
     public BallSprite(String id, String imageFileName) {
 
         super(id, imageFileName);
         gridManager = GridManager.getInstance();
-        shouldCollide = false; // boolean to prevent double collisions
+        didCollide = false; // boolean to prevent double collisions
+        prevCollide = false;
     }
 
     @Override
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
         super.update(pressedKeys,heldKeys);
-
+        didCollide = false;
         ArrayList<DisplayObject> spriteList = gridManager.getChildren();
         for (DisplayObject obj : spriteList) {
             GridSprite s = (GridSprite) obj;
-            if (this.collidesWith(s) && shouldCollide) {
-                if (s.getId() == "Player") {
-//                    PlayerSprite player = (PlayerSprite) s;
-//                    if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
-//                        this.setvX(0);
-//                        this.setvY(0);
-//                        pathToGridPoint(player.getGridPosition(), 0);
-//                        player.setState(PlayerSprite.PlayerState.NEUTRAL);
-//                    }
-//                    shouldCollide = false;
-                } else if (s.getId() == "Guard") {
-                    System.out.println("Guard hit!");
-                    Direction reflection = this.getCollisionNormal(s);
-                    this.reflect(reflection);
-                    shouldCollide = false;
-                } else {
-                    // Probably hit a wall
-                    Direction reflection = this.getCollisionNormal(s);
-                    this.reflect(reflection);
-                    shouldCollide = false;
+            if (this.collidesWith(s)) {
+                // collision confirmed
+                didCollide = true;
+                // did prev frame not have a collision?
+                if (prevCollide == false) {
+                    if (s.getId() == "Player") {
+                        PlayerSprite player = (PlayerSprite) s;
+                        if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
+                            this.setvX(0);
+                            this.setvY(0);
+                            player.setState(PlayerSprite.PlayerState.NEUTRAL);
+                        }
+                    } else if (s.getId() == "Guard") {
+                        System.out.println("Guard hit!");
+                        Direction reflection = this.getCollisionNormal(s);
+                        this.reflect(reflection);
+                    } else {
+                        // Probably hit a wall
+                        Direction reflection = this.getCollisionNormal(s);
+                        this.reflect(reflection);
+                    }
                 }
             }
         }
         // only if there is a frame where there is no collisions should this reset
-        shouldCollide = true;
+        prevCollide = didCollide;
     }
 
 
