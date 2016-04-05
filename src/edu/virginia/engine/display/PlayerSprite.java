@@ -24,7 +24,7 @@ public class PlayerSprite extends GridSprite {
     Direction dunkDir;
     GridManager gridManager;
 
-    private enum PlayerState {
+    public enum PlayerState {
         NEUTRAL, DUNKING, NoBall, THROWING
     }
 
@@ -137,6 +137,8 @@ public class PlayerSprite extends GridSprite {
         TweenJuggler.getInstance().addTween(t);
     }
 
+    public PlayerState getState() { return this.state; }
+    public void setState(PlayerState state) { this.state = state; }
     public BallSprite getBall() {
         return myBall;
     }

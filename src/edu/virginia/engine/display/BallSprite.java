@@ -1,5 +1,6 @@
 package edu.virginia.engine.display;
 
+import com.sun.media.jfxmedia.events.PlayerStateEvent;
 import edu.virginia.engine.tween.Tween;
 import edu.virginia.engine.tween.TweenJuggler;
 import edu.virginia.engine.tween.TweenTransitions;
@@ -22,12 +23,14 @@ public class BallSprite extends PhysicsSprite {
     Tween ballFollowPlayer;
     GridManager gridManager;
     static int VELOCITY = 5;
+    boolean shouldCollide;
     //static int DEACCEL = -1;
 
     public BallSprite(String id, String imageFileName) {
 
         super(id, imageFileName);
         gridManager = GridManager.getInstance();
+        shouldCollide = false; // boolean to prevent double collisions
     }
 
     @Override
@@ -37,11 +40,31 @@ public class BallSprite extends PhysicsSprite {
         ArrayList<DisplayObject> spriteList = gridManager.getChildren();
         for (DisplayObject obj : spriteList) {
             GridSprite s = (GridSprite) obj;
-            if (this.collidesWith(s) && s.getId() != "Player") {
-                Direction reflection = this.getCollisionNormal(s);
-                this.reflect(reflection);
+            if (this.collidesWith(s) && shouldCollide) {
+                if (s.getId() == "Player") {
+//                    PlayerSprite player = (PlayerSprite) s;
+//                    if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
+//                        this.setvX(0);
+//                        this.setvY(0);
+//                        pathToGridPoint(player.getGridPosition(), 0);
+//                        player.setState(PlayerSprite.PlayerState.NEUTRAL);
+//                    }
+//                    shouldCollide = false;
+                } else if (s.getId() == "Guard") {
+                    System.out.println("Guard hit!");
+                    Direction reflection = this.getCollisionNormal(s);
+                    this.reflect(reflection);
+                    shouldCollide = false;
+                } else {
+                    // Probably hit a wall
+                    Direction reflection = this.getCollisionNormal(s);
+                    this.reflect(reflection);
+                    shouldCollide = false;
+                }
             }
         }
+        // only if there is a frame where there is no collisions should this reset
+        shouldCollide = true;
     }
 
 
@@ -62,6 +85,7 @@ public class BallSprite extends PhysicsSprite {
         Gets the current position and gives the ball physics
      */
     public void dunk(Direction vector) {
+
         switch (vector) {
             case UP:
                 this.setvY(-VELOCITY);
@@ -129,7 +153,20 @@ public class BallSprite extends PhysicsSprite {
     }
 
     public void reflect(Direction reflection) {
-
+        switch (reflection) {
+            case UP:
+                this.setvY(-this.getvY());
+                break;
+            case DOWN:
+                this.setvY(-this.getvY());
+                break;
+            case LEFT:
+                this.setvX(-this.getvX());
+                break;
+            case RIGHT:
+                this.setvX(-this.getvX());
+                break;
+        }
     }
 
     public Point getPlayerOffset() {
