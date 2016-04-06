@@ -45,7 +45,7 @@ public class BallSprite extends PhysicsSprite {
                 didCollide = true;
                 // did prev frame not have a collision?
                 if (prevCollide == false) {
-                    if (s.getId() == "Player") {
+                    if (s.getId().equals("Player")) {
                         PlayerSprite player = (PlayerSprite) s;
                         if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
                             this.setvX(0);
@@ -53,16 +53,18 @@ public class BallSprite extends PhysicsSprite {
                             player.setState(PlayerSprite.PlayerState.NEUTRAL);
                             break;
                         }
-                    } else if (s.getId() == "Guard") {
+                    } else if (s.getId().equals("Guard")) {
                         System.out.println("Guard hit!");
                         Direction reflection = this.getCollisionNormal(s);
                         this.reflect(reflection);
                         break;
-                    } else {
+                    } else if(s.getId().equals("Wall")){
                         // Probably hit a wall
                         Direction reflection = this.getCollisionNormal(s);
                         this.reflect(reflection);
                         break;
+                    } else if(s.getId().equals("Hoop")){
+                        System.out.println("You won the game");
                     }
                 }
             }
