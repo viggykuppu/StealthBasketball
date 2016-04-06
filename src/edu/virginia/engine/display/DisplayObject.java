@@ -40,9 +40,6 @@ public class DisplayObject extends EventDispatcher{
 	private float alpha = 1;
 
 	public Area getHitbox(){
-//		Point globalL = this.globalize(this.getPosition());
-//		int pX = globalL.x;
-//		int pY = globalL.y;
 		int pX = this.getPosition().x;
 		int pY = this.getPosition().y;
 
