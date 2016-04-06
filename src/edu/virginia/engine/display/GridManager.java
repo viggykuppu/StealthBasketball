@@ -28,8 +28,8 @@ public class GridManager extends DisplayObjectContainer{
     }
 
     //Overall grid scalers and size
-    int gridX;
-    int gridY;
+    public int gridX;
+    public int gridY;
     int gridxScale;
     int gridyScale;
     int screenX;
@@ -274,7 +274,29 @@ public class GridManager extends DisplayObjectContainer{
             int x = (gridToGameX(original.location.x) + gridToGameX(pointer.location.x)) /2;
             int y = (gridToGameY(original.location.y) + gridToGameY(pointer.location.y)) / 2;
             Point wallPosition = new Point(x,y);
-            GridWallSprite wall = new GridWallSprite("wall",horizontal, wallPosition);
+            GridWallSprite wall = new GridWallSprite("Wall",horizontal, wallPosition);
+            addChild(wall);
+        } else {
+            Point fakePoint = new Point(original.location.x,original.location.y);
+            switch(direction){
+                case LEFT:
+                    fakePoint.translate(-1,0);
+                    break;
+                case RIGHT:
+                    fakePoint.translate(1,0);
+                    break;
+                case UP:
+                    fakePoint.translate(0,-1);
+                    break;
+                case DOWN:
+                    fakePoint.translate(0,1);
+                    break;
+            }
+            boolean horizontal  = direction == Direction.DOWN || direction == Direction.UP ? true : false;
+            int x = (gridToGameX(original.location.x) + gridToGameX(fakePoint.x)) /2;
+            int y = (gridToGameY(original.location.y) + gridToGameY(fakePoint.y)) / 2;
+            Point wallPosition = new Point(x,y);
+            GridWallSprite wall = new GridWallSprite("Wall",horizontal, wallPosition);
             addChild(wall);
         }
     }

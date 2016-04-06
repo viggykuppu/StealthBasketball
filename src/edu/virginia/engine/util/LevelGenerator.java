@@ -5,10 +5,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
-import edu.virginia.engine.display.BallSprite;
-import edu.virginia.engine.display.GridGuardSprite;
-import edu.virginia.engine.display.GridManager;
-import edu.virginia.engine.display.PlayerSprite;
+import edu.virginia.engine.display.*;
 import org.xml.sax.*;
 import org.w3c.dom.*;
 import com.sun.org.apache.xerces.internal.parsers.XMLParser;
@@ -33,6 +30,7 @@ public class LevelGenerator {
 
     private BallSprite ball = new BallSprite("Ball", "coin.gif");
     private PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
+    private HoopSprite hoop = new HoopSprite("Hoop","hoop.png");
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
     private Map<Point,ArrayList<Direction>> m = new HashMap<Point,ArrayList<Direction>>();
     private File levelFile;
@@ -43,16 +41,15 @@ public class LevelGenerator {
     public void generateLevel(){
         player.setPivotPoint(new Point(player.getUnscaledWidth() / 2, player.getUnscaledHeight() / 2));
         ball.setPivotPoint(new Point(28, 28));
-
+        int y = 0;
+        int x = 0;
         try {
             Scanner s = new Scanner(levelFile);
-            int y = 0;
             while(s.hasNextLine()){
                 y++;
                 s.nextLine();
             }
             s = new Scanner(levelFile);
-            int x;
             int ly = 0;
             while(s.hasNextLine()){
                 String line = s.nextLine();
@@ -68,6 +65,7 @@ public class LevelGenerator {
                 ly++;
             }
             GridManager.getInstance().addToGrid(player,player.getGridPosition().x,player.getGridPosition().y);
+            GridManager.getInstance().addToGrid(hoop,hoop.getGridPosition().x,hoop.getGridPosition().y);
             for(GridGuardSprite g : guards){
                 GridManager.getInstance().addToGrid(g,g.getGridPosition().x,g.getGridPosition().y);
             }
@@ -75,6 +73,15 @@ public class LevelGenerator {
                 for(Direction d : m.get(p)){
                     GridManager.getInstance().addWall(p,d);
                 }
+            }
+
+            for(int i = 0; i < x; i++){
+                GridManager.getInstance().addWall(new Point(i,0),Direction.UP);
+                GridManager.getInstance().addWall(new Point(i,y-1),Direction.DOWN);
+            }
+            for(int i = 0; i < y; i++){
+                GridManager.getInstance().addWall(new Point(0,i),Direction.LEFT);
+                GridManager.getInstance().addWall(new Point(x-1,i),Direction.RIGHT);
             }
             ball.setPosition(new Point (player.getPosition().x+ball.getPlayerOffset().x,player.getPosition().y+ball.getPlayerOffset().y));
         } catch (FileNotFoundException e) {
@@ -127,9 +134,12 @@ public class LevelGenerator {
                     m.get(location).add(Direction.RIGHT);
                 }
                 break;
-            default:
+            case "H":
+                hoop.setGridPosition(location);
+                hoop.setPivotPoint(new Point(45,45));
                 break;
         }
 
     }
 }
+
