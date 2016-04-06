@@ -18,6 +18,7 @@ public class GridManager extends DisplayObjectContainer{
         return ourInstance;
     }
 
+
     private GridManager(String id) {
         super(id);
     }
@@ -40,6 +41,8 @@ public class GridManager extends DisplayObjectContainer{
 
     long scrollSpeed = 1000*1000*16;//Nanoseconds to screen scroll 1/10 of the way there
 
+    public boolean levelFinished = true;
+    public boolean levelFailed = false;
     PlayerSprite player; //this is the player sprite
 
     @Override
@@ -333,6 +336,10 @@ public class GridManager extends DisplayObjectContainer{
         for(int i = 0; i < this.getChildren().size(); i+=0){
             this.removeChildByIndex(0);
         }
+    }
+
+    public void endLevel(){
+        levelFinished = true;
     }
 
     public float getTurnLength() {

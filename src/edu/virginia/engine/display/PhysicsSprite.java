@@ -103,7 +103,7 @@ public class PhysicsSprite extends AnimatedSprite{
 	public double decrease(double v){
 		if(v == 0)
 			return 0;
-		double dV = v/70;
+		double dV = v/100;
 		return v-dV;
 	}
 	

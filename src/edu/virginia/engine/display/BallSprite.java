@@ -38,9 +38,11 @@ public class BallSprite extends PhysicsSprite {
         super.update(pressedKeys,heldKeys);
         didCollide = false;
         ArrayList<DisplayObject> spriteList = gridManager.getChildren();
+        boolean print = false;
         for (DisplayObject obj : spriteList) {
             GridSprite s = (GridSprite) obj;
             if (this.collidesWith(s)) {
+
                 // collision confirmed
                 didCollide = true;
                 // did prev frame not have a collision?
@@ -54,21 +56,27 @@ public class BallSprite extends PhysicsSprite {
                             break;
                         }
                     } else if (s.getId().equals("Guard")) {
+                        print = true;
                         System.out.println("Guard hit!");
                         Direction reflection = this.getCollisionNormal(s);
                         this.reflect(reflection);
                         break;
                     } else if(s.getId().equals("Wall")){
+                        print = true;
                         // Probably hit a wall
+                        System.out.println("wall hit");
                         Direction reflection = this.getCollisionNormal(s);
                         this.reflect(reflection);
                         break;
                     } else if(s.getId().equals("Hoop")){
-                        System.out.println("You won the game");
+                        GridManager.getInstance().endLevel();
+                        System.out.println("You won the level!!!");
                     }
                 }
             }
         }
+        if(print)
+            System.out.println("-------------");
         // only if there is a frame where there is no collisions should this reset
         prevCollide = didCollide;
     }
