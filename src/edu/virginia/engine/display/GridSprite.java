@@ -7,6 +7,10 @@ import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Area;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 /**
@@ -22,6 +26,14 @@ public class GridSprite extends Sprite {
 
     public GridSprite(String id, String imageFileName) {
         super(id, imageFileName);
+    }
+
+
+    public void draw(Graphics g, int xOffset, int yOffset){
+        Point p = getPosition();
+        setPosition(new Point(p.x + xOffset,p.y + yOffset));
+        super.draw(g);
+        setPosition(p);
     }
 
     @Override
@@ -78,5 +90,21 @@ public class GridSprite extends Sprite {
 
     public void setGridPosition(Point gridPosition) {
         this.gridPosition = gridPosition;
+    }
+
+    public ArrayList<DisplayObject> checkRay(Point start, Point end){
+
+        Line2D ray = new Line2D.Float(start,end);
+        Area rayArea = new Area(ray);
+
+        ArrayList<DisplayObject> intersectingObjects = new ArrayList<>();
+
+        for (DisplayObject o : GridManager.getInstance().getChildren()){
+            //TODO DO THIS
+            if (o.collidesWith(rayArea))
+                intersectingObjects.add(o);
+        }
+
+        return intersectingObjects;
     }
 }

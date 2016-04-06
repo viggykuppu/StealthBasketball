@@ -40,3 +40,7 @@ Visuals:
 	Ball has some kind of tween function to make it arc to places
 	Guards probably have a 4-frame fall animation and then flash nes-style, shoot black dots tweened to the right place
 	Fuckin tweens loitering on my property
+
+UNRESTRICTED MOVEMENT?
+BALL PORTALS
+	-Throw the ball through before you move through (one-directional portal)
