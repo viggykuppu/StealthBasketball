@@ -125,18 +125,41 @@ public class BallSprite extends PhysicsSprite {
         double up = area.getY();
         double down = up + area.getHeight();
 
-        // get the closest side of the rectangle
-        Rectangle ball = this.getHitCircle().getBounds();
-
         // get the center of ball
-        double centerX = ball.getX() + (ball.getWidth() / 2);
-        double centerY = ball.getY() + (ball.getHeight() / 2);
+        Rectangle ball = this.getHitCircle().getBounds();
+        double ballCenterX = ball.getX() + (ball.getWidth() / 2);
+        double ballCenterY = ball.getY() + (ball.getHeight() / 2);
 
-        // do the math
-        double distLeft = Math.abs(left - centerX);
-        double distRight = Math.abs(right - centerX);
-        double distUp = Math.abs(up - centerY);
-        double distDown = Math.abs(down - centerY);
+        //Get the center of the rectangle
+        double rectCenterX = area.getX() + (area.getWidth() / 2);
+        double rectCenterY = area.getY() + (area.getHeight() / 2);
+
+        //Created as vector from ball center to rect center
+        double collisionPointX = rectCenterX - ballCenterX;
+        double collisionPointY = rectCenterY - ballCenterY;
+
+        //Normalize vector from ball center to rect center to be ball radius length
+        double magnitude = Math.sqrt(collisionPointX*collisionPointX + collisionPointY*collisionPointY);
+        collisionPointX /= magnitude;
+        collisionPointY /= magnitude;
+        collisionPointX *= ball.getWidth()/2;//Ball radius standin
+        collisionPointY *= ball.getHeight()/2;
+
+        //collisionPoint to be the point the ball hits the rectangle now
+        collisionPointX = ballCenterX + collisionPointX;
+        collisionPointY = ballCenterY + collisionPointY;
+
+        //If ball has already travelled a good bit through the rectangle, use ballCenter instead of collisionPoint
+        if (Math.abs(ballCenterX - collisionPointX) > Math.abs(ballCenterX - rectCenterX))
+            collisionPointX = ballCenterX;
+        if (Math.abs(ballCenterY - collisionPointY) > Math.abs(ballCenterY - rectCenterY))
+            collisionPointY = ballCenterY;
+
+        //Choose the closest rectangle side
+        double distLeft = Math.abs(left - collisionPointX);
+        double distRight = Math.abs(right - collisionPointX);
+        double distUp = Math.abs(up - collisionPointY);
+        double distDown = Math.abs(down - collisionPointY);
 
         Direction ret = Direction.LEFT;
         double smallest = distLeft;
