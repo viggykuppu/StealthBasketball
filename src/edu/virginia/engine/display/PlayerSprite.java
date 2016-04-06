@@ -42,6 +42,10 @@ public class PlayerSprite extends GridSprite {
         if(state != PlayerState.NoBall){
             this.generateSound(pingEffect.getRadius());
         }
+
+        //Center screen to player
+        GridManager.getInstance().centerPointOnScreen(getPosition().x,getPosition().y);
+
         if (state == PlayerState.NEUTRAL) {
             if (heldKeys.contains(KeyEvent.VK_Z)) {
                 dunkKeyed = true;
@@ -132,12 +136,14 @@ public class PlayerSprite extends GridSprite {
 
     @Override
     public void gridTurnUpdate() {
+        //Generate ping visual
         if(this.state != PlayerState.NoBall){
             Tween t = new Tween(pingEffect);
             t.animate(TweenableParams.PING_RADIUS,0,pingRadius,300);
             t.animate(TweenableParams.ALPHA,1.0,0.0,300);
             TweenJuggler.getInstance().addTween(t);
         }
+
 
     }
 
