@@ -74,6 +74,11 @@ public class GridSprite extends Sprite {
                 return true;
             }
         }
+        if(GridManager.getInstance().getSpriteAtGridPoint(destination) != null){
+            if(GridManager.getInstance().getSpriteAtGridPoint(destination).getId().equals("Player")){
+                GridManager.getInstance().levelFailed = true;
+            }
+        }
         return false;
     }
 
