@@ -43,10 +43,10 @@ public class StealthBasketball extends Game {
             loadNextLevel();
         }
         if (nullChecker != null) {
-//            if(GridManager.getInstance().levelFailed){
-//                System.out.println("reloading level");
-//                this.reloadLevel();
-//            }
+            if(GridManager.getInstance().levelFailed){
+                System.out.println("reloading level");
+                this.reloadLevel();
+            }
             GridManager.getInstance().update(pressedKeys,heldKeys);
             TweenJuggler.getInstance().nextFrame();
         }
@@ -59,8 +59,9 @@ public class StealthBasketball extends Game {
                 levelIndex++;
                 LevelGenerator level = new LevelGenerator("levels/"+levels.get(levelIndex));
                 level.generateLevel();
+                GridManager.getInstance().startTurns();
                 GridManager.getInstance().levelFinished = false;
-            } else if(levelIndex == levels.size()){
+            } else if(levelIndex == levels.size()-1){
                 this.exitGame();
             }
         }
@@ -70,6 +71,7 @@ public class StealthBasketball extends Game {
         GridManager.getInstance().resetLevel();
         LevelGenerator level = new LevelGenerator("levels/"+levels.get(levelIndex));
         level.generateLevel();
+        GridManager.getInstance().startTurns();
         GridManager.getInstance().levelFailed = false;
     }
 
