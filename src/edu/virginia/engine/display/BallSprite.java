@@ -51,15 +51,18 @@ public class BallSprite extends PhysicsSprite {
                             this.setvX(0);
                             this.setvY(0);
                             player.setState(PlayerSprite.PlayerState.NEUTRAL);
+                            break;
                         }
                     } else if (s.getId() == "Guard") {
                         System.out.println("Guard hit!");
                         Direction reflection = this.getCollisionNormal(s);
                         this.reflect(reflection);
+                        break;
                     } else {
                         // Probably hit a wall
                         Direction reflection = this.getCollisionNormal(s);
                         this.reflect(reflection);
+                        break;
                     }
                 }
             }
