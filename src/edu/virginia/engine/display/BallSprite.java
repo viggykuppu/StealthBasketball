@@ -178,6 +178,7 @@ public class BallSprite extends PhysicsSprite {
             ret = Direction.DOWN;
         }
 
+        System.out.println(ret);
         return ret;
     }
 
