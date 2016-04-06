@@ -289,7 +289,7 @@ public class DisplayObject extends EventDispatcher{
 				g2d.drawImage(displayImage, -pivotPoint.x, -pivotPoint.y,
 						(int) (getUnscaledWidth()),
 						(int) (getUnscaledHeight()), null);
-			}	
+			}
 			/*
 			 * undo the transformations so this doesn't affect other display
 			 * objects

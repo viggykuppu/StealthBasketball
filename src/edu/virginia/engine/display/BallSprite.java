@@ -1,12 +1,10 @@
 package edu.virginia.engine.display;
 
-import com.sun.media.jfxmedia.events.PlayerStateEvent;
 import edu.virginia.engine.tween.Tween;
 import edu.virginia.engine.tween.TweenJuggler;
 import edu.virginia.engine.tween.TweenTransitions;
 import edu.virginia.engine.tween.TweenableParams;
 import edu.virginia.engine.util.Direction;
-import javafx.scene.shape.Ellipse;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
