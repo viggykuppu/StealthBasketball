@@ -80,8 +80,8 @@ public class PhysicsSprite extends AnimatedSprite{
 		if(aX != 0)
 		aX = decrease(aX);
 		aY = decrease(aY);
-//		vX = decrease(vX);
-//		vY = decrease(vY);
+		vX = decrease(vX);
+		vY = decrease(vY);
 	}
 	
 	public double getpX() {
@@ -103,7 +103,7 @@ public class PhysicsSprite extends AnimatedSprite{
 	public double decrease(double v){
 		if(v == 0)
 			return 0;
-		double dV = v/70;
+		double dV = v/100;
 		return v-dV;
 	}
 	
