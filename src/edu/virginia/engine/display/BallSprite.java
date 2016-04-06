@@ -70,7 +70,7 @@ public class BallSprite extends PhysicsSprite {
                         break;
                     } else if(s.getId().equals("Hoop")){
                         GridManager.getInstance().endLevel();
-                        System.out.println("You won the game");
+                        System.out.println("You won the level!!!");
                     }
                 }
             }
