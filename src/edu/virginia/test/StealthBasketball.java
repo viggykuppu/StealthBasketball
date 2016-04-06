@@ -28,18 +28,9 @@ public class StealthBasketball extends Game {
 
         LevelGenerator level = new LevelGenerator("levels/level1.csv");
         level.generateLevel();
-//        player.setPivotPoint(new Point(player.getUnscaledWidth() / 2, player.getUnscaledHeight() / 2));
-//        ball.setPivotPoint(new Point(28, 28));
-//        guard.setPivotPoint(new Point(34, 46));
-//
-//        GridManager.getInstance().setGridSize(10, 5, 1000, 500);
-//        GridManager.getInstance().addToGrid(player, 8, 3);
-//        GridManager.getInstance().addToGrid(guard, 0, 0);
 
         GridManager.getInstance().startTurns();
-////
-//        ball.setPosition(new Point (player.getPosition().x+ball.getPlayerOffset().x,player.getPosition().y+ball.getPlayerOffset().y));
-    }
+   }
 
     /**
      * Engine will automatically call this update method once per frame and pass to us

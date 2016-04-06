@@ -28,5 +28,10 @@ public class GridWallSprite extends GridSprite{
         }
     }
 
+    @Override
+    public void draw(Graphics g){
+        super.draw(g);
+    }
+
 
 }
