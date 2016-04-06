@@ -258,7 +258,6 @@ public class GridManager extends DisplayObjectContainer{
 
             s.setPosition(gridtoGamePoint(new Point(x,y)));
             s.setGridPosition(new Point(x,y));
-
             addChild(s);
         }
     }
