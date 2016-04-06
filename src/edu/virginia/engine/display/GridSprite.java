@@ -70,8 +70,8 @@ public class GridSprite extends Sprite {
         destination.y = gridPosition.y;
         destination.translate(dx,dy);
         Direction direction = GridManager.getInstance().gridVectorToDirection(new Point(dx,dy));
-        if (GridManager.getInstance().getSpriteAtGridPoint(destination).get(GridSpriteTypes.Player) == null && GridManager.getInstance().getSpriteAtGridPoint(destination).get(GridSpriteTypes.Guard) == null) {
-            if (GridManager.getInstance().existsValidPath(gridPosition, direction)) {
+        if (GridManager.getInstance().existsValidPath(gridPosition, direction)) {
+            if (GridManager.getInstance().getSpriteAtGridPoint(destination).get(GridSpriteTypes.Player) == null && GridManager.getInstance().getSpriteAtGridPoint(destination).get(GridSpriteTypes.Guard) == null) {
                 if (GridManager.getInstance().swapSprites(gridPosition, destination, getGridSpriteType(), timems)) {
                     gridPosition.x = destination.x;
                     gridPosition.y = destination.y;
@@ -81,7 +81,7 @@ public class GridSprite extends Sprite {
         }
         if(this.getId().equals("Guard")){
             if(GridManager.getInstance().getSpriteAtGridPoint(destination) != null){
-                if(GridManager.getInstance().getSpriteAtGridPoint(destination).getId().equals("Player")){
+                if(GridManager.getInstance().getSpriteAtGridPoint(destination,GridSpriteTypes.Player).getId().equals("Player")){
                     GridManager.getInstance().levelFailed = true;
                 }
             }

@@ -40,8 +40,9 @@ public class DisplayObject extends EventDispatcher{
 	private float alpha = 1;
 
 	public Area getHitbox(){
-		int pX = this.getPosition().x;
-		int pY = this.getPosition().y;
+		Point globalL = this.globalize(this.getPosition());
+		int pX = globalL.x;
+		int pY = globalL.y;
 
 		Rectangle rect = new Rectangle(-this.getPivotPoint().x,-this.getPivotPoint().y,this.getUnscaledWidth(),this.getUnscaledHeight());
 		AffineTransform transform = new AffineTransform();
@@ -51,15 +52,6 @@ public class DisplayObject extends EventDispatcher{
 		Area ra = new Area(rect);
 
 		ra = ra.createTransformedArea(transform);
-		parent = this.getParent();
-		while(parent != null){
-			AffineTransform t = new AffineTransform();
-			t.translate(parent.getPosition().x,parent.getPosition().y);
-			t.rotate(Math.PI*parent.getRotation()/180);
-			t.scale(Math.abs(parent.getScaleX()),Math.abs(parent.getScaleY()));
-			ra = ra.createTransformedArea(t);
-			parent = parent.getParent();
-		}
 		return ra;
 	}
 
