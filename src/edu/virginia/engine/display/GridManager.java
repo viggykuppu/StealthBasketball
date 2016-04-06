@@ -40,8 +40,10 @@ public class GridManager extends DisplayObjectContainer{
     float turnLength = 1000;
     long previousTurnTime;
     boolean turnsActive = false;
+    long frameTimer;
+    long deltaTime;
 
-    long scrollSpeed = 200;//Milliseconds to tween screen scrolling
+    long scrollSpeed = 1000*1000*16;//Nanoseconds to screen scroll 1/10 of the way there
 
     PlayerSprite player; //this is the player sprite
 
@@ -72,6 +74,9 @@ public class GridManager extends DisplayObjectContainer{
 
         super.update(pressedKeys,heldKeys);
 
+        deltaTime = (System.nanoTime() - frameTimer);
+        frameTimer = System.nanoTime();
+
         if (turnsActive) {
             if ((System.currentTimeMillis() - previousTurnTime) >= turnLength) {//Turn ended
                 turnUpdate();
@@ -88,8 +93,6 @@ public class GridManager extends DisplayObjectContainer{
         for (DisplayObject obj : spriteList){
             GridSprite s = (GridSprite) obj;
             s.gridTurnUpdate();
-            if (s.getId() == "Player"){}
-                centerPointOnScreen(s.getPosition().x,s.getPosition().y);
         }
     }
 
@@ -182,28 +185,41 @@ public class GridManager extends DisplayObjectContainer{
         }
     }
 
-    //Input a screen size (same as gameX and gameY in setUpGrid)--set the offset to center the chosen point on screen. Round down functionality is commented out, may be relevant later.
+    //Linearly interpolates the grid offset to center the chosen point on screen.
     public void centerPointOnScreen(int x,int y){
 
-        int xOffset = screenX/2 - x;
-        int yOffset = screenY/2 - y;
+        //Establish the goal position, accounting for grid edges
+        int xPos = screenX/2 - x;
+        int yPos = screenY/2 - y;
 
-        if (xOffset > 0)
-            xOffset = 0;
-        else if (screenX - xOffset > gridX*gridxScale) {
-            xOffset = screenX - gridX * gridxScale;
+        if (xPos > 0)
+            xPos = 0;
+        else if (screenX - xPos > gridX*gridxScale) {
+            xPos = screenX - gridX * gridxScale;
         }
 
-        if (yOffset > 0)
-            yOffset = 0;
-        else if (screenY - yOffset > gridY*gridyScale)
-            yOffset = screenY - gridY*gridyScale;
+        if (yPos > 0)
+            yPos = 0;
+        else if (screenY - yPos > gridY*gridyScale)
+            yPos = screenY - gridY*gridyScale;
 
-        //TODO Change this to work and add tweening
-        Tween t = new Tween(this);
-        t.animate(TweenableParams.X,getPosition().x,xOffset,scrollSpeed);
-        t.animate(TweenableParams.Y,getPosition().y,yOffset,scrollSpeed);
-        TweenJuggler.getInstance().addTweenNonRedundant(t,this);
+        //Linearly interpolate to the goal position
+        int xOffset = (int)((xPos - getPosition().x)/10*deltaTime/scrollSpeed);
+        int yOffset = (int)((yPos - getPosition().y)/10*deltaTime/scrollSpeed);
+
+        //If linear interpolation is stuck due to integer arithmetic, bump to goal position
+        int finalx;
+        int finaly;
+        if (xOffset != 0)
+            finalx = getPosition().x + xOffset;
+        else
+            finalx = xPos;
+        if (yOffset != 0)
+            finaly = getPosition().y + yOffset;
+        else
+            finaly = yPos;
+
+        setPosition(new Point(finalx, finaly));
     }
 
     public int gridToGameX(int x){

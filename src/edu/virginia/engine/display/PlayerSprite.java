@@ -40,6 +40,9 @@ public class PlayerSprite extends GridSprite {
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
         super.update(pressedKeys, heldKeys);
 
+        //Center screen to player
+        GridManager.getInstance().centerPointOnScreen(getPosition().x,getPosition().y);
+
         if (state == PlayerState.NEUTRAL) {
             if (heldKeys.contains(KeyEvent.VK_Z)) {
                 dunkKeyed = true;
@@ -130,6 +133,9 @@ public class PlayerSprite extends GridSprite {
 
     @Override
     public void gridTurnUpdate() {
+
+
+        //Generate ping visual
         Tween t = new Tween(pingEffect);
         this.generateSound(pingRadius);
         t.animate(TweenableParams.PING_RADIUS,0,pingRadius,300);
