@@ -28,8 +28,8 @@ public class GridManager extends DisplayObjectContainer{
     }
 
     //Overall grid scalers and size
-    public int gridX;
-    public int gridY;
+    int gridX;
+    int gridY;
     int gridxScale;
     int gridyScale;
     int screenX;
