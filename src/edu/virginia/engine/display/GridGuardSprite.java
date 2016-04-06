@@ -19,13 +19,8 @@ public class GridGuardSprite extends GridSprite{
         playerVisible,lostPlayer,idle;
     }
 
-    public GridGuardSprite(String id,PlayerSprite player) {
-        super(id);
-        this.player = player;
-    }
-
     public GridGuardSprite(String id, String imageFileName, PlayerSprite player) {
-        super(id, imageFileName);
+        super(id, imageFileName, GridSpriteTypes.Guard);
         this.player = player;
     }
 

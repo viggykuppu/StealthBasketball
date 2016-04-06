@@ -7,6 +7,6 @@ public class HoopSprite extends GridSprite {
 
 
     public HoopSprite(String id, String imageFileName) {
-        super(id, imageFileName);
+        super(id, imageFileName, GridSpriteTypes.Hoop);
     }
 }

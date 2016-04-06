@@ -29,7 +29,7 @@ public class PlayerSprite extends GridSprite {
     }
 
     public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
-        super(id, imageFileName);
+        super(id, imageFileName,GridSpriteTypes.Player);
         gridManager = GridManager.getInstance();
         this.myBall = myBall;
         this.pingEffect = new PlayerPingEffect("Ping1",this);
@@ -39,6 +39,8 @@ public class PlayerSprite extends GridSprite {
     @Override
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
         super.update(pressedKeys, heldKeys);
+
+        //Dribble sound only applies when holding ball
         if(state != PlayerState.NoBall){
             this.generateSound(pingEffect.getRadius());
         }
@@ -107,6 +109,8 @@ public class PlayerSprite extends GridSprite {
                 moveOnGrid(1, 0, 500);
             }
         }
+
+        //Update player subcomponents
         myBall.update(pressedKeys, heldKeys);
     }
 
@@ -143,8 +147,6 @@ public class PlayerSprite extends GridSprite {
             t.animate(TweenableParams.ALPHA,1.0,0.0,300);
             TweenJuggler.getInstance().addTween(t);
         }
-
-
     }
 
     public PlayerState getState() { return this.state; }
