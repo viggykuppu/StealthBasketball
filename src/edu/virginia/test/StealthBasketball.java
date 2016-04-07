@@ -16,7 +16,7 @@ public class StealthBasketball extends Game {
 
     BallSprite ball = new BallSprite("Ball", "coin.gif");
     PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
-    GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png",player);
+    ArrayList<String> stunAnim = new ArrayList<>();
     private ArrayList<String> levels  = new ArrayList<String>();
     private int levelIndex = -1;
 
@@ -26,6 +26,9 @@ public class StealthBasketball extends Game {
 
     public StealthBasketball() {
         super("Stealth Basketball!", 1007, 530);
+        stunAnim.add("floryan,mark_stunned.png");
+        stunAnim.add("floryan,mark_stunned.png");
+        GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", stunAnim,player);
         levels.add("level1.csv");
         levels.add("level2.csv");
 

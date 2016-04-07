@@ -14,14 +14,18 @@ public class GridGuardSprite extends GridSprite{
     double sightRadius = 9;
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
+    static double STUNLENGTH = 1; // determined in seconds
+    boolean stunned;
 
     private enum GridGuardState{
         playerVisible,lostPlayer,idle;
     }
 
-    public GridGuardSprite(String id, String imageFileName, PlayerSprite player) {
+    public GridGuardSprite(String id, String imageFileName, ArrayList<String> stunAnimation, PlayerSprite player) {
         super(id, imageFileName, GridSpriteTypes.Guard);
         this.player = player;
+        this.stunned = false;
+        readAnimation("Stunned", stunAnimation, STUNLENGTH);
     }
 
     public boolean canDetectPlayer(){
@@ -31,10 +35,23 @@ public class GridGuardSprite extends GridSprite{
 
     @Override
     public void gridTurnUpdate(){
-        if(guardState == GridGuardState.idle){
+        if (stunned) {
+
+        }
+        else if(guardState == GridGuardState.idle){
 
         } else {
             aStar(lastKnownPlayerLocation);
+        }
+    }
+
+    @Override
+    public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
+        super.update(pressedKeys, heldKeys);
+        if (stunned) {
+            if (this.animate("Stunned")) {
+                stunned = false;
+            }
         }
     }
 
@@ -141,6 +158,8 @@ public class GridGuardSprite extends GridSprite{
     public double getSightRadius(){
         return this.sightRadius;
     }
+
+    public void setStun(boolean stunned) { this.stunned = stunned; }
 
     public void updatePlayerLocation(Point position){
         this.guardState = GridGuardState.lostPlayer.playerVisible;

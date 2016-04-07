@@ -62,6 +62,8 @@ public class BallSprite extends PhysicsSprite {
                             print = true;
                             Direction reflection = this.getCollisionNormal(s);
                             System.out.println("Guard hit! " + reflection);
+                            GridGuardSprite guard = (GridGuardSprite) s;
+                            guard.setStun(true);
                             this.reflect(reflection);
                             break;
                         } else if (s.getId().equals("Wall")) {
