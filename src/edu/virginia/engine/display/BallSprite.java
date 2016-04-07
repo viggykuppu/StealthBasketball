@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  */
 public class BallSprite extends PhysicsSprite {
 
-    Point playerOffset = new Point(0,-25);
+    Point playerOffset = new Point(0, 0);
     Tween ballFollowPlayer;
     GridManager gridManager;
     static int VELOCITY = 5;
@@ -31,11 +32,12 @@ public class BallSprite extends PhysicsSprite {
         gridManager = GridManager.getInstance();
         didCollide = false; // boolean to prevent double collisions
         prevCollide = false;
+
     }
 
     @Override
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
-        super.update(pressedKeys,heldKeys);
+        super.update(pressedKeys, heldKeys);
         didCollide = false;
         ArrayList<DisplayObject> spriteList = gridManager.getChildren();
         boolean print = false;
@@ -61,21 +63,21 @@ public class BallSprite extends PhysicsSprite {
                         Direction reflection = this.getCollisionNormal(s);
                         this.reflect(reflection);
                         break;
-                    } else if(s.getId().equals("Wall")){
+                    } else if (s.getId().equals("Wall")) {
                         print = true;
                         // Probably hit a wall
                         System.out.println("wall hit");
                         Direction reflection = this.getCollisionNormal(s);
                         this.reflect(reflection);
                         break;
-                    } else if(s.getId().equals("Hoop")){
+                    } else if (s.getId().equals("Hoop")) {
                         GridManager.getInstance().endLevel();
                         System.out.println("You won the level!!!");
                     }
                 }
             }
         }
-        if(print)
+        if (print)
             System.out.println("-------------");
         // only if there is a frame where there is no collisions should this reset
         prevCollide = didCollide;
@@ -89,9 +91,9 @@ public class BallSprite extends PhysicsSprite {
         endPosition.y += playerOffset.y;
 
         ballFollowPlayer = new Tween(this);
-        ballFollowPlayer.animate(TweenableParams.X,getPosition().x,endPosition.x,timems);
-        ballFollowPlayer.animate(TweenableParams.Y,getPosition().y,endPosition.y,timems);
-        TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer,this);
+        ballFollowPlayer.animate(TweenableParams.X, getPosition().x, endPosition.x, timems);
+        ballFollowPlayer.animate(TweenableParams.Y, getPosition().y, endPosition.y, timems);
+        TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer, this);
     }
 
 
@@ -133,41 +135,22 @@ public class BallSprite extends PhysicsSprite {
         double up = area.getY();
         double down = up + area.getHeight();
 
+        //The corners of the rectangle
+        Point2D.Double topLeft = new Point2D.Double(left, up);
+        Point2D.Double topRight = new Point2D.Double(right, up);
+        Point2D.Double bottomLeft = new Point2D.Double(left, down);
+        Point2D.Double bottomRight = new Point2D.Double(right, down);
+
         // get the center of ball
         Rectangle ball = this.getHitCircle().getBounds();
         double ballCenterX = ball.getX() + (ball.getWidth() / 2);
         double ballCenterY = ball.getY() + (ball.getHeight() / 2);
+        Point2D.Double ballCenter = new Point2D.Double(ballCenterX, ballCenterY);
 
-        //Get the center of the rectangle
-        double rectCenterX = area.getX() + (area.getWidth() / 2);
-        double rectCenterY = area.getY() + (area.getHeight() / 2);
-
-        //Created as vector from ball center to rect center
-        double collisionPointX = rectCenterX - ballCenterX;
-        double collisionPointY = rectCenterY - ballCenterY;
-
-        //Normalize vector from ball center to rect center to be ball radius length
-        double magnitude = Math.sqrt(collisionPointX*collisionPointX + collisionPointY*collisionPointY);
-        collisionPointX /= magnitude;
-        collisionPointY /= magnitude;
-        collisionPointX *= ball.getWidth()/2;//Ball radius standin
-        collisionPointY *= ball.getHeight()/2;
-
-        //collisionPoint to be the point the ball hits the rectangle now
-        collisionPointX = ballCenterX + collisionPointX;
-        collisionPointY = ballCenterY + collisionPointY;
-
-        //If ball has already travelled a good bit through the rectangle, use ballCenter instead of collisionPoint
-        if (Math.abs(ballCenterX - collisionPointX) > Math.abs(ballCenterX - rectCenterX))
-            collisionPointX = ballCenterX;
-        if (Math.abs(ballCenterY - collisionPointY) > Math.abs(ballCenterY - rectCenterY))
-            collisionPointY = ballCenterY;
-
-        //Choose the closest rectangle side
-        double distLeft = Math.abs(left - collisionPointX);
-        double distRight = Math.abs(right - collisionPointX);
-        double distUp = Math.abs(up - collisionPointY);
-        double distDown = Math.abs(down - collisionPointY);
+        double distLeft = distToSegment2(ballCenter, topLeft, bottomLeft);
+        double distRight = distToSegment2(ballCenter, topRight, bottomRight);
+        double distUp = distToSegment2(ballCenter, topLeft, topRight);
+        double distDown = distToSegment2(ballCenter, bottomLeft, bottomRight);
 
         Direction ret = Direction.LEFT;
         double smallest = distLeft;
@@ -188,6 +171,15 @@ public class BallSprite extends PhysicsSprite {
 
         System.out.println(ret);
         return ret;
+    }
+
+    double distToSegment2(Point2D.Double p, Point2D.Double v, Point2D.Double w) {
+        double l2 = v.distanceSq(w);
+        if (l2 == 0)
+            return p.distanceSq(v);
+        double t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / 12;
+        t = Math.max(0, Math.min(1, t));
+        return p.distanceSq(new Point2D.Double(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y)));
     }
 
     public void reflect(Direction reflection) {
