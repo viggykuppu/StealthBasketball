@@ -1,16 +1,11 @@
 package edu.virginia.engine.display;
 
-import edu.virginia.engine.tween.Tween;
-import edu.virginia.engine.tween.TweenJuggler;
-import edu.virginia.engine.tween.TweenableParams;
 import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.EnumMap;
 
 /**
  * Created by Guillaume Bailey on 3/19/2016.
@@ -65,6 +60,10 @@ public class GridManager extends DisplayObjectContainer{
         getChildren().sort(new Comparator<DisplayObject>() {
             @Override
             public int compare(DisplayObject o1, DisplayObject o2) {
+                if (o1.getId().equals("Ball"))
+                    return 1;
+                if (o2.getId().equals("Ball"))
+                    return -1;
                 return o1.getPosition().y - o2.getPosition().y;
             }
         });
@@ -94,44 +93,46 @@ public class GridManager extends DisplayObjectContainer{
         //Run the turn update on each sprite, move safe
         ArrayList<DisplayObject> spriteList = this.getChildren();
         for (DisplayObject obj : spriteList){
-            GridSprite s = (GridSprite) obj;
-            s.gridTurnUpdate();
+            if (!obj.getId().equals("Ball")) {
+                GridSprite s = (GridSprite) obj;
+                s.gridTurnUpdate();
+            }
         }
     }
 
     //Returns true if successful move, false otherwise
-    public boolean swapSprites(Point start, Point end) {
+    public boolean swapSprites(Point start, Point end, GridSpriteTypes swapType) {
 
         if (start.x >= 0 && start.x < gridX && start.y >= 0 && start.y < gridY && end.x >= 0 && end.x < gridX && end.y >= 0 && end.y < gridY) {
-            GridSprite temp = sprites[end.x][end.y].getSprite();
-            sprites[end.x][end.y].setSprite(sprites[start.x][start.y].getSprite());
-            sprites[start.x][start.y].setSprite(temp);
-            if (sprites[end.x][end.y].getSprite() != null) {
-                sprites[end.x][end.y].getSprite().setPosition(gridtoGamePoint(end));
-                sprites[end.x][end.y].getSprite().setGridPosition(end);
+            GridSprite temp = sprites[end.x][end.y].getSprite(swapType);
+            sprites[end.x][end.y].addSprite(sprites[start.x][start.y].getSprite(swapType),swapType);
+            sprites[start.x][start.y].addSprite(temp,swapType);
+            if (sprites[end.x][end.y].getSprite(swapType) != null) {
+                sprites[end.x][end.y].getSprite(swapType).setPosition(gridtoGamePoint(end));
+                sprites[end.x][end.y].getSprite(swapType).setGridPosition(end);
             }
-            if (sprites[start.x][start.y].getSprite() != null){
-                sprites[start.x][start.y].getSprite().setPosition(gridtoGamePoint(start));
-                sprites[start.x][start.y].getSprite().setGridPosition(start);
+            if (sprites[start.x][start.y].getSprite(swapType) != null){
+                sprites[start.x][start.y].getSprite(swapType).setPosition(gridtoGamePoint(start));
+                sprites[start.x][start.y].getSprite(swapType).setGridPosition(start);
             }
             return true;
         }
         return false;
     }
 
-    public boolean swapSprites(Point start, Point end, long timems) {
+    public boolean swapSprites(Point start, Point end, GridSpriteTypes swapType, long timems) {
 
         if (start.x >= 0 && start.x < gridX && start.y >= 0 && start.y < gridY && end.x >= 0 && end.x < gridX && end.y >= 0 && end.y < gridY) {
-            GridSprite temp = sprites[end.x][end.y].getSprite();
-            sprites[end.x][end.y].setSprite(sprites[start.x][start.y].getSprite());
-            sprites[start.x][start.y].setSprite(temp);
-            if (sprites[end.x][end.y].getSprite() != null) {
-                sprites[end.x][end.y].getSprite().moveToPosition(gridtoGamePoint(end),timems);
-                sprites[end.x][end.y].getSprite().setGridPosition(end);
+            GridSprite temp = sprites[end.x][end.y].getSprite(swapType);
+            sprites[end.x][end.y].addSprite(sprites[start.x][start.y].getSprite(swapType),swapType);
+            sprites[start.x][start.y].addSprite(temp,swapType);
+            if (sprites[end.x][end.y].getSprite(swapType) != null) {
+                sprites[end.x][end.y].getSprite(swapType).moveToPosition(gridtoGamePoint(end),timems);
+                sprites[end.x][end.y].getSprite(swapType).setGridPosition(end);
             }
-            if (sprites[start.x][start.y].getSprite() != null){
-                sprites[start.x][start.y].getSprite().moveToPosition(gridtoGamePoint(start),timems);
-                sprites[start.x][start.y].getSprite().setGridPosition(start);
+            if (sprites[start.x][start.y].getSprite(swapType) != null){
+                sprites[start.x][start.y].getSprite(swapType).moveToPosition(gridtoGamePoint(start),timems);
+                sprites[start.x][start.y].getSprite(swapType).setGridPosition(start);
             }
             return true;
         }
@@ -147,9 +148,16 @@ public class GridManager extends DisplayObjectContainer{
         turnsActive = false;
     }
 
-    public GridSprite getSpriteAtGridPoint(Point p){
+    public GridSprite getSpriteAtGridPoint(Point p, GridSpriteTypes spriteType){
         if (p.x >= 0 && p.x < gridX && p.y >= 0 && p.y < gridY)
-            return sprites[p.x][p.y].getSprite();
+            return sprites[p.x][p.y].getSprite(spriteType);
+        else
+            return null;
+    }
+
+    public EnumMap<GridSpriteTypes,GridSprite> getSpriteAtGridPoint(Point p){
+        if (p.x >= 0 && p.x < gridX && p.y >= 0 && p.y < gridY)
+            return sprites[p.x][p.y].getSprites();
         else
             return null;
     }
@@ -273,7 +281,7 @@ public class GridManager extends DisplayObjectContainer{
     //gridX is the same as sprites.length, gridY is the same as sprites[0].length
     public void addToGrid(GridSprite s, int x, int y){
         if (x >= 0 && x < gridX && y >= 0 && y < gridY){
-            sprites[x][y].setSprite(s);
+            sprites[x][y].addSprite(s,s.getGridSpriteType());
 
             s.setPosition(gridtoGamePoint(new Point(x,y)));
             s.setGridPosition(new Point(x,y));

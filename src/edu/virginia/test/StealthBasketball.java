@@ -87,6 +87,14 @@ public class StealthBasketball extends Game {
         super.draw(g);
         if (nullChecker != null) {
             GridManager.getInstance().draw(g);
+            for (DisplayObject o : GridManager.getInstance().getChildren()){
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.draw(o.getHitbox());
+                if(o.getId().equals("Player")){
+                    PlayerSprite player = (PlayerSprite) o;
+                    g2d.draw(player.getBall().getHitbox());
+                }
+            }
         }
     }
 

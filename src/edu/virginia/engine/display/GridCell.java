@@ -3,6 +3,7 @@ package edu.virginia.engine.display;
 import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,28 +12,31 @@ import java.util.Map;
  */
 public class GridCell {
     Point location;
-    //f = g + h
+    //f = g + h, values for A* map navigation
     int f;
     int g;
     int h;
     public Map<Direction,GridCell> neighbors =  new HashMap<Direction,GridCell>();
-    private GridSprite sprite = null;
+
+    private EnumMap<GridSpriteTypes,GridSprite> sprites = new EnumMap(GridSpriteTypes.class);
 
 
     public GridCell(int x, int y){
         location = new Point(x,y);
     }
 
-    public void setSprite(GridSprite sprite){
-            this.sprite = sprite;
+    public void addSprite(GridSprite sprite, GridSpriteTypes spriteType){
+            sprites.put(spriteType,sprite);
     }
 
-    public GridSprite getSprite(){
-        return this.sprite;
+    public GridSprite getSprite(GridSpriteTypes spriteType){
+        return sprites.get(spriteType);
     }
 
-    public void removeSprite(){
-        this.sprite = null;
+    public EnumMap<GridSpriteTypes,GridSprite> getSprites() { return sprites; }
+
+    public void removeSpriteAt( GridSpriteTypes spriteType ){
+        sprites.remove(spriteType);
     }
 
     public void resetAStarValues(){

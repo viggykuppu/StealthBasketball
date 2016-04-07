@@ -19,11 +19,17 @@ import java.util.ArrayList;
 public class GridSprite extends AnimatedSprite {
 
     Point gridPosition;
+    private GridSpriteTypes gridSpriteType;
 
     public GridSprite(String id, String imageFileName) {
-        super(id, imageFileName);
+        super(id,imageFileName);
     }
 
+    public GridSprite(String id, String imageFileName, GridSpriteTypes gridSpriteType) {
+        super(id,imageFileName);
+
+        this.gridSpriteType = gridSpriteType;
+    }
 
     public void draw(Graphics g, int xOffset, int yOffset){
         Point p = getPosition();
@@ -47,7 +53,7 @@ public class GridSprite extends AnimatedSprite {
         destination.translate(dx,dy);
         Direction direction = GridManager.getInstance().gridVectorToDirection(new Point(dx,dy));
         if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null && GridManager.getInstance().existsValidPath(gridPosition,direction)){
-            if (GridManager.getInstance().swapSprites(gridPosition,destination)) {
+            if (GridManager.getInstance().swapSprites(gridPosition,destination,getGridSpriteType())) {
                 gridPosition.x = destination.x;
                 gridPosition.y = destination.y;
                 return true;
@@ -63,16 +69,18 @@ public class GridSprite extends AnimatedSprite {
         destination.y = gridPosition.y;
         destination.translate(dx,dy);
         Direction direction = GridManager.getInstance().gridVectorToDirection(new Point(dx,dy));
-        if (GridManager.getInstance().getSpriteAtGridPoint(destination) == null && GridManager.getInstance().existsValidPath(gridPosition,direction)){
-            if (GridManager.getInstance().swapSprites(gridPosition,destination,timems)) {
-                gridPosition.x = destination.x;
-                gridPosition.y = destination.y;
-                return true;
+        if (GridManager.getInstance().existsValidPath(gridPosition, direction)) {
+            if (GridManager.getInstance().getSpriteAtGridPoint(destination).get(GridSpriteTypes.Player) == null && GridManager.getInstance().getSpriteAtGridPoint(destination).get(GridSpriteTypes.Guard) == null) {
+                if (GridManager.getInstance().swapSprites(gridPosition, destination, getGridSpriteType(), timems)) {
+                    gridPosition.x = destination.x;
+                    gridPosition.y = destination.y;
+                    return true;
+                }
             }
         }
         if(this.getId().equals("Guard")){
             if(GridManager.getInstance().getSpriteAtGridPoint(destination) != null){
-                if(GridManager.getInstance().getSpriteAtGridPoint(destination).getId().equals("Player")){
+                if(GridManager.getInstance().getSpriteAtGridPoint(destination,GridSpriteTypes.Player).getId().equals("Player")){
                     GridManager.getInstance().levelFailed = true;
                 }
             }
@@ -93,6 +101,14 @@ public class GridSprite extends AnimatedSprite {
 
     public void setGridPosition(Point gridPosition) {
         this.gridPosition = gridPosition;
+    }
+
+    public GridSpriteTypes getGridSpriteType() {
+        return gridSpriteType;
+    }
+
+    public void setGridSpriteType(GridSpriteTypes gridSpriteType) {
+        this.gridSpriteType = gridSpriteType;
     }
 
     public ArrayList<DisplayObject> checkRay(Point start, Point end){

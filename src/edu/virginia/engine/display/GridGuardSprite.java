@@ -21,9 +21,8 @@ public class GridGuardSprite extends GridSprite{
         playerVisible,lostPlayer,idle;
     }
 
-
     public GridGuardSprite(String id, String imageFileName, ArrayList<String> stunAnimation, PlayerSprite player) {
-        super(id, imageFileName);
+        super(id, imageFileName, GridSpriteTypes.Guard);
         this.player = player;
         this.stunned = false;
         readAnimation("Stunned", stunAnimation, STUNLENGTH);
