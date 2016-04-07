@@ -59,15 +59,15 @@ public class BallSprite extends PhysicsSprite {
                         }
                     } else if (s.getId().equals("Guard")) {
                         print = true;
-                        System.out.println("Guard hit!");
                         Direction reflection = this.getCollisionNormal(s);
+                        System.out.println("Guard hit! "+reflection);
                         this.reflect(reflection);
                         break;
                     } else if (s.getId().equals("Wall")) {
                         print = true;
                         // Probably hit a wall
-                        System.out.println("wall hit");
                         Direction reflection = this.getCollisionNormal(s);
+                        System.out.println("wall hit "+reflection);
                         this.reflect(reflection);
                         break;
                     } else if (s.getId().equals("Hoop")) {
