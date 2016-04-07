@@ -131,7 +131,12 @@ public class PlayerSprite extends GridSprite {
         myBall.draw(g);
         pingEffect.draw(g);
         Rectangle ballBox = myBall.getHitCircle().getBounds();
-        g.drawOval(ballBox.x, ballBox.y, ballBox.width, ballBox.height);
+        g.drawRect(ballBox.x, ballBox.y, ballBox.width, ballBox.height);
+        ArrayList<DisplayObject> sprites = gridManager.getChildren();
+        for (DisplayObject d : sprites) {
+            Rectangle hitbox = d.getHitbox().getBounds();
+            g.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        }
     }
 
     @Override

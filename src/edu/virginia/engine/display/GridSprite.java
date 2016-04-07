@@ -16,13 +16,9 @@ import java.util.ArrayList;
 /**
  * Created by Guillaume Bailey on 3/19/2016.
  */
-public class GridSprite extends Sprite {
+public class GridSprite extends AnimatedSprite {
 
     Point gridPosition;
-
-    public GridSprite(String id) {
-        super(id);
-    }
 
     public GridSprite(String id, String imageFileName) {
         super(id, imageFileName);

@@ -90,6 +90,7 @@ public class AnimatedSprite extends Sprite {
 		animationSpeeds.set(animStats.get(anim).get(2), spd);
 	}
 
+	public void setDefaultImg() { super.setImage(animations.get(0)); }
 
 	public boolean isHalted() {
 		return halted;
