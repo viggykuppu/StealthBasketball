@@ -34,6 +34,7 @@ public class PlayerSprite extends GridSprite {
         this.myBall = myBall;
         this.pingEffect = new PlayerPingEffect("Ping1",this);
         gridManager.setPlayer(this);
+        gridManager.addChild(myBall);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class PlayerSprite extends GridSprite {
         }
 
         //Update player subcomponents
-        myBall.update(pressedKeys, heldKeys);
+        //myBall.update(pressedKeys, heldKeys);
     }
 
     public void generateSound(int radius){
@@ -132,10 +133,8 @@ public class PlayerSprite extends GridSprite {
     @Override
     public void draw(Graphics g) {
         super.draw(g);
-        myBall.draw(g);
+        //myBall.draw(g);
         pingEffect.draw(g);
-        Rectangle ballBox = myBall.getHitCircle().getBounds();
-        g.drawOval(ballBox.x, ballBox.y, ballBox.width, ballBox.height);
     }
 
     @Override

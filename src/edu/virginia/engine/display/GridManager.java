@@ -60,6 +60,10 @@ public class GridManager extends DisplayObjectContainer{
         getChildren().sort(new Comparator<DisplayObject>() {
             @Override
             public int compare(DisplayObject o1, DisplayObject o2) {
+                if (o1.getId().equals("Ball"))
+                    return 1;
+                if (o2.getId().equals("Ball"))
+                    return -1;
                 return o1.getPosition().y - o2.getPosition().y;
             }
         });
@@ -89,8 +93,10 @@ public class GridManager extends DisplayObjectContainer{
         //Run the turn update on each sprite, move safe
         ArrayList<DisplayObject> spriteList = this.getChildren();
         for (DisplayObject obj : spriteList){
-            GridSprite s = (GridSprite) obj;
-            s.gridTurnUpdate();
+            if (!obj.getId().equals("Ball")) {
+                GridSprite s = (GridSprite) obj;
+                s.gridTurnUpdate();
+            }
         }
     }
 
