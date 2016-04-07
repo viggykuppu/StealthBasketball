@@ -179,7 +179,7 @@ public class BallSprite extends PhysicsSprite {
         double l2 = v.distanceSq(w);
         if (l2 == 0)
             return p.distanceSq(v);
-        double t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / 12;
+        double t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
         t = Math.max(0, Math.min(1, t));
         return p.distanceSq(new Point2D.Double(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y)));
     }
