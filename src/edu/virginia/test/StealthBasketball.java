@@ -17,7 +17,8 @@ public class StealthBasketball extends Game {
     BallSprite ball = new BallSprite("Ball", "coin.gif");
     PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
     GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png",player);
-
+    private ArrayList<String> levels  = new ArrayList<String>();
+    private int levelIndex = -1;
 
 
     //Instantiate all sprites prior to the nullChecker
@@ -25,9 +26,9 @@ public class StealthBasketball extends Game {
 
     public StealthBasketball() {
         super("Stealth Basketball!", 1007, 530);
+        levels.add("level1.csv");
+        levels.add("level2.csv");
 
-        LevelGenerator level = new LevelGenerator("levels/level1.csv");
-        level.generateLevel();
 
         GridManager.getInstance().startTurns();
    }
@@ -38,13 +39,40 @@ public class StealthBasketball extends Game {
      */
     @Override
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
+        if(GridManager.getInstance().levelFinished){
+            loadNextLevel();
+        }
         if (nullChecker != null) {
+            if(GridManager.getInstance().levelFailed){
+                System.out.println("reloading level");
+                this.reloadLevel();
+            }
             GridManager.getInstance().update(pressedKeys,heldKeys);
             TweenJuggler.getInstance().nextFrame();
-            if(pressedKeys.contains(KeyEvent.VK_SPACE)){
-                GridManager.getInstance().resetLevel();
+        }
+    }
+
+    public void loadNextLevel(){
+        if(levels != null && levels.size() > 0){
+            GridManager.getInstance().resetLevel();
+            if(levelIndex < levels.size()-1){
+                levelIndex++;
+                LevelGenerator level = new LevelGenerator("levels/"+levels.get(levelIndex));
+                level.generateLevel();
+                GridManager.getInstance().startTurns();
+                GridManager.getInstance().levelFinished = false;
+            } else if(levelIndex == levels.size()-1){
+                this.exitGame();
             }
         }
+    }
+
+    public void reloadLevel(){
+        GridManager.getInstance().resetLevel();
+        LevelGenerator level = new LevelGenerator("levels/"+levels.get(levelIndex));
+        level.generateLevel();
+        GridManager.getInstance().startTurns();
+        GridManager.getInstance().levelFailed = false;
     }
 
     /**

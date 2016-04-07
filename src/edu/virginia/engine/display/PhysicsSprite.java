@@ -4,12 +4,12 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class PhysicsSprite extends AnimatedSprite{
-	private int vX;
-	private int vY;
-	private int aX;
-	private int aY;
-	private int pX;
-	private int pY;
+	private double vX;
+	private double vY;
+	private double aX;
+	private double aY;
+	private double pX;
+	private double pY;
 	private long t0;
 	private long t;
 	private long dT;
@@ -25,35 +25,35 @@ public class PhysicsSprite extends AnimatedSprite{
 		t0 = System.currentTimeMillis()/10;
 	}
 	
-	public int getvX() {
+	public double getvX() {
 		return vX;
 	}
 
-	public void setvX(int vX) {
+	public void setvX(double vX) {
 		this.vX = vX;
 	}
 
-	public int getvY() {
+	public double getvY() {
 		return vY;
 	}
 
-	public void setvY(int vY) {
+	public void setvY(double vY) {
 		this.vY = vY;
 	}
 
-	public int getaX() {
+	public double getaX() {
 		return aX;
 	}
 
-	public void setaX(int aX) {
+	public void setaX(double aX) {
 		this.aX = aX;
 	}
 
-	public int getaY() {
+	public double getaY() {
 		return aY;
 	}
 
-	public void setaY(int aY) {
+	public void setaY(double aY) {
 		this.aY = aY;
 	}
 
@@ -80,28 +80,31 @@ public class PhysicsSprite extends AnimatedSprite{
 		if(aX != 0)
 		aX = decrease(aX);
 		aY = decrease(aY);
-		//vX = decrease(vX);
-		//vY = decrease(vY);
+//		vX = decrease(vX);
+//		vY = decrease(vY);
 	}
 	
-	public int getpX() {
+	public double getpX() {
 		return pX;
 	}
 
-	public void setpX(int pX) {
+	public void setpX(double pX) {
 		this.pX = pX;
 	}
 
-	public int getpY() {
+	public double getpY() {
 		return pY;
 	}
 
-	public void setpY(int pY) {
+	public void setpY(double pY) {
 		this.pY = pY;
 	}
 
-	public int decrease(int v){
-		return v == 0 ? 0 : v - v/Math.abs(v);
+	public double decrease(double v){
+		if(v == 0)
+			return 0;
+		double dV = v/100;
+		return v-dV;
 	}
 	
 	public void place(DisplayObject o){
