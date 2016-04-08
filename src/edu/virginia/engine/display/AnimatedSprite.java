@@ -69,6 +69,38 @@ public class AnimatedSprite extends Sprite {
 
 
 	/*
+		If you want your animation looped (w/o using default sprite), use this version
+	 */
+	public boolean looping_Animate(String anim) {
+		boolean ret = false;
+		if (this.halted == false) {
+			if (startTime == 0) {
+				startIndex = animStats.get(anim).get(0);
+				endIndex = animStats.get(anim).get(1);
+				currentFrame = startIndex;
+				startTime = System.nanoTime();
+				allotedTime = (long)(animationSpeeds.get(animStats.get(anim).get(2)) *
+						1000000000 / ((endIndex - startIndex)));
+			}
+			// return the animation based on the elapsed time
+			if (System.nanoTime() - startTime < allotedTime) {
+
+			}
+			else if (currentFrame == endIndex) {
+				currentFrame = startIndex;
+				startTime = 0;
+				ret = true;
+			}
+			else {
+				startTime = System.nanoTime();
+				currentFrame += 1;
+			}
+
+		}
+		super.setImage(animations.get(currentFrame));
+		return ret;
+	}
+	/*
         Length is given in seconds
      */
 	public void readAnimation(String anim, ArrayList<String> animation, double length) {
