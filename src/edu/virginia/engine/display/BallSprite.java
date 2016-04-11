@@ -24,6 +24,7 @@ public class BallSprite extends PhysicsSprite {
     static int VELOCITY = 5;
     boolean didCollide;
     boolean prevCollide; // this boolean exists solely to manage shouldCollide in loops
+    boolean playerCollide;
     //static int DEACCEL = -1;
 
     public BallSprite(String id, String imageFileName) {
@@ -32,7 +33,7 @@ public class BallSprite extends PhysicsSprite {
         gridManager = GridManager.getInstance();
         didCollide = false; // boolean to prevent double collisions
         prevCollide = false;
-
+        playerCollide = true;
     }
 
     @Override
@@ -45,20 +46,42 @@ public class BallSprite extends PhysicsSprite {
             if (!obj.equals(this)) {
                 GridSprite s = (GridSprite) obj;
                 if (this.collidesWith(s)) {
-
                     // collision confirmed
                     didCollide = true;
                     // did prev frame not have a collision?
                     if (prevCollide == false) {
+                        // we should only turn playerCollide to false once all collisions are done
+                        playerCollide = false;
                         if (s.getId().equals("Player")) {
                             PlayerSprite player = (PlayerSprite) s;
                             if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
                                 this.setvX(0);
                                 this.setvY(0);
                                 player.setState(PlayerSprite.PlayerState.NEUTRAL);
+                                playerCollide = true;
                                 break;
                             }
                         } else if (s.getId().equals("Guard")) {
+                            print = true;
+                            Direction reflection = this.getCollisionNormal(s);
+                            System.out.println("Guard hit! " + reflection);
+                            GridGuardSprite guard = (GridGuardSprite) s;
+                            guard.setStun(true);
+                            this.reflect(reflection);
+                            break;
+                        } else if (s.getId().equals("Wall")) {
+                            print = true;
+                            // Probably hit a wall
+                            Direction reflection = this.getCollisionNormal(s);
+                            System.out.println("wall hit " + reflection);
+                            this.reflect(reflection);
+                            break;
+                        } else if (s.getId().equals("Hoop")) {
+                            GridManager.getInstance().endLevel();
+                            System.out.println("You won the level!!!");
+                        }
+                    } else if (playerCollide) {
+                        if (s.getId().equals("Guard")) {
                             print = true;
                             Direction reflection = this.getCollisionNormal(s);
                             System.out.println("Guard hit! " + reflection);
