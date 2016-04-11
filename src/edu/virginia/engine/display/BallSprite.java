@@ -48,10 +48,11 @@ public class BallSprite extends PhysicsSprite {
                 if (this.collidesWith(s)) {
                     // collision confirmed
                     didCollide = true;
+                    if (s.getId().equals("Player")) {
+                        playerCollide = true;
+                    }
                     // did prev frame not have a collision?
                     if (prevCollide == false) {
-                        // we should only turn playerCollide to false once all collisions are done
-                        playerCollide = false;
                         if (s.getId().equals("Player")) {
                             PlayerSprite player = (PlayerSprite) s;
                             if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
@@ -108,6 +109,8 @@ public class BallSprite extends PhysicsSprite {
             System.out.println("-------------");
         // only if there is a frame where there is no collisions should this reset
         prevCollide = didCollide;
+        // we should only turn playerCollide to false once all collisions are done
+        playerCollide = false;
     }
 
 
