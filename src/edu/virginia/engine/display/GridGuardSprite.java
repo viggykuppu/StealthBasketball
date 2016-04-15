@@ -142,7 +142,6 @@ public class GridGuardSprite extends GridSprite{
         // TODO take this out when done testing
         aPath.clear();
         for (int i = 0; i < path.size(); i++) {
-            System.out.println("Patthhsss");
             GridSprite aSprite = new GridSprite("path", "coin.gif");
             aSprite.setGridPosition(path.get(i));
             Point normalPoint = gridManager.gridtoGamePoint(path.get(i));
