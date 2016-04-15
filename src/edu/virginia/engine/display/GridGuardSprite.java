@@ -2,7 +2,7 @@ package edu.virginia.engine.display;
 
 import edu.virginia.engine.util.Direction;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.*;
 
 /**
@@ -16,6 +16,8 @@ public class GridGuardSprite extends GridSprite{
     GridGuardState guardState = GridGuardState.idle;
     static double STUNLENGTH = 1; // determined in seconds
     boolean stunned;
+    ArrayList<GridSprite> aPath;
+    GridManager gridManager;
 
     private enum GridGuardState{
         playerVisible,lostPlayer,idle;
@@ -26,6 +28,8 @@ public class GridGuardSprite extends GridSprite{
         this.player = player;
         this.stunned = false;
         readAnimation("Stunned", stunAnimation, STUNLENGTH);
+        aPath = new ArrayList<>();
+        gridManager = GridManager.getInstance();
     }
 
     public boolean canDetectPlayer(){
@@ -52,6 +56,15 @@ public class GridGuardSprite extends GridSprite{
             if (this.animate("Stunned")) {
                 stunned = false;
             }
+        }
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        super.draw(g);
+        Graphics2D g2d = (Graphics2D)g;
+        for (int i = 0; i < aPath.size(); i++) {
+            aPath.get(i).draw(g2d);
         }
     }
 
@@ -124,6 +137,19 @@ public class GridGuardSprite extends GridSprite{
         }
 
         Collections.reverse(path);
+
+        // generating the path from guard to player
+        // TODO take this out when done testing
+        aPath.clear();
+        for (int i = 0; i < path.size(); i++) {
+            System.out.println("Patthhsss");
+            GridSprite aSprite = new GridSprite("path", "coin.gif");
+            aSprite.setGridPosition(path.get(i));
+            Point normalPoint = gridManager.gridtoGamePoint(path.get(i));
+            aSprite.setPosition(normalPoint);
+            aPath.add(aSprite);
+        }
+
         //Code for checking path if you would like to do that
         resetAStarGrid();
         Point nextPosition;
