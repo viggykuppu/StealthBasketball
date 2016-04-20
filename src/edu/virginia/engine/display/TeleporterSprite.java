@@ -7,8 +7,9 @@ import java.util.ArrayList;
  */
 public class TeleporterSprite extends GridSprite {
 
-    ArrayList<String> animation = new ArrayList<>();
+    private ArrayList<String> animation = new ArrayList<>();
     static double animationTime = 1; //In seconds
+    private TeleporterSprite partner;
 
     public TeleporterSprite(String id, String imageFileName) {
         super(id, imageFileName,GridSpriteTypes.Teleporter);
@@ -21,5 +22,13 @@ public class TeleporterSprite extends GridSprite {
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys){
         super.update(pressedKeys, heldKeys);
         looping_Animate("TeleporterAnim");
+    }
+
+    public TeleporterSprite getPartner() {
+        return partner;
+    }
+
+    public void setPartner(TeleporterSprite partner) {
+        this.partner = partner;
     }
 }
