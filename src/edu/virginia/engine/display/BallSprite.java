@@ -193,8 +193,36 @@ public class BallSprite extends PhysicsSprite {
         if (distDown < smallest) {
             ret = Direction.DOWN;
         }
-
-        System.out.println(ret);
+        if(s.getId().equals("Wall")){
+            GridWallSprite wall = (GridWallSprite) s;
+            boolean isHorizontal = wall.isHorizontal();
+            Direction temp;
+            double d = 0;
+            if(isHorizontal && (ret == Direction.LEFT || ret == Direction.RIGHT)){
+                if(distDown < distUp){
+                    temp = Direction.DOWN;
+                    d = distDown;
+                } else {
+                    temp = Direction.UP;
+                    d = distUp;
+                }
+                if(d == smallest){
+                    ret = temp;
+                }
+            }
+            if(!isHorizontal && (ret == Direction.UP || ret == Direction.DOWN)){
+                if(distLeft < distRight){
+                    temp = Direction.LEFT;
+                    d = distLeft;
+                } else {
+                    temp = Direction.RIGHT;
+                    d = distRight;
+                }
+                if(d == smallest){
+                    ret = temp;
+                }
+            }
+        }
         return ret;
     }
 
