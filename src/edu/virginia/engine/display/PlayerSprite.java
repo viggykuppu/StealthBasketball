@@ -29,11 +29,11 @@ public class PlayerSprite extends GridSprite {
         NEUTRAL, DUNKING, NoBall, THROWING
     }
 
-    public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
-        super(id, imageFileName,GridSpriteTypes.Player);
-        gridManager = GridManager.getInstance();
-        this.myBall = myBall;
-        this.pingEffect = new PlayerPingEffect("Ping1",this);
+        public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
+            super(id, imageFileName,GridSpriteTypes.Player);
+            gridManager = GridManager.getInstance();
+            this.myBall = myBall;
+            this.pingEffect = new PlayerPingEffect("Ping1",this);
         gridManager.setPlayer(this);
         gridManager.addChild(myBall);
     }
