@@ -15,7 +15,7 @@ public class Tween extends EventDispatcher{
 	private long startTime;
 	private Map<TweenableParams,TweenParam> params = new HashMap<>();
 	private TweenTransitions transition;
-	private boolean complete = false;
+	private boolean complete = true;
 	
 	public Tween(DisplayObject object) {
 		this.object = object;
@@ -24,6 +24,7 @@ public class Tween extends EventDispatcher{
 	}
 	
 	public void animate(TweenableParams fieldToAnimate, double startVal, double endVal, long timems){
+		complete = false;
 		TweenParam tp = new TweenParam(fieldToAnimate,startVal,endVal,timems);
 		params.put(fieldToAnimate, tp);
 	}
