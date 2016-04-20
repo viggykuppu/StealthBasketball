@@ -32,6 +32,7 @@ public class LevelGenerator {
     private PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
     private HoopSprite hoop = new HoopSprite("Hoop","hoop.png");
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
+    private ArrayList<Pair<TeleporterSprite,TeleporterSprite>> teleporterSprites = new ArrayList<>();
     private ArrayList<String> stunAnim = new ArrayList<>();
     private Map<Point,ArrayList<Direction>> m = new HashMap<Point,ArrayList<Direction>>();
     private File levelFile;
@@ -141,8 +142,39 @@ public class LevelGenerator {
                 hoop.setGridPosition(location);
                 hoop.setPivotPoint(new Point(45,45));
                 break;
+            case "T":
+                TeleporterSprite tpS = new TeleporterSprite("Teleporter", "Teleporter/frame_0_delay-0.04s.gif");
+                tpS.setPivotPoint(new Point(45, 45));
+                tpS.setGridPosition(location);
+                GridManager.getInstance().addToGrid(tpS,tpS.getGridPosition().x,tpS.getGridPosition().y);
+                break;
         }
+    }
+}
 
+class Pair<F, S> {
+    private F first = null; //first member of pair
+    private S second = null; //second member of pair
+
+    public Pair(F first, S second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public void setFirst(F first) {
+        this.first = first;
+    }
+
+    public void setSecond(S second) {
+        this.second = second;
+    }
+
+    public F getFirst() {
+        return first;
+    }
+
+    public S getSecond() {
+        return second;
     }
 }
 
