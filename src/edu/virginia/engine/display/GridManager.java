@@ -43,7 +43,7 @@ public class GridManager extends DisplayObjectContainer{
 
     public boolean levelFinished = true;
     public boolean levelFailed = false;
-    PlayerSprite player; //this is the player sprite
+    public PlayerSprite player; //this is the player sprite
 
     @Override
     public void draw(Graphics g){
