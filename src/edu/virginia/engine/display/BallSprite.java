@@ -131,6 +131,7 @@ public class BallSprite extends PhysicsSprite {
         ballFollowPlayer.animate(TweenableParams.X, getPosition().x, endPosition.x, timems);
         ballFollowPlayer.animate(TweenableParams.Y, getPosition().y, endPosition.y, timems);
         TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer, this);
+        dribbleUp = true;
     }
 
 
@@ -259,20 +260,7 @@ public class BallSprite extends PhysicsSprite {
             TweenJuggler.getInstance().addTweenNonRedundant(dribble, this);
         //}
     }
-
-    /*
-    public void pathToGridPoint(Point gridDest, long timems) {
-        Point endPosition = new Point(gridDest);
-        endPosition = GridManager.getInstance().gridtoGamePoint(endPosition);
-        endPosition.x += playerOffset.x;
-        endPosition.y += playerOffset.y;
-
-        ballFollowPlayer = new Tween(this);
-        ballFollowPlayer.animate(TweenableParams.X, getPosition().x, endPosition.x, timems);
-        ballFollowPlayer.animate(TweenableParams.Y, getPosition().y, endPosition.y, timems);
-        TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer, this);
-    }
-     */
+    
     public Point getPlayerOffset() {
         return playerOffset;
     }

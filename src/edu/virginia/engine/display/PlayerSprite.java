@@ -23,6 +23,7 @@ public class PlayerSprite extends GridSprite {
     boolean dunkKeyed = false;
     Direction dunkDir;
     GridManager gridManager;
+    private boolean movedBall;
 
     public enum PlayerState {
         NEUTRAL, DUNKING, NoBall, THROWING
@@ -50,6 +51,14 @@ public class PlayerSprite extends GridSprite {
         GridManager.getInstance().centerPointOnScreen(getPosition().x,getPosition().y);
 
         if (state == PlayerState.NEUTRAL) {
+            //Update player subcomponents
+            //myBall.update(pressedKeys, heldKeys);
+            long delta = System.currentTimeMillis();
+            if (delta - timer > 1000) {
+                myBall.dribble(500);
+                timer = System.currentTimeMillis();
+            }
+            
             if (heldKeys.contains(KeyEvent.VK_Z)) {
                 dunkKeyed = true;
             } else
@@ -109,14 +118,6 @@ public class PlayerSprite extends GridSprite {
             } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
                 moveOnGrid(1, 0, 500);
             }
-        }
-
-        //Update player subcomponents
-        //myBall.update(pressedKeys, heldKeys);
-        long delta = System.currentTimeMillis();
-        if (delta - timer > 1000) {
-            myBall.dribble(500);
-            timer = System.currentTimeMillis();
         }
     }
 
