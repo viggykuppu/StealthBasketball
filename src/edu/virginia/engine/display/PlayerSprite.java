@@ -19,7 +19,7 @@ public class PlayerSprite extends GridSprite {
     private PlayerPingEffect pingEffect;
     private int pingRadius = 400;
     PlayerState state = PlayerState.NEUTRAL;
-
+    private long timer = System.currentTimeMillis();
     boolean dunkKeyed = false;
     Direction dunkDir;
     GridManager gridManager;
@@ -113,6 +113,11 @@ public class PlayerSprite extends GridSprite {
 
         //Update player subcomponents
         //myBall.update(pressedKeys, heldKeys);
+        long delta = System.currentTimeMillis();
+        if (delta - timer > 1000) {
+            myBall.dribble(500);
+            timer = System.currentTimeMillis();
+        }
     }
 
     public void generateSound(int radius){

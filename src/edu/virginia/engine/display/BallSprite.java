@@ -18,6 +18,9 @@ import java.util.ArrayList;
  */
 public class BallSprite extends PhysicsSprite {
 
+    // static variables
+    static int DRIBBLE_OFFSET = 50;
+
     Point playerOffset = new Point(0, 0);
     Tween ballFollowPlayer;
     GridManager gridManager;
@@ -25,6 +28,8 @@ public class BallSprite extends PhysicsSprite {
     boolean didCollide;
     boolean prevCollide; // this boolean exists solely to manage shouldCollide in loops
     boolean playerCollide;
+    Tween dribble;
+    boolean dribbleUp; // status of whether the ball is 'up' or on dribble 'down'
     //static int DEACCEL = -1;
 
     public BallSprite(String id, String imageFileName) {
@@ -34,6 +39,8 @@ public class BallSprite extends PhysicsSprite {
         didCollide = false; // boolean to prevent double collisions
         prevCollide = false;
         playerCollide = true;
+        dribble = new Tween(this);
+        dribbleUp = true;
     }
 
     @Override
@@ -229,6 +236,43 @@ public class BallSprite extends PhysicsSprite {
         }
     }
 
+    /*
+        Player should call this once every x secs or so
+        This method will tween down then back up
+        param: how long you want the tween to be
+     */
+    public void dribble(long timems) {
+        // player will call dribble if he's dribbling
+        // if currently tweening, don't do anything
+        //if (ballFollowPlayer.isComplete()) {
+            // if not tweening, call appropriate tween animation
+            // dribble down
+        dribble = new Tween(this);
+            if (dribbleUp) {
+                dribble.animate(TweenableParams.Y, getPosition().y, getPosition().y + DRIBBLE_OFFSET, timems);
+                dribbleUp = false;
+            } else {
+                // dribble up
+                dribble.animate(TweenableParams.Y, getPosition().y, getPosition().y - DRIBBLE_OFFSET, timems);
+                dribbleUp = true;
+            }
+            TweenJuggler.getInstance().addTweenNonRedundant(dribble, this);
+        //}
+    }
+
+    /*
+    public void pathToGridPoint(Point gridDest, long timems) {
+        Point endPosition = new Point(gridDest);
+        endPosition = GridManager.getInstance().gridtoGamePoint(endPosition);
+        endPosition.x += playerOffset.x;
+        endPosition.y += playerOffset.y;
+
+        ballFollowPlayer = new Tween(this);
+        ballFollowPlayer.animate(TweenableParams.X, getPosition().x, endPosition.x, timems);
+        ballFollowPlayer.animate(TweenableParams.Y, getPosition().y, endPosition.y, timems);
+        TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer, this);
+    }
+     */
     public Point getPlayerOffset() {
         return playerOffset;
     }
