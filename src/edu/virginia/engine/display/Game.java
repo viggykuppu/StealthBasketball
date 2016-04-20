@@ -194,7 +194,7 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        System.out.println(mouseEvent.getX()+" "+mouseEvent.getY());
+
     }
 
     @Override

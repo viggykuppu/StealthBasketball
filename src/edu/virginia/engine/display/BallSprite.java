@@ -135,7 +135,6 @@ public class BallSprite extends PhysicsSprite {
         double normalizingFactor = Math.sqrt(x*x+y*y);
         double vx = VELOCITY*(x/normalizingFactor);
         double vy  = VELOCITY*(y/normalizingFactor);
-        System.out.println(vx+" "+vy);
         this.setvX(vx);
         this.setvY(vy);
     }

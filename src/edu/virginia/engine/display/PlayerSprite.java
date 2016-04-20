@@ -117,7 +117,6 @@ public class PlayerSprite extends GridSprite {
 
     public void throwBall(int x, int y){
         Point relativeP = this.getRelativeRelativeLocation(new Point(x,y));
-        System.out.println(relativeP.x+" "+relativeP.y);
         myBall.throwBall(relativeP.x,relativeP.y);
         state = PlayerState.NoBall;
     }
