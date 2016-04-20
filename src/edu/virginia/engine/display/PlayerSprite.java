@@ -76,27 +76,27 @@ public class PlayerSprite extends GridSprite {
                 }
             } else {//Dunking action
 
-                if (pressedKeys.contains(KeyEvent.VK_UP)) {
-                    if (moveOnGrid(0, -1, 500)) {
-                        myBall.dunk(Direction.UP);
-                        state = PlayerState.NoBall;
-                    }
-                } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
-                    if (moveOnGrid(0, 1, 500)) {
-                        myBall.dunk(Direction.DOWN);
-                        state = PlayerState.NoBall;
-                    }
-                } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
-                    if (moveOnGrid(-1, 0, 500)) {
-                        myBall.dunk(Direction.LEFT);
-                        state = PlayerState.NoBall;
-                    }
-                } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
-                    if (moveOnGrid(1, 0, 500)) {
-                        myBall.dunk(Direction.RIGHT);
-                        state = PlayerState.NoBall;
-                    }
-                }
+//                if (pressedKeys.contains(KeyEvent.VK_UP)) {
+//                    if (moveOnGrid(0, -1, 500)) {
+//                        myBall.dunk(Direction.UP);
+//                        state = PlayerState.NoBall;
+//                    }
+//                } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+//                    if (moveOnGrid(0, 1, 500)) {
+//                        myBall.dunk(Direction.DOWN);
+//                        state = PlayerState.NoBall;
+//                    }
+//                } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+//                    if (moveOnGrid(-1, 0, 500)) {
+//                        myBall.dunk(Direction.LEFT);
+//                        state = PlayerState.NoBall;
+//                    }
+//                } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+//                    if (moveOnGrid(1, 0, 500)) {
+//                        myBall.dunk(Direction.RIGHT);
+//                        state = PlayerState.NoBall;
+//                    }
+//                }
             }
         } else if (state == PlayerState.NoBall) {
 
@@ -113,6 +113,13 @@ public class PlayerSprite extends GridSprite {
 
         //Update player subcomponents
         //myBall.update(pressedKeys, heldKeys);
+    }
+
+    public void throwBall(int x, int y){
+        Point relativeP = this.getRelativeRelativeLocation(new Point(x,y));
+        System.out.println(relativeP.x+" "+relativeP.y);
+        myBall.throwBall(relativeP.x,relativeP.y);
+        state = PlayerState.NoBall;
     }
 
     public void generateSound(int radius){

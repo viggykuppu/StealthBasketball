@@ -130,26 +130,14 @@ public class BallSprite extends PhysicsSprite {
     /*
         Gets the current position and gives the ball physics
      */
-    public void dunk(Direction vector) {
-
-        switch (vector) {
-            case UP:
-                this.setvY(-VELOCITY);
-                //this.setaX(-DEACCEL);
-                break;
-            case DOWN:
-                this.setvY(VELOCITY);
-                //this.setaY(DEACCEL);
-                break;
-            case LEFT:
-                this.setvX(-VELOCITY);
-                //this.setaX(-DEACCEL);
-                break;
-            case RIGHT:
-                this.setvX(VELOCITY);
-                //this.setaY(DEACCEL);
-                break;
-        }
+    public void throwBall(int x, int y) {
+        //First calculate
+        double normalizingFactor = Math.sqrt(x*x+y*y);
+        double vx = VELOCITY*(x/normalizingFactor);
+        double vy  = VELOCITY*(y/normalizingFactor);
+        System.out.println(vx+" "+vy);
+        this.setvX(vx);
+        this.setvY(vy);
     }
 
     /*

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Highest level class for creating a game in Java.
  */
-public class Game extends DisplayObjectContainer implements ActionListener, KeyListener {
+public class Game extends DisplayObjectContainer implements ActionListener, KeyListener, MouseListener{
 
     /* Frames per second this game runs at */
     private int FRAMES_PER_SEC = 30;
@@ -29,7 +29,7 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
         setUpMainFrame(gameId, width, height);
 
         setScenePanel(new GameScenePanel(this));
-
+        mainFrame.addMouseListener(this);
 		/* Use an absolute layout */
         scenePanel.setLayout(null);
     }
@@ -189,6 +189,31 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
     @Override
     public void keyTyped(KeyEvent e) {
         // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+        System.out.println(mouseEvent.getX()+" "+mouseEvent.getY());
+    }
+
+    @Override
+    public void mousePressed(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent mouseEvent) {
 
     }
 }
