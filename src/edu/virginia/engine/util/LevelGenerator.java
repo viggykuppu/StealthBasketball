@@ -6,6 +6,7 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
 import edu.virginia.engine.display.*;
+import org.w3c.dom.events.EventException;
 import org.xml.sax.*;
 import org.w3c.dom.*;
 import com.sun.org.apache.xerces.internal.parsers.XMLParser;
@@ -32,7 +33,8 @@ public class LevelGenerator {
     private PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
     private HoopSprite hoop = new HoopSprite("Hoop","hoop.png");
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
-    private ArrayList<Pair<TeleporterSprite,TeleporterSprite>> teleporterSprites = new ArrayList<>();
+    private ArrayList<TeleporterSprite> teleporters = new ArrayList<>();
+    private ArrayList<Integer> teleporterPairId = new ArrayList<>();
     private ArrayList<String> stunAnim = new ArrayList<>();
     private Map<Point,ArrayList<Direction>> m = new HashMap<Point,ArrayList<Direction>>();
     private File levelFile;
@@ -45,6 +47,7 @@ public class LevelGenerator {
         ball.setPivotPoint(new Point(28, 28));
         stunAnim.add("floryan,mark_stunned.png");
         stunAnim.add("floryan,mark_stunned.png");
+        //Parse level file
         int y = 0;
         int x = 0;
         try {
@@ -68,17 +71,34 @@ public class LevelGenerator {
                 }
                 ly++;
             }
+
+            //Add objects to grid
             GridManager.getInstance().addToGrid(player,player.getGridPosition().x,player.getGridPosition().y);
             GridManager.getInstance().addToGrid(hoop,hoop.getGridPosition().x,hoop.getGridPosition().y);
             for(GridGuardSprite g : guards){
                 GridManager.getInstance().addToGrid(g,g.getGridPosition().x,g.getGridPosition().y);
             }
+            int numPairs = 0;//Teleporter pairs should be numbered from 1 up
+            for (int i = 0; i < teleporterPairId.size(); i++)
+                if (teleporterPairId.get(i) > numPairs)
+                    numPairs = teleporterPairId.get(i);
+            for(int i = 1; i <= numPairs; i++) {
+                int firstIndex = teleporterPairId.indexOf(i);
+                int secondIndex = teleporterPairId.lastIndexOf(i);
+                if (teleporters.get(firstIndex) != null && teleporters.get(secondIndex) != null && firstIndex != secondIndex) {
+                    teleporters.get(firstIndex).setPartner(teleporters.get(secondIndex));
+                    teleporters.get(secondIndex).setPartner(teleporters.get(firstIndex));
+                    GridManager.getInstance().addToGrid(teleporters.get(firstIndex),teleporters.get(firstIndex).getGridPosition().x,teleporters.get(firstIndex).getGridPosition().y);
+                    GridManager.getInstance().addToGrid(teleporters.get(secondIndex),teleporters.get(secondIndex).getGridPosition().x,teleporters.get(secondIndex).getGridPosition().y);
+                }
+            }
+
+            //Add walls to grid
             for(Point p : m.keySet()){
                 for(Direction d : m.get(p)){
                     GridManager.getInstance().addWall(p,d);
                 }
             }
-
             for(int i = 0; i < x; i++){
                 GridManager.getInstance().addWall(new Point(i,0),Direction.UP);
                 GridManager.getInstance().addWall(new Point(i,y-1),Direction.DOWN);
@@ -142,39 +162,19 @@ public class LevelGenerator {
                 hoop.setGridPosition(location);
                 hoop.setPivotPoint(new Point(45,45));
                 break;
-            case "T":
-                TeleporterSprite tpS = new TeleporterSprite("Teleporter", "Teleporter/frame_0_delay-0.04s.gif");
-                tpS.setPivotPoint(new Point(45, 45));
-                tpS.setGridPosition(location);
-                GridManager.getInstance().addToGrid(tpS,tpS.getGridPosition().x,tpS.getGridPosition().y);
-                break;
+            default:
+                if (s.substring(0,1).equals("T")) {
+                    TeleporterSprite tpS = new TeleporterSprite("Teleporter", "Teleporter/frame_0_delay-0.04s.gif");
+                    tpS.setPivotPoint(new Point(45, 45));
+                    tpS.setGridPosition(location);
+                    teleporters.add(tpS);
+                    try {
+                        int i = Integer.parseInt(s.substring(1));
+                        teleporterPairId.add(i);
+                    } catch (Exception e) {
+                        System.out.println("Teleporter int parse failed");
+                    }
+                }
         }
     }
 }
-
-class Pair<F, S> {
-    private F first = null; //first member of pair
-    private S second = null; //second member of pair
-
-    public Pair(F first, S second) {
-        this.first = first;
-        this.second = second;
-    }
-
-    public void setFirst(F first) {
-        this.first = first;
-    }
-
-    public void setSecond(S second) {
-        this.second = second;
-    }
-
-    public F getFirst() {
-        return first;
-    }
-
-    public S getSecond() {
-        return second;
-    }
-}
-
