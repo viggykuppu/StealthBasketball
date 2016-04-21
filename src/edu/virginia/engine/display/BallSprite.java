@@ -1,9 +1,6 @@
 package edu.virginia.engine.display;
 
-import edu.virginia.engine.tween.Tween;
-import edu.virginia.engine.tween.TweenJuggler;
-import edu.virginia.engine.tween.TweenTransitions;
-import edu.virginia.engine.tween.TweenableParams;
+import edu.virginia.engine.tween.*;
 import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
