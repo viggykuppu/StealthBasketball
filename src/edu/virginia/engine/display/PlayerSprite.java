@@ -66,41 +66,41 @@ public class PlayerSprite extends GridSprite {
 
             if (!dunkKeyed) {//Normal Movement
 
-                if (pressedKeys.contains(KeyEvent.VK_UP)) {
+                if (pressedKeys.contains(KeyEvent.VK_W)) {
                     if (moveOnGrid(0, -1, 500)) {
 //                        myBall.pathToGridPoint(gridPosition, 500);
                     }
-                } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                } else if (pressedKeys.contains(KeyEvent.VK_S)) {
                     if (moveOnGrid(0, 1, 500)) {
 //                        myBall.pathToGridPoint(gridPosition, 500);
                     }
-                } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                } else if (pressedKeys.contains(KeyEvent.VK_A)) {
                     if (moveOnGrid(-1, 0, 500)) {
 //                        myBall.pathToGridPoint(gridPosition, 500);
                     }
-                } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                } else if (pressedKeys.contains(KeyEvent.VK_D)) {
                     if (moveOnGrid(1, 0, 500)) {
 //                        myBall.pathToGridPoint(gridPosition, 500);
                     }
                 }
             } else {//Dunking action
 
-//                if (pressedKeys.contains(KeyEvent.VK_UP)) {
+//                if (pressedKeys.contains(KeyEvent.VK_W)) {
 //                    if (moveOnGrid(0, -1, 500)) {
 //                        myBall.dunk(Direction.UP);
 //                        state = PlayerState.NoBall;
 //                    }
-//                } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+//                } else if (pressedKeys.contains(KeyEvent.VK_S)) {
 //                    if (moveOnGrid(0, 1, 500)) {
 //                        myBall.dunk(Direction.DOWN);
 //                        state = PlayerState.NoBall;
 //                    }
-//                } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+//                } else if (pressedKeys.contains(KeyEvent.VK_A)) {
 //                    if (moveOnGrid(-1, 0, 500)) {
 //                        myBall.dunk(Direction.LEFT);
 //                        state = PlayerState.NoBall;
 //                    }
-//                } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+//                } else if (pressedKeys.contains(KeyEvent.VK_D)) {
 //                    if (moveOnGrid(1, 0, 500)) {
 //                        myBall.dunk(Direction.RIGHT);
 //                        state = PlayerState.NoBall;
@@ -109,13 +109,13 @@ public class PlayerSprite extends GridSprite {
             }
         } else if (state == PlayerState.NoBall) {
 
-            if (pressedKeys.contains(KeyEvent.VK_UP)) {
+            if (pressedKeys.contains(KeyEvent.VK_W)) {
                 moveOnGrid(0, -1, 500);
-            } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+            } else if (pressedKeys.contains(KeyEvent.VK_S)) {
                 moveOnGrid(0, 1, 500);
-            } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+            } else if (pressedKeys.contains(KeyEvent.VK_A)) {
                 moveOnGrid(-1, 0, 500);
-            } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+            } else if (pressedKeys.contains(KeyEvent.VK_D)) {
                 moveOnGrid(1, 0, 500);
             }
         }

@@ -37,7 +37,7 @@ public class GridManager extends DisplayObjectContainer{
 
     public GridCell[][] sprites = null;
 
-    float turnLength = 1000;
+    float turnLength = 800;
     long previousTurnTime;
     boolean turnsActive = false;
     long frameTimer;
