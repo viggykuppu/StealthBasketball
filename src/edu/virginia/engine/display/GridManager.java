@@ -340,6 +340,12 @@ public class GridManager extends DisplayObjectContainer{
         }
     }
 
+    public void addTeleporter(Point t1, Point t2){
+        GridCell starter = sprites[t1.x][t1.y];
+        starter.neighbors.put(Direction.TELEPORTER,sprites[t2.x][t2.y]);
+
+    }
+
     void resetAStarGrid(){
         for(int i = 0; i < gridX; i++){
             for(int j = 0; j < gridY; j++){
