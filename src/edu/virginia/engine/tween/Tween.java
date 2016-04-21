@@ -23,12 +23,25 @@ public class Tween extends EventDispatcher{
 		this.transition = new TweenTransitions();
 		this.startTime = -1;
 	}
+
+	public Tween(DisplayObject object, TweenTransitions transition){
+		this.object = object;
+		this.transition = new TweenTransitions();
+		this.startTime = -1;
+	}
 	
 	public void animate(TweenableParams fieldToAnimate, double startVal, double endVal, long timems){
 		complete = false;
 		TweenParam tp = new TweenParam(fieldToAnimate,startVal,endVal,timems);
 		params.put(fieldToAnimate, tp);
 	}
+
+	public void animate(TweenableParams fieldToAnimate, double startVal, double endVal, long timems, TweenTransitionIndex tti){
+		complete = false;
+		TweenParam tp = new TweenParam(fieldToAnimate,startVal,endVal,timems,tti);
+		params.put(fieldToAnimate, tp);
+	}
+
 	
 	public void processTween(TweenParam tp){
 		TweenableParams fieldToAnimate = tp.getParam();

@@ -1,9 +1,6 @@
 package edu.virginia.engine.display;
 
-import edu.virginia.engine.tween.Tween;
-import edu.virginia.engine.tween.TweenJuggler;
-import edu.virginia.engine.tween.TweenTransitions;
-import edu.virginia.engine.tween.TweenableParams;
+import edu.virginia.engine.tween.*;
 import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
@@ -281,11 +278,11 @@ public class BallSprite extends PhysicsSprite {
             // dribble down
         dribble = new Tween(this);
             if (dribbleUp) {
-                dribble.animate(TweenableParams.BALL_DRIBBLE, 0, DRIBBLE_OFFSET, timems);
+                dribble.animate(TweenableParams.BALL_DRIBBLE, 0, DRIBBLE_OFFSET, timems, TweenTransitionIndex.QUAD);
                 dribbleUp = false;
             } else {
                 // dribble up
-                dribble.animate(TweenableParams.BALL_DRIBBLE, DRIBBLE_OFFSET, 0, timems);
+                dribble.animate(TweenableParams.BALL_DRIBBLE, DRIBBLE_OFFSET, 0, timems, TweenTransitionIndex.INVERSE_QUAD);
                 dribbleUp = true;
             }
             TweenJuggler.getInstance().addTweenNonRedundant(dribble, this);
