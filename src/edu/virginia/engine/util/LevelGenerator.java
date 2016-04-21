@@ -29,7 +29,7 @@ public class LevelGenerator {
     public Point screenSize = new Point(1000,500);
 
     private BallSprite ball = new BallSprite("Ball", "coin.gif");
-    private PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
+    private PlayerSprite player = new PlayerSprite("Player", "vignesh.png", ball);
     private HoopSprite hoop = new HoopSprite("Hoop","hoop.png");
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
     private Map<Point,ArrayList<Direction>> m = new HashMap<Point,ArrayList<Direction>>();
@@ -97,7 +97,7 @@ public class LevelGenerator {
     public void handleToken(String s, Point location){
         switch(s){
             case "G":
-                GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", player);
+                GridGuardSprite guard = new GridGuardSprite("Guard", "meg.png", player);
                 guard.setPivotPoint(new Point(34, 46));
                 guard.setGridPosition(location);
                 guards.add(guard);
