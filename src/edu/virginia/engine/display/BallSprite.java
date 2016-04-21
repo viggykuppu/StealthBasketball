@@ -112,6 +112,17 @@ public class BallSprite extends PhysicsSprite {
                 }
             }
         }
+        if (getPosition().x >= gridManager.getScreenX()) {
+            this.reflect(Direction.LEFT);
+        } else if (getPosition().x <= 0) {
+            this.reflect(Direction.RIGHT);
+        }
+
+        if (getPosition().y >= gridManager.getScreenY()) {
+            this.reflect(Direction.UP);
+        } else if (getPosition().y <= 0) {
+            this.reflect(Direction.DOWN);
+        }
         if (print)
             System.out.println("-------------");
         // only if there is a frame where there is no collisions should this reset

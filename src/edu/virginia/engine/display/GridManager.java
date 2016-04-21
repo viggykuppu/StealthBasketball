@@ -359,4 +359,12 @@ public class GridManager extends DisplayObjectContainer{
     public void setPlayer(PlayerSprite player) {
         this.player = player;
     }
+
+    public int getScreenX() {
+        return this.screenX;
+    }
+
+    public int getScreenY() {
+        return this.screenY;
+    }
 }
