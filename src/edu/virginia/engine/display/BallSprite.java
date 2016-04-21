@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class BallSprite extends PhysicsSprite {
 
     // static variables
-    static int DRIBBLE_OFFSET = 50;
+    static int DRIBBLE_OFFSET = 15;
 
     Point playerOffset = new Point(0, 0);
     Tween ballFollowPlayer;

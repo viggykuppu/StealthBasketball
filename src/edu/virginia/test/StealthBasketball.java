@@ -32,6 +32,7 @@ public class StealthBasketball extends Game {
         GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", player);
         levels.add("level1.csv");
         levels.add("level2.csv");
+        levels.add("level3.csv");
 
 
         GridManager.getInstance().startTurns();
