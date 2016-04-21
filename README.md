@@ -8,8 +8,8 @@ Contributors:
 * Vignesh Kuppusamy (vmk5dw)
 
 Controls:
-* Use the directional keys to move
-* Hold Z and use directional key to throw basketball
+* Use WASD to move
+* Point and click with the mouse to throw the basketball
 
 Goal:
 * Throw the ball into the hoop to win!

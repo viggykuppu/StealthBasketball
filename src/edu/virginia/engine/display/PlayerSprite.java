@@ -56,7 +56,7 @@ public class PlayerSprite extends GridSprite {
             //Update player subcomponents
             //myBall.update(pressedKeys, heldKeys);
             long delta = System.currentTimeMillis();
-            if (delta - timer > 1000) {
+            if (delta - timer > 500) {
                 myBall.dribble(500);
                 timer = System.currentTimeMillis();
             }
@@ -68,41 +68,41 @@ public class PlayerSprite extends GridSprite {
 
             if (!dunkKeyed) {//Normal Movement
 
-                if (pressedKeys.contains(KeyEvent.VK_UP)) {
+                if (pressedKeys.contains(KeyEvent.VK_W)) {
                     if (moveOnGrid(0, -1, 500)) {
 //                        myBall.pathToGridPoint(gridPosition, 500);
                     }
-                } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+                } else if (pressedKeys.contains(KeyEvent.VK_S)) {
                     if (moveOnGrid(0, 1, 500)) {
 //                        myBall.pathToGridPoint(gridPosition, 500);
                     }
-                } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+                } else if (pressedKeys.contains(KeyEvent.VK_A)) {
                     if (moveOnGrid(-1, 0, 500)) {
 //                        myBall.pathToGridPoint(gridPosition, 500);
                     }
-                } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+                } else if (pressedKeys.contains(KeyEvent.VK_D)) {
                     if (moveOnGrid(1, 0, 500)) {
 //                        myBall.pathToGridPoint(gridPosition, 500);
                     }
                 }
             } else {//Dunking action
 
-//                if (pressedKeys.contains(KeyEvent.VK_UP)) {
+//                if (pressedKeys.contains(KeyEvent.VK_W)) {
 //                    if (moveOnGrid(0, -1, 500)) {
 //                        myBall.dunk(Direction.UP);
 //                        state = PlayerState.NoBall;
 //                    }
-//                } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+//                } else if (pressedKeys.contains(KeyEvent.VK_S)) {
 //                    if (moveOnGrid(0, 1, 500)) {
 //                        myBall.dunk(Direction.DOWN);
 //                        state = PlayerState.NoBall;
 //                    }
-//                } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+//                } else if (pressedKeys.contains(KeyEvent.VK_A)) {
 //                    if (moveOnGrid(-1, 0, 500)) {
 //                        myBall.dunk(Direction.LEFT);
 //                        state = PlayerState.NoBall;
 //                    }
-//                } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+//                } else if (pressedKeys.contains(KeyEvent.VK_D)) {
 //                    if (moveOnGrid(1, 0, 500)) {
 //                        myBall.dunk(Direction.RIGHT);
 //                        state = PlayerState.NoBall;
@@ -111,13 +111,13 @@ public class PlayerSprite extends GridSprite {
             }
         } else if (state == PlayerState.NoBall) {
 
-            if (pressedKeys.contains(KeyEvent.VK_UP)) {
+            if (pressedKeys.contains(KeyEvent.VK_W)) {
                 moveOnGrid(0, -1, 500);
-            } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
+            } else if (pressedKeys.contains(KeyEvent.VK_S)) {
                 moveOnGrid(0, 1, 500);
-            } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
+            } else if (pressedKeys.contains(KeyEvent.VK_A)) {
                 moveOnGrid(-1, 0, 500);
-            } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
+            } else if (pressedKeys.contains(KeyEvent.VK_D)) {
                 moveOnGrid(1, 0, 500);
             }
         }
@@ -187,8 +187,8 @@ public class PlayerSprite extends GridSprite {
         //Generate ping visual
         if(this.state != PlayerState.NoBall){
             Tween t = new Tween(pingEffect);
-            t.animate(TweenableParams.PING_RADIUS,0,pingRadius,300);
-            t.animate(TweenableParams.ALPHA,1.0,0.0,300);
+            t.animate(TweenableParams.PING_RADIUS,0,pingRadius,500);
+            t.animate(TweenableParams.ALPHA,1.0,0.0,500);
             TweenJuggler.getInstance().addTween(t);
         }
     }

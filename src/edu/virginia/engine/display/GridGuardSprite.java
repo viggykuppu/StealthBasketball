@@ -14,7 +14,7 @@ public class GridGuardSprite extends GridSprite{
     double sightRadius = 9;
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
-    static double STUNLENGTH = 1; // determined in seconds
+    static double STUNLENGTH = 3; // determined in seconds
     boolean stunned;
     ArrayList<GridSprite> aPath;
     GridManager gridManager;
@@ -152,7 +152,11 @@ public class GridGuardSprite extends GridSprite{
 //            aSprite.setPosition(normalPoint);
 //            aPath.add(aSprite);
 //        }
-        GridSprite aSprite = new GridSprite("path", "coin.gif");
+        GridSprite aSprite = new GridSprite("path", "x.png");
+        aSprite.setScaleX(.5);
+        aSprite.setScaleY(.5);
+        Point pivot = new Point(60, 60);
+        aSprite.setPivotPoint(pivot);
         aSprite.setGridPosition(path.get(path.size()-1));
         Point normalPoint = gridManager.gridtoGamePoint(path.get(path.size()-1));
         aSprite.setPosition(normalPoint);
