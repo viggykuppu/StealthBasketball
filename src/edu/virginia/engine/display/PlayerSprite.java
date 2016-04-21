@@ -29,14 +29,14 @@ public class PlayerSprite extends GridSprite {
         NEUTRAL, DUNKING, NoBall, THROWING
     }
 
-    public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
-        super(id, imageFileName,GridSpriteTypes.Player);
-        gridManager = GridManager.getInstance();
-        this.myBall = myBall;
-        this.pingEffect = new PlayerPingEffect("Ping1",this);
-        gridManager.setPlayer(this);
-        gridManager.addChild(myBall);
-    }
+        public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
+            super(id, imageFileName,GridSpriteTypes.Player);
+            gridManager = GridManager.getInstance();
+            this.myBall = myBall;
+            this.pingEffect = new PlayerPingEffect("Ping1",this);
+            gridManager.setPlayer(this);
+            this.addChild(myBall);
+        }
 
     @Override
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
@@ -68,19 +68,19 @@ public class PlayerSprite extends GridSprite {
 
                 if (pressedKeys.contains(KeyEvent.VK_UP)) {
                     if (moveOnGrid(0, -1, 500)) {
-                        myBall.pathToGridPoint(gridPosition, 500);
+//                        myBall.pathToGridPoint(gridPosition, 500);
                     }
                 } else if (pressedKeys.contains(KeyEvent.VK_DOWN)) {
                     if (moveOnGrid(0, 1, 500)) {
-                        myBall.pathToGridPoint(gridPosition, 500);
+//                        myBall.pathToGridPoint(gridPosition, 500);
                     }
                 } else if (pressedKeys.contains(KeyEvent.VK_LEFT)) {
                     if (moveOnGrid(-1, 0, 500)) {
-                        myBall.pathToGridPoint(gridPosition, 500);
+//                        myBall.pathToGridPoint(gridPosition, 500);
                     }
                 } else if (pressedKeys.contains(KeyEvent.VK_RIGHT)) {
                     if (moveOnGrid(1, 0, 500)) {
-                        myBall.pathToGridPoint(gridPosition, 500);
+//                        myBall.pathToGridPoint(gridPosition, 500);
                     }
                 }
             } else {//Dunking action
@@ -122,9 +122,16 @@ public class PlayerSprite extends GridSprite {
     }
 
     public void throwBall(int x, int y){
-        Point relativeP = this.getRelativeRelativeLocation(new Point(x,y));
-        myBall.throwBall(relativeP.x,relativeP.y);
         state = PlayerState.NoBall;
+        this.removeChild(myBall);
+        Point newBallPosition = new Point(this.getPosition().x+myBall.getPosition().x,this.getPosition().y+myBall.getPosition().y);
+        myBall.setPosition(newBallPosition);
+        Point globalBallPosition = this.globalize(newBallPosition);
+        myBall.setDuck(0);
+        Point relativeP = new Point(x-globalBallPosition.x,y-globalBallPosition.y);
+        System.out.println(relativeP);
+        GridManager.getInstance().addChild(myBall);
+        myBall.throwBall(relativeP.x,relativeP.y);
     }
 
     public void generateSound(int radius){
@@ -145,7 +152,6 @@ public class PlayerSprite extends GridSprite {
     @Override
     public void draw(Graphics g) {
         super.draw(g);
-        //myBall.draw(g);
         pingEffect.draw(g);
     }
 

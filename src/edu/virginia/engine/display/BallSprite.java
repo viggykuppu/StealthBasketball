@@ -30,6 +30,7 @@ public class BallSprite extends PhysicsSprite {
     boolean playerCollide;
     Tween dribble;
     boolean dribbleUp; // status of whether the ball is 'up' or on dribble 'down'
+    private int duck = 0;
     //static int DEACCEL = -1;
 
     public BallSprite(String id, String imageFileName) {
@@ -65,7 +66,10 @@ public class BallSprite extends PhysicsSprite {
                             if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
                                 this.setvX(0);
                                 this.setvY(0);
+                                this.setPosition(new Point(this.getPlayerOffset().x,this.getPlayerOffset().y));
+                                GridManager.getInstance().player.addChild(this);
                                 player.setState(PlayerSprite.PlayerState.NEUTRAL);
+                                GridManager.getInstance().removeBall = true;
                                 playerCollide = true;
                                 break;
                             }
@@ -151,6 +155,7 @@ public class BallSprite extends PhysicsSprite {
      */
     public void throwBall(int x, int y) {
         //First calculate
+        TweenJuggler.getInstance().removeTween(dribble);
         double normalizingFactor = Math.sqrt(x*x+y*y);
         double vx = VELOCITY*(x/normalizingFactor);
         double vy  = VELOCITY*(y/normalizingFactor);
@@ -276,19 +281,42 @@ public class BallSprite extends PhysicsSprite {
             // dribble down
         dribble = new Tween(this);
             if (dribbleUp) {
-                dribble.animate(TweenableParams.Y, getPosition().y, getPosition().y + DRIBBLE_OFFSET, timems);
+                dribble.animate(TweenableParams.BALL_DRIBBLE, 0, DRIBBLE_OFFSET, timems);
                 dribbleUp = false;
             } else {
                 // dribble up
-                dribble.animate(TweenableParams.Y, getPosition().y, getPosition().y - DRIBBLE_OFFSET, timems);
+                dribble.animate(TweenableParams.BALL_DRIBBLE, DRIBBLE_OFFSET, 0, timems);
                 dribbleUp = true;
             }
             TweenJuggler.getInstance().addTweenNonRedundant(dribble, this);
         //}
     }
+
+    @Override
+    public Point getPosition(){
+        return new Point(super.getPosition().x,super.getPosition().y+duck);
+    }
+
+    @Override
+    public void setPosition(Point position){
+       if(GridManager.getInstance().player.getState() == PlayerSprite.PlayerState.NoBall){
+            super.setPosition(position);
+       } else {
+           position = new Point(position.x,position.y-duck);
+           super.setPosition(position);
+       }
+    }
     
     public Point getPlayerOffset() {
         return playerOffset;
+    }
+
+    public void setDuck(int duck){
+        this.duck = duck;
+    }
+
+    public int getDuck(){
+        return this.duck;
     }
 
     public void setPlayerOffset(Point playerOffset) {

@@ -1,5 +1,6 @@
 package edu.virginia.engine.tween;
 
+import edu.virginia.engine.display.BallSprite;
 import edu.virginia.engine.display.DisplayObject;
 import edu.virginia.engine.display.PlayerPingEffect;
 import edu.virginia.engine.events.EventDispatcher;
@@ -57,6 +58,10 @@ public class Tween extends EventDispatcher{
 				break;
 			case PING_RADIUS:
 				((PlayerPingEffect)object).setRadius((int)val);
+				break;
+			case BALL_DRIBBLE:
+				BallSprite ball = (BallSprite)object;
+				ball.setDuck((int)val);
 				break;
 		}
 	}
