@@ -7,6 +7,7 @@ import edu.virginia.engine.util.LevelGenerator;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
@@ -28,7 +29,7 @@ public class StealthBasketball extends Game {
         super("Stealth Basketball!", 1007, 530);
         stunAnim.add("floryan,mark_stunned.png");
         stunAnim.add("floryan,mark_stunned.png");
-        GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", stunAnim,player);
+        GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", player);
         levels.add("level1.csv");
         levels.add("level2.csv");
 
@@ -102,6 +103,12 @@ public class StealthBasketball extends Game {
     public static void main(String[] args) {
         StealthBasketball game = new StealthBasketball();
         game.start();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent){
+        super.mouseClicked(mouseEvent);
+        GridManager.getInstance().player.throwBall(mouseEvent.getX(),mouseEvent.getY());
     }
 
 }

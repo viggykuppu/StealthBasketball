@@ -30,6 +30,10 @@ public class GridManager extends DisplayObjectContainer{
     int gridyScale;
     int screenX;
     int screenY;
+    int gameX;
+    int gameY;
+
+    boolean removeBall = false;
 
     public GridCell[][] sprites = null;
 
@@ -43,7 +47,7 @@ public class GridManager extends DisplayObjectContainer{
 
     public boolean levelFinished = true;
     public boolean levelFailed = false;
-    PlayerSprite player; //this is the player sprite
+    public PlayerSprite player; //this is the player sprite
 
     @Override
     public void draw(Graphics g){
@@ -84,6 +88,12 @@ public class GridManager extends DisplayObjectContainer{
                 turnUpdate();
                 previousTurnTime = System.currentTimeMillis();
             }
+        }
+
+        if(removeBall){
+            BallSprite ball = (BallSprite)this.getChild("Ball");
+            this.removeChild(ball);
+            removeBall = false;
         }
     }
 
@@ -166,6 +176,8 @@ public class GridManager extends DisplayObjectContainer{
     public void setUpGrid(int gridX, int gridY, int gameX, int gameY, int screenX, int screenY){
         gridxScale = gameX / gridX;
         gridyScale = gameY / gridY;
+        this.gameX = gameX;
+        this.gameY = gameY;
         this.gridX = gridX;
         this.gridY = gridY;
         this.screenX = screenX;
@@ -358,5 +370,21 @@ public class GridManager extends DisplayObjectContainer{
 
     public void setPlayer(PlayerSprite player) {
         this.player = player;
+    }
+
+    public int getScreenX() {
+        return this.screenX;
+    }
+
+    public int getScreenY() {
+        return this.screenY;
+    }
+
+    public int getGameX() {
+        return this.gameX;
+    }
+
+    public int getGameY() {
+        return this.gameY;
     }
 }
