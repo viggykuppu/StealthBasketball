@@ -116,13 +116,13 @@ public class BallSprite extends PhysicsSprite {
                 }
             }
         }
-        if (getPosition().x >= gridManager.getScreenX()) {
+        if (getPosition().x >= gridManager.getGameX()) {
             this.reflect(Direction.LEFT);
         } else if (getPosition().x <= 0) {
             this.reflect(Direction.RIGHT);
         }
 
-        if (getPosition().y >= gridManager.getScreenY()) {
+        if (getPosition().y >= gridManager.getGameY()) {
             this.reflect(Direction.UP);
         } else if (getPosition().y <= 0) {
             this.reflect(Direction.DOWN);
