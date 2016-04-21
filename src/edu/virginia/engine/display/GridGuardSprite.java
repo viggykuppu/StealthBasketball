@@ -18,16 +18,20 @@ public class GridGuardSprite extends GridSprite{
     boolean stunned;
     ArrayList<GridSprite> aPath;
     GridManager gridManager;
+    private ArrayList<String> stunAnim;
 
     private enum GridGuardState{
         playerVisible,lostPlayer,idle;
     }
 
-    public GridGuardSprite(String id, String imageFileName, ArrayList<String> stunAnimation, PlayerSprite player) {
+    public GridGuardSprite(String id, String imageFileName, PlayerSprite player) {
         super(id, imageFileName, GridSpriteTypes.Guard);
+        stunAnim = new ArrayList<>();
         this.player = player;
         this.stunned = false;
-        readAnimation("Stunned", stunAnimation, STUNLENGTH);
+        stunAnim.add("floryan,mark_stunned.png");
+        stunAnim.add("floryan,mark_stunned.png");
+        readAnimation("Stunned", stunAnim, STUNLENGTH);
         aPath = new ArrayList<>();
         gridManager = GridManager.getInstance();
     }

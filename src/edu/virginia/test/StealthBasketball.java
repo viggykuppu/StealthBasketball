@@ -29,7 +29,7 @@ public class StealthBasketball extends Game {
         super("Stealth Basketball!", 1007, 530);
         stunAnim.add("floryan,mark_stunned.png");
         stunAnim.add("floryan,mark_stunned.png");
-        GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", stunAnim,player);
+        GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", player);
         levels.add("level1.csv");
         levels.add("level2.csv");
 

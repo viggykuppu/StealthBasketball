@@ -32,7 +32,6 @@ public class LevelGenerator {
     private PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
     private HoopSprite hoop = new HoopSprite("Hoop","hoop.png");
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
-    private ArrayList<String> stunAnim = new ArrayList<>();
     private Map<Point,ArrayList<Direction>> m = new HashMap<Point,ArrayList<Direction>>();
     private File levelFile;
     public LevelGenerator(String fileName){
@@ -42,8 +41,6 @@ public class LevelGenerator {
     public void generateLevel(){
         player.setPivotPoint(new Point(player.getUnscaledWidth() / 2, player.getUnscaledHeight() / 2));
         ball.setPivotPoint(new Point(28, 28));
-        stunAnim.add("floryan,mark_stunned.png");
-        stunAnim.add("floryan,mark_stunned.png");
         int y = 0;
         int x = 0;
         try {
@@ -95,7 +92,7 @@ public class LevelGenerator {
     public void handleToken(String s, Point location){
         switch(s){
             case "G":
-                GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", stunAnim, player);
+                GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", player);
                 guard.setPivotPoint(new Point(34, 46));
                 guard.setGridPosition(location);
                 guards.add(guard);
