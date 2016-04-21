@@ -111,8 +111,13 @@ public class PlayerSprite extends GridSprite {
             }
         }
 
-        //Update player subcomponents
-        //myBall.update(pressedKeys, heldKeys);
+        for(DisplayObject g: GridManager.getInstance().getChildren()){
+            if (g.getClass().equals(TeleporterSprite.class)){
+                if (collidesWith(g)){
+                    System.out.println(((TeleporterSprite)g).getPartner());
+                }
+            }
+        }
     }
 
     public void generateSound(int radius){
