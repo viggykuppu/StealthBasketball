@@ -61,7 +61,6 @@ public class Tween extends EventDispatcher{
 				break;
 			case BALL_DRIBBLE:
 				BallSprite ball = (BallSprite)object;
-				System.out.println(val);
 				ball.setDuck((int)val);
 				break;
 		}

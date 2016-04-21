@@ -31,6 +31,8 @@ public class GridManager extends DisplayObjectContainer{
     int screenX;
     int screenY;
 
+    boolean removeBall = false;
+
     public GridCell[][] sprites = null;
 
     float turnLength = 1000;
@@ -84,6 +86,12 @@ public class GridManager extends DisplayObjectContainer{
                 turnUpdate();
                 previousTurnTime = System.currentTimeMillis();
             }
+        }
+
+        if(removeBall){
+            BallSprite ball = (BallSprite)this.getChild("Ball");
+            this.removeChild(ball);
+            removeBall = false;
         }
     }
 

@@ -86,7 +86,7 @@ public class LevelGenerator {
                 GridManager.getInstance().addWall(new Point(0,i),Direction.LEFT);
                 GridManager.getInstance().addWall(new Point(x-1,i),Direction.RIGHT);
             }
-            ball.setPosition(new Point (player.getPosition().x+ball.getPlayerOffset().x,player.getPosition().y+ball.getPlayerOffset().y));
+            ball.setPosition(new Point (ball.getPlayerOffset().x, ball.getPlayerOffset().y));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

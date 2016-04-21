@@ -66,7 +66,10 @@ public class BallSprite extends PhysicsSprite {
                             if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
                                 this.setvX(0);
                                 this.setvY(0);
+                                this.setPosition(new Point(this.getPlayerOffset().x,this.getPlayerOffset().y));
+                                GridManager.getInstance().player.addChild(this);
                                 player.setState(PlayerSprite.PlayerState.NEUTRAL);
+                                GridManager.getInstance().removeBall = true;
                                 playerCollide = true;
                                 break;
                             }
@@ -141,6 +144,7 @@ public class BallSprite extends PhysicsSprite {
      */
     public void throwBall(int x, int y) {
         //First calculate
+        TweenJuggler.getInstance().removeTween(dribble);
         double normalizingFactor = Math.sqrt(x*x+y*y);
         double vx = VELOCITY*(x/normalizingFactor);
         double vy  = VELOCITY*(y/normalizingFactor);
@@ -298,6 +302,10 @@ public class BallSprite extends PhysicsSprite {
 
     public void setDuck(int duck){
         this.duck = duck;
+    }
+
+    public int getDuck(){
+        return this.duck;
     }
 
     public void setPlayerOffset(Point playerOffset) {

@@ -29,7 +29,7 @@ public class TweenJuggler implements IEventListener{
 		t.addEventListener(this,"tweenEnd");
 	}
 
-	void removeTweensByObject(DisplayObject displayObject){
+	public void removeTweensByObject(DisplayObject displayObject){
 		for (int i = tweens.size() - 1; i >= 0; i--){
 			if (tweens.get(i).getDisplayObject() == displayObject)
 				tweens.remove(i);
@@ -40,6 +40,10 @@ public class TweenJuggler implements IEventListener{
 		for(int i = 0; i < tweens.size(); i++){
 			tweens.get(i).update();
 		}
+	}
+
+	public void removeTween(Tween tween){
+		tweens.remove(tween);
 	}
 
 	@Override
