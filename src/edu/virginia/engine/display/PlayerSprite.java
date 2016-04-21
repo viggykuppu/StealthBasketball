@@ -54,7 +54,7 @@ public class PlayerSprite extends GridSprite {
             //Update player subcomponents
             //myBall.update(pressedKeys, heldKeys);
             long delta = System.currentTimeMillis();
-            if (delta - timer > 1000) {
+            if (delta - timer > 500) {
                 myBall.dribble(500);
                 timer = System.currentTimeMillis();
             }
@@ -160,8 +160,8 @@ public class PlayerSprite extends GridSprite {
         //Generate ping visual
         if(this.state != PlayerState.NoBall){
             Tween t = new Tween(pingEffect);
-            t.animate(TweenableParams.PING_RADIUS,0,pingRadius,300);
-            t.animate(TweenableParams.ALPHA,1.0,0.0,300);
+            t.animate(TweenableParams.PING_RADIUS,0,pingRadius,500);
+            t.animate(TweenableParams.ALPHA,1.0,0.0,500);
             TweenJuggler.getInstance().addTween(t);
         }
     }
