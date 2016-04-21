@@ -145,13 +145,18 @@ public class GridGuardSprite extends GridSprite{
         // generating the path from guard to player
         // TODO take this out when done testing
         aPath.clear();
-        for (int i = 0; i < path.size(); i++) {
-            GridSprite aSprite = new GridSprite("path", "coin.gif");
-            aSprite.setGridPosition(path.get(i));
-            Point normalPoint = gridManager.gridtoGamePoint(path.get(i));
-            aSprite.setPosition(normalPoint);
-            aPath.add(aSprite);
-        }
+//        for (int i = 0; i < path.size(); i++) {
+//            GridSprite aSprite = new GridSprite("path", "coin.gif");
+//            aSprite.setGridPosition(path.get(i));
+//            Point normalPoint = gridManager.gridtoGamePoint(path.get(i));
+//            aSprite.setPosition(normalPoint);
+//            aPath.add(aSprite);
+//        }
+        GridSprite aSprite = new GridSprite("path", "coin.gif");
+        aSprite.setGridPosition(path.get(path.size()-1));
+        Point normalPoint = gridManager.gridtoGamePoint(path.get(path.size()-1));
+        aSprite.setPosition(normalPoint);
+        aPath.add(aSprite);
 
         //Code for checking path if you would like to do that
         resetAStarGrid();

@@ -122,16 +122,18 @@ public class PlayerSprite extends GridSprite {
     }
 
     public void throwBall(int x, int y){
-        state = PlayerState.NoBall;
-        this.removeChild(myBall);
-        Point newBallPosition = new Point(this.getPosition().x+myBall.getPosition().x,this.getPosition().y+myBall.getPosition().y);
-        myBall.setPosition(newBallPosition);
-        Point globalBallPosition = this.globalize(newBallPosition);
-        myBall.setDuck(0);
-        Point relativeP = new Point(x-globalBallPosition.x,y-globalBallPosition.y);
-        System.out.println(relativeP);
-        GridManager.getInstance().addChild(myBall);
-        myBall.throwBall(relativeP.x,relativeP.y);
+        if (state == PlayerState.NEUTRAL) {
+            state = PlayerState.NoBall;
+            this.removeChild(myBall);
+            Point newBallPosition = new Point(this.getPosition().x + myBall.getPosition().x, this.getPosition().y + myBall.getPosition().y);
+            myBall.setPosition(newBallPosition);
+            Point globalBallPosition = this.globalize(newBallPosition);
+            myBall.setDuck(0);
+            Point relativeP = new Point(x - globalBallPosition.x, y - globalBallPosition.y);
+            System.out.println(relativeP);
+            GridManager.getInstance().addChild(myBall);
+            myBall.throwBall(relativeP.x, relativeP.y);
+        }
     }
 
     public void generateSound(int radius){
