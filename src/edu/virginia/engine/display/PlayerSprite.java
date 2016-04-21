@@ -25,6 +25,8 @@ public class PlayerSprite extends GridSprite {
     GridManager gridManager;
     private boolean movedBall;
 
+    private long teleportTimer = System.nanoTime();
+
     public enum PlayerState {
         NEUTRAL, DUNKING, NoBall, THROWING
     }
@@ -43,12 +45,12 @@ public class PlayerSprite extends GridSprite {
         super.update(pressedKeys, heldKeys);
 
         //Dribble sound only applies when holding ball
-        if(state != PlayerState.NoBall){
+        if (state != PlayerState.NoBall) {
             this.generateSound(pingEffect.getRadius());
         }
 
         //Center screen to player
-        GridManager.getInstance().centerPointOnScreen(getPosition().x,getPosition().y);
+        GridManager.getInstance().centerPointOnScreen(getPosition().x, getPosition().y);
 
         if (state == PlayerState.NEUTRAL) {
             //Update player subcomponents
@@ -58,7 +60,7 @@ public class PlayerSprite extends GridSprite {
                 myBall.dribble(500);
                 timer = System.currentTimeMillis();
             }
-            
+
             if (heldKeys.contains(KeyEvent.VK_Z)) {
                 dunkKeyed = true;
             } else
@@ -117,6 +119,29 @@ public class PlayerSprite extends GridSprite {
                 moveOnGrid(-1, 0, 500);
             } else if (pressedKeys.contains(KeyEvent.VK_D)) {
                 moveOnGrid(1, 0, 500);
+            }
+        }
+        if (GridManager.getInstance().getSpriteAtGridPoint(getGridPosition(),GridSpriteTypes.Teleporter) != null){
+            ((TeleporterSprite)GridManager.getInstance().getSpriteAtGridPoint(getGridPosition(),GridSpriteTypes.Teleporter)).getPartner();
+
+        }
+
+        for (DisplayObject g : GridManager.getInstance().getChildren()) {
+            if (g.getClass().equals(TeleporterSprite.class)) {
+                TeleporterSprite tpS = (TeleporterSprite) g;
+                if (collidesWith(tpS)) {//Teleport!
+                    if (System.nanoTime() - teleportTimer > 2*GridManager.getInstance().getTurnLength()*1000*1000){
+                        Point destination = new Point(tpS.getPartner().getGridPosition().x,tpS.getPartner().getGridPosition().y);
+                        if (GridManager.getInstance().getSpriteAtGridPoint(destination,GridSpriteTypes.Guard) == null){
+                            if (GridManager.getInstance().swapSprites(gridPosition,destination,getGridSpriteType())) {
+                                TweenJuggler.getInstance().removeTweensByObject(this);
+                                gridPosition.x = destination.x;
+                                gridPosition.y = destination.y;
+                                teleportTimer = System.nanoTime();
+                            }
+                        }
+                    }
+                }
             }
         }
     }

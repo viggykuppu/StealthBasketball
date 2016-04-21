@@ -29,8 +29,8 @@ public class GridGuardSprite extends GridSprite{
         stunAnim = new ArrayList<>();
         this.player = player;
         this.stunned = false;
-        stunAnim.add("floryan,mark_stunned.png");
-        stunAnim.add("floryan,mark_stunned.png");
+        stunAnim.add("meg_stunned.png");
+        stunAnim.add("meg_stunned.png");
         readAnimation("Stunned", stunAnim, STUNLENGTH);
         aPath = new ArrayList<>();
         gridManager = GridManager.getInstance();
