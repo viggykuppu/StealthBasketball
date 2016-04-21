@@ -25,6 +25,8 @@ public class PlayerSprite extends GridSprite {
     GridManager gridManager;
     private boolean movedBall;
 
+    private long teleportTimer = System.nanoTime();
+
     public enum PlayerState {
         NEUTRAL, DUNKING, NoBall, THROWING
     }
@@ -119,10 +121,26 @@ public class PlayerSprite extends GridSprite {
                 moveOnGrid(1, 0, 500);
             }
         }
+        if (GridManager.getInstance().getSpriteAtGridPoint(getGridPosition(),GridSpriteTypes.Teleporter) != null){
+            ((TeleporterSprite)GridManager.getInstance().getSpriteAtGridPoint(getGridPosition(),GridSpriteTypes.Teleporter)).getPartner();
+
+        }
+
         for (DisplayObject g : GridManager.getInstance().getChildren()) {
             if (g.getClass().equals(TeleporterSprite.class)) {
-                if (collidesWith(g)) {
-                    System.out.println(((TeleporterSprite) g).getPartner());
+                TeleporterSprite tpS = (TeleporterSprite) g;
+                if (collidesWith(tpS)) {//Teleport!
+                    if (System.nanoTime() - teleportTimer > 2*GridManager.getInstance().getTurnLength()*1000*1000){
+                        Point destination = new Point(tpS.getPartner().getGridPosition().x,tpS.getPartner().getGridPosition().y);
+                        if (GridManager.getInstance().getSpriteAtGridPoint(destination,GridSpriteTypes.Guard) == null){
+                            if (GridManager.getInstance().swapSprites(gridPosition,destination,getGridSpriteType())) {
+                                TweenJuggler.getInstance().removeTweensByObject(this);
+                                gridPosition.x = destination.x;
+                                gridPosition.y = destination.y;
+                                teleportTimer = System.nanoTime();
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -68,6 +68,10 @@ public class GridManager extends DisplayObjectContainer{
                     return 1;
                 if (o2.getId().equals("Ball"))
                     return -1;
+                if (o1.getClass().equals(TeleporterSprite.class))
+                    return -1;
+                if (o2.getClass().equals(TeleporterSprite.class))
+                    return 1;
                 return o1.getPosition().y - o2.getPosition().y;
             }
         });
