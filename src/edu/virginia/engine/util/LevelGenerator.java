@@ -33,6 +33,7 @@ public class LevelGenerator {
     private HoopSprite hoop = new HoopSprite("Hoop","hoop.png");
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
     private Map<Point,ArrayList<Direction>> m = new HashMap<Point,ArrayList<Direction>>();
+    private Map<Point,ArrayList<Direction>> p = new HashMap<>();
     private File levelFile;
     public LevelGenerator(String fileName){
         levelFile = new File(fileName);
@@ -74,7 +75,11 @@ public class LevelGenerator {
                     GridManager.getInstance().addWall(p,d);
                 }
             }
-
+            for(Point pnt : p.keySet()) {
+                for (Direction d : p.get(pnt)) {
+                    GridManager.getInstance().addPenWall(pnt, d);
+                }
+            }
             for(int i = 0; i < x; i++){
                 GridManager.getInstance().addWall(new Point(i,0),Direction.UP);
                 GridManager.getInstance().addWall(new Point(i,y-1),Direction.DOWN);
@@ -132,6 +137,38 @@ public class LevelGenerator {
                     m.get(location).add(Direction.RIGHT);
                 } else {
                     m.get(location).add(Direction.RIGHT);
+                }
+                break;
+            case "PU":
+                if(p.get(location) == null){
+                    p.put(location, new ArrayList<Direction>());
+                    p.get(location).add(Direction.UP);
+                } else {
+                    p.get(location).add(Direction.UP);
+                }
+                break;
+            case "PD":
+                if(p.get(location) == null){
+                    p.put(location, new ArrayList<Direction>());
+                    p.get(location).add(Direction.DOWN);
+                } else {
+                    p.get(location).add(Direction.DOWN);
+                }
+                break;
+            case "PL":
+                if(p.get(location) == null){
+                    p.put(location, new ArrayList<Direction>());
+                    p.get(location).add(Direction.LEFT);
+                } else {
+                    p.get(location).add(Direction.LEFT);
+                }
+                break;
+            case "PR":
+                if(p.get(location) == null){
+                    p.put(location, new ArrayList<Direction>());
+                    p.get(location).add(Direction.RIGHT);
+                } else {
+                    p.get(location).add(Direction.RIGHT);
                 }
                 break;
             case "H":
