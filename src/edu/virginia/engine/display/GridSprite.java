@@ -59,6 +59,13 @@ public class GridSprite extends AnimatedSprite {
                 return true;
             }
         }
+        if(this.getId().equals("Guard")){
+            if(GridManager.getInstance().getSpriteAtGridPoint(destination) != null){
+                if(GridManager.getInstance().getSpriteAtGridPoint(destination,GridSpriteTypes.Player).getId().equals("Player")){
+                    GridManager.getInstance().levelFailed = true;
+                }
+            }
+        }
         return false;
     }
 
