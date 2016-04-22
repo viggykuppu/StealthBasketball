@@ -9,6 +9,8 @@ public class TweenTransitions {
 				return linear(percentDone);
 			case QUAD:
 				return quad(percentDone);
+			case INVERSE_QUAD:
+				return inverseQuad(percentDone);
 		}
 		return -1;
 	}
@@ -16,6 +18,8 @@ public class TweenTransitions {
 	public double quad(double percentDone){
 		return percentDone*percentDone;
 	}
+
+	public double inverseQuad(double percentDone) { return Math.sqrt(percentDone); }
 	
 	public double linear(double percentDone){
 		return percentDone;

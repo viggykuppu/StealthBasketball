@@ -1,6 +1,9 @@
 package edu.virginia.engine.display;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 public class PhysicsSprite extends AnimatedSprite{
@@ -101,10 +104,7 @@ public class PhysicsSprite extends AnimatedSprite{
 	}
 
 	public double decrease(double v){
-		if(v == 0)
-			return 0;
-		double dV = v/100;
-		return v-dV;
+		return 0.98*v;
 	}
 	
 	public void place(DisplayObject o){

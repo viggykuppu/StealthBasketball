@@ -30,10 +30,14 @@ public class GridManager extends DisplayObjectContainer{
     int gridyScale;
     int screenX;
     int screenY;
+    int gameX;
+    int gameY;
+
+    boolean removeBall = false;
 
     public GridCell[][] sprites = null;
 
-    float turnLength = 1000;
+    float turnLength = 800;
     long previousTurnTime;
     boolean turnsActive = false;
     long frameTimer;
@@ -43,7 +47,7 @@ public class GridManager extends DisplayObjectContainer{
 
     public boolean levelFinished = true;
     public boolean levelFailed = false;
-    PlayerSprite player; //this is the player sprite
+    public PlayerSprite player; //this is the player sprite
 
     @Override
     public void draw(Graphics g){
@@ -64,6 +68,10 @@ public class GridManager extends DisplayObjectContainer{
                     return 1;
                 if (o2.getId().equals("Ball"))
                     return -1;
+                if (o1.getClass().equals(TeleporterSprite.class))
+                    return -1;
+                if (o2.getClass().equals(TeleporterSprite.class))
+                    return 1;
                 return o1.getPosition().y - o2.getPosition().y;
             }
         });
@@ -84,6 +92,12 @@ public class GridManager extends DisplayObjectContainer{
                 turnUpdate();
                 previousTurnTime = System.currentTimeMillis();
             }
+        }
+
+        if(removeBall){
+            BallSprite ball = (BallSprite)this.getChild("Ball");
+            this.removeChild(ball);
+            removeBall = false;
         }
     }
 
@@ -166,6 +180,8 @@ public class GridManager extends DisplayObjectContainer{
     public void setUpGrid(int gridX, int gridY, int gameX, int gameY, int screenX, int screenY){
         gridxScale = gameX / gridX;
         gridyScale = gameY / gridY;
+        this.gameX = gameX;
+        this.gameY = gameY;
         this.gridX = gridX;
         this.gridY = gridY;
         this.screenX = screenX;
@@ -328,6 +344,44 @@ public class GridManager extends DisplayObjectContainer{
         }
     }
 
+    public void addPenWall(Point initial, Direction direction) {
+        GridCell original = sprites[initial.x][initial.y];
+        GridCell pointer = original.neighbors.get(direction);
+        if(pointer !=null){
+            original.neighbors.remove(direction);
+            pointer.neighbors.remove(direction.opposite());
+            //Now add wall to array at right position
+            boolean horizontal  = direction == Direction.DOWN || direction == Direction.UP ? true : false;
+            int x = (gridToGameX(original.location.x) + gridToGameX(pointer.location.x)) /2;
+            int y = (gridToGameY(original.location.y) + gridToGameY(pointer.location.y)) / 2;
+            Point wallPosition = new Point(x,y);
+            GridWallSprite wall = new GridWallSprite("PenWall",horizontal, wallPosition);
+            addChild(wall);
+        } else {
+            Point fakePoint = new Point(original.location.x,original.location.y);
+            switch(direction){
+                case LEFT:
+                    fakePoint.translate(-1,0);
+                    break;
+                case RIGHT:
+                    fakePoint.translate(1,0);
+                    break;
+                case UP:
+                    fakePoint.translate(0,-1);
+                    break;
+                case DOWN:
+                    fakePoint.translate(0,1);
+                    break;
+            }
+            boolean horizontal  = direction == Direction.DOWN || direction == Direction.UP ? true : false;
+            int x = (gridToGameX(original.location.x) + gridToGameX(fakePoint.x)) /2;
+            int y = (gridToGameY(original.location.y) + gridToGameY(fakePoint.y)) / 2;
+            Point wallPosition = new Point(x,y);
+            GridWallSprite wall = new GridWallSprite("Wall",horizontal, wallPosition);
+            addChild(wall);
+        }
+    }
+
     void resetAStarGrid(){
         for(int i = 0; i < gridX; i++){
             for(int j = 0; j < gridY; j++){
@@ -358,5 +412,21 @@ public class GridManager extends DisplayObjectContainer{
 
     public void setPlayer(PlayerSprite player) {
         this.player = player;
+    }
+
+    public int getScreenX() {
+        return this.screenX;
+    }
+
+    public int getScreenY() {
+        return this.screenY;
+    }
+
+    public int getGameX() {
+        return this.gameX;
+    }
+
+    public int getGameY() {
+        return this.gameY;
     }
 }

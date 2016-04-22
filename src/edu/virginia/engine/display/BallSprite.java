@@ -1,9 +1,6 @@
 package edu.virginia.engine.display;
 
-import edu.virginia.engine.tween.Tween;
-import edu.virginia.engine.tween.TweenJuggler;
-import edu.virginia.engine.tween.TweenTransitions;
-import edu.virginia.engine.tween.TweenableParams;
+import edu.virginia.engine.tween.*;
 import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
@@ -18,12 +15,19 @@ import java.util.ArrayList;
  */
 public class BallSprite extends PhysicsSprite {
 
-    Point playerOffset = new Point(0, 0);
+    // static variables
+    static int DRIBBLE_OFFSET = 30;
+
+    Point playerOffset = new Point(0, -10);
     Tween ballFollowPlayer;
     GridManager gridManager;
     static int VELOCITY = 5;
     boolean didCollide;
     boolean prevCollide; // this boolean exists solely to manage shouldCollide in loops
+    boolean playerCollide;
+    Tween dribble;
+    boolean dribbleUp; // status of whether the ball is 'up' or on dribble 'down'
+    private int duck = 0;
     //static int DEACCEL = -1;
 
     public BallSprite(String id, String imageFileName) {
@@ -32,7 +36,9 @@ public class BallSprite extends PhysicsSprite {
         gridManager = GridManager.getInstance();
         didCollide = false; // boolean to prevent double collisions
         prevCollide = false;
-
+        playerCollide = true;
+        dribble = new Tween(this);
+        dribbleUp = true;
     }
 
     @Override
@@ -45,9 +51,11 @@ public class BallSprite extends PhysicsSprite {
             if (!obj.equals(this)) {
                 GridSprite s = (GridSprite) obj;
                 if (this.collidesWith(s)) {
-
                     // collision confirmed
                     didCollide = true;
+                    if (s.getId().equals("Player")) {
+                        playerCollide = true;
+                    }
                     // did prev frame not have a collision?
                     if (prevCollide == false) {
                         if (s.getId().equals("Player")) {
@@ -55,10 +63,34 @@ public class BallSprite extends PhysicsSprite {
                             if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
                                 this.setvX(0);
                                 this.setvY(0);
+                                this.setPosition(new Point(this.getPlayerOffset().x,this.getPlayerOffset().y));
+                                GridManager.getInstance().player.addChild(this);
                                 player.setState(PlayerSprite.PlayerState.NEUTRAL);
+                                GridManager.getInstance().removeBall = true;
+                                playerCollide = true;
                                 break;
                             }
                         } else if (s.getId().equals("Guard")) {
+                            print = true;
+                            Direction reflection = this.getCollisionNormal(s);
+                            System.out.println("Guard hit! " + reflection);
+                            GridGuardSprite guard = (GridGuardSprite) s;
+                            guard.setStun(true);
+                            this.reflect(reflection);
+                            break;
+                        } else if (s.getId().equals("Wall")) {
+                            print = true;
+                            // Probably hit a wall
+                            Direction reflection = this.getCollisionNormal(s);
+                            System.out.println("wall hit " + reflection);
+                            this.reflect(reflection);
+                            break;
+                        } else if (s.getId().equals("Hoop")) {
+                            GridManager.getInstance().endLevel();
+                            System.out.println("You won the level!!!");
+                        }
+                    } else if (playerCollide) {
+                        if (s.getId().equals("Guard")) {
                             print = true;
                             Direction reflection = this.getCollisionNormal(s);
                             System.out.println("Guard hit! " + reflection);
@@ -81,10 +113,23 @@ public class BallSprite extends PhysicsSprite {
                 }
             }
         }
+        if (getPosition().x >= gridManager.getGameX()) {
+            this.reflect(Direction.LEFT);
+        } else if (getPosition().x <= 0) {
+            this.reflect(Direction.RIGHT);
+        }
+
+        if (getPosition().y >= gridManager.getGameY()) {
+            this.reflect(Direction.UP);
+        } else if (getPosition().y <= 0) {
+            this.reflect(Direction.DOWN);
+        }
         if (print)
             System.out.println("-------------");
         // only if there is a frame where there is no collisions should this reset
         prevCollide = didCollide;
+        // we should only turn playerCollide to false once all collisions are done
+        playerCollide = false;
     }
 
 
@@ -98,32 +143,21 @@ public class BallSprite extends PhysicsSprite {
         ballFollowPlayer.animate(TweenableParams.X, getPosition().x, endPosition.x, timems);
         ballFollowPlayer.animate(TweenableParams.Y, getPosition().y, endPosition.y, timems);
         TweenJuggler.getInstance().addTweenNonRedundant(ballFollowPlayer, this);
+        dribbleUp = true;
     }
 
 
     /*
         Gets the current position and gives the ball physics
      */
-    public void dunk(Direction vector) {
-
-        switch (vector) {
-            case UP:
-                this.setvY(-VELOCITY);
-                //this.setaX(-DEACCEL);
-                break;
-            case DOWN:
-                this.setvY(VELOCITY);
-                //this.setaY(DEACCEL);
-                break;
-            case LEFT:
-                this.setvX(-VELOCITY);
-                //this.setaX(-DEACCEL);
-                break;
-            case RIGHT:
-                this.setvX(VELOCITY);
-                //this.setaY(DEACCEL);
-                break;
-        }
+    public void throwBall(int x, int y) {
+        //First calculate
+        TweenJuggler.getInstance().removeTween(dribble);
+        double normalizingFactor = Math.sqrt(x*x+y*y);
+        double vx = VELOCITY*(x/normalizingFactor);
+        double vy  = VELOCITY*(y/normalizingFactor);
+        this.setvX(vx);
+        this.setvY(vy);
     }
 
     /*
@@ -172,8 +206,36 @@ public class BallSprite extends PhysicsSprite {
         if (distDown < smallest) {
             ret = Direction.DOWN;
         }
-
-        System.out.println(ret);
+        if(s.getId().equals("Wall")){
+            GridWallSprite wall = (GridWallSprite) s;
+            boolean isHorizontal = wall.isHorizontal();
+            Direction temp;
+            double d = 0;
+            if(isHorizontal && (ret == Direction.LEFT || ret == Direction.RIGHT)){
+                if(distDown < distUp){
+                    temp = Direction.DOWN;
+                    d = distDown;
+                } else {
+                    temp = Direction.UP;
+                    d = distUp;
+                }
+                if(d == smallest){
+                    ret = temp;
+                }
+            }
+            if(!isHorizontal && (ret == Direction.UP || ret == Direction.DOWN)){
+                if(distLeft < distRight){
+                    temp = Direction.LEFT;
+                    d = distLeft;
+                } else {
+                    temp = Direction.RIGHT;
+                    d = distRight;
+                }
+                if(d == smallest){
+                    ret = temp;
+                }
+            }
+        }
         return ret;
     }
 
@@ -203,8 +265,55 @@ public class BallSprite extends PhysicsSprite {
         }
     }
 
+    /*
+        Player should call this once every x secs or so
+        This method will tween down then back up
+        param: how long you want the tween to be
+     */
+    public void dribble(long timems) {
+        // player will call dribble if he's dribbling
+        // if currently tweening, don't do anything
+        //if (ballFollowPlayer.isComplete()) {
+            // if not tweening, call appropriate tween animation
+            // dribble down
+        dribble = new Tween(this);
+            if (dribbleUp) {
+                dribble.animate(TweenableParams.BALL_DRIBBLE, 0, DRIBBLE_OFFSET, timems, TweenTransitionIndex.QUAD);
+                dribbleUp = false;
+            } else {
+                // dribble up
+                dribble.animate(TweenableParams.BALL_DRIBBLE, DRIBBLE_OFFSET, 0, timems, TweenTransitionIndex.INVERSE_QUAD);
+                dribbleUp = true;
+            }
+            TweenJuggler.getInstance().addTweenNonRedundant(dribble, this);
+        //}
+    }
+
+    @Override
+    public Point getPosition(){
+        return new Point(super.getPosition().x,super.getPosition().y+duck);
+    }
+
+    @Override
+    public void setPosition(Point position){
+       if(GridManager.getInstance().player.getState() == PlayerSprite.PlayerState.NoBall){
+            super.setPosition(position);
+       } else {
+           position = new Point(position.x,position.y-duck);
+           super.setPosition(position);
+       }
+    }
+    
     public Point getPlayerOffset() {
         return playerOffset;
+    }
+
+    public void setDuck(int duck){
+        this.duck = duck;
+    }
+
+    public int getDuck(){
+        return this.duck;
     }
 
     public void setPlayerOffset(Point playerOffset) {

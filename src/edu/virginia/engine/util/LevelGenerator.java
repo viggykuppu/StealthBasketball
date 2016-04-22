@@ -6,6 +6,7 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
 import edu.virginia.engine.display.*;
+import org.w3c.dom.events.EventException;
 import org.xml.sax.*;
 import org.w3c.dom.*;
 import com.sun.org.apache.xerces.internal.parsers.XMLParser;
@@ -29,11 +30,13 @@ public class LevelGenerator {
     public Point screenSize = new Point(1000,500);
 
     private BallSprite ball = new BallSprite("Ball", "coin.gif");
-    private PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
+    private PlayerSprite player = new PlayerSprite("Player", "vignesh.png", ball);
     private HoopSprite hoop = new HoopSprite("Hoop","hoop.png");
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
-    private ArrayList<String> stunAnim = new ArrayList<>();
+    private ArrayList<TeleporterSprite> teleporters = new ArrayList<>();
+    private ArrayList<Integer> teleporterPairId = new ArrayList<>();
     private Map<Point,ArrayList<Direction>> m = new HashMap<Point,ArrayList<Direction>>();
+    private Map<Point,ArrayList<Direction>> p = new HashMap<>();
     private File levelFile;
     public LevelGenerator(String fileName){
         levelFile = new File(fileName);
@@ -42,8 +45,8 @@ public class LevelGenerator {
     public void generateLevel(){
         player.setPivotPoint(new Point(player.getUnscaledWidth() / 2, player.getUnscaledHeight() / 2));
         ball.setPivotPoint(new Point(28, 28));
-        stunAnim.add("floryan,mark_stunned.png");
-        stunAnim.add("floryan,mark_stunned.png");
+
+        //Parse level file
         int y = 0;
         int x = 0;
         try {
@@ -67,14 +70,38 @@ public class LevelGenerator {
                 }
                 ly++;
             }
+
+            //Add objects to grid
             GridManager.getInstance().addToGrid(player,player.getGridPosition().x,player.getGridPosition().y);
             GridManager.getInstance().addToGrid(hoop,hoop.getGridPosition().x,hoop.getGridPosition().y);
             for(GridGuardSprite g : guards){
                 GridManager.getInstance().addToGrid(g,g.getGridPosition().x,g.getGridPosition().y);
             }
+            int numPairs = 0;//Teleporter pairs should be numbered from 1 up
+            for (int i = 0; i < teleporterPairId.size(); i++)
+                if (teleporterPairId.get(i) > numPairs)
+                    numPairs = teleporterPairId.get(i);
+            for(int i = 1; i <= numPairs; i++) {
+                int firstIndex = teleporterPairId.indexOf(i);
+                int secondIndex = teleporterPairId.lastIndexOf(i);
+                if (teleporters.get(firstIndex) != null && teleporters.get(secondIndex) != null && firstIndex != secondIndex) {
+                    teleporters.get(firstIndex).setPartner(teleporters.get(secondIndex));
+                    teleporters.get(secondIndex).setPartner(teleporters.get(firstIndex));
+                    GridManager.getInstance().addToGrid(teleporters.get(firstIndex),teleporters.get(firstIndex).getGridPosition().x,teleporters.get(firstIndex).getGridPosition().y);
+                    GridManager.getInstance().addToGrid(teleporters.get(secondIndex),teleporters.get(secondIndex).getGridPosition().x,teleporters.get(secondIndex).getGridPosition().y);
+                }
+            }
+
+            //Add walls to grid
             for(Point p : m.keySet()){
                 for(Direction d : m.get(p)){
                     GridManager.getInstance().addWall(p,d);
+                }
+            }
+
+            for(Point pnt : p.keySet()) {
+                for (Direction d : p.get(pnt)) {
+                    GridManager.getInstance().addPenWall(pnt, d);
                 }
             }
 
@@ -86,7 +113,7 @@ public class LevelGenerator {
                 GridManager.getInstance().addWall(new Point(0,i),Direction.LEFT);
                 GridManager.getInstance().addWall(new Point(x-1,i),Direction.RIGHT);
             }
-            ball.setPosition(new Point (player.getPosition().x+ball.getPlayerOffset().x,player.getPosition().y+ball.getPlayerOffset().y));
+            ball.setPosition(new Point (ball.getPlayerOffset().x, ball.getPlayerOffset().y));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -95,7 +122,7 @@ public class LevelGenerator {
     public void handleToken(String s, Point location){
         switch(s){
             case "G":
-                GridGuardSprite guard = new GridGuardSprite("Guard", "floryan,mark.png", stunAnim, player);
+                GridGuardSprite guard = new GridGuardSprite("Guard", "meg.png", player);
                 guard.setPivotPoint(new Point(34, 46));
                 guard.setGridPosition(location);
                 guards.add(guard);
@@ -137,12 +164,55 @@ public class LevelGenerator {
                     m.get(location).add(Direction.RIGHT);
                 }
                 break;
+            case "PU":
+                if(p.get(location) == null){
+                    p.put(location, new ArrayList<Direction>());
+                    p.get(location).add(Direction.UP);
+                } else {
+                    p.get(location).add(Direction.UP);
+                }
+                break;
+            case "PD":
+                if(p.get(location) == null){
+                    p.put(location, new ArrayList<Direction>());
+                    p.get(location).add(Direction.DOWN);
+                } else {
+                    p.get(location).add(Direction.DOWN);
+                }
+                break;
+            case "PL":
+                if(p.get(location) == null){
+                    p.put(location, new ArrayList<Direction>());
+                    p.get(location).add(Direction.LEFT);
+                } else {
+                    p.get(location).add(Direction.LEFT);
+                }
+                break;
+            case "PR":
+                if(p.get(location) == null){
+                    p.put(location, new ArrayList<Direction>());
+                    p.get(location).add(Direction.RIGHT);
+                } else {
+                    p.get(location).add(Direction.RIGHT);
+                }
+                break;
             case "H":
                 hoop.setGridPosition(location);
                 hoop.setPivotPoint(new Point(45,45));
                 break;
+            default:
+                if (s.substring(0,1).equals("T")) {
+                    TeleporterSprite tpS = new TeleporterSprite("Teleporter", "Teleporter/frame_0_delay-0.04s.gif");
+                    tpS.setPivotPoint(new Point(43, 52));
+                    tpS.setGridPosition(location);
+                    teleporters.add(tpS);
+                    try {
+                        int i = Integer.parseInt(s.substring(1));
+                        teleporterPairId.add(i);
+                    } catch (Exception e) {
+                        System.out.println("Teleporter int parse failed");
+                    }
+                }
         }
-
     }
 }
-

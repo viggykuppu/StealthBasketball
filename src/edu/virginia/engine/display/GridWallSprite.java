@@ -28,6 +28,10 @@ public class GridWallSprite extends GridSprite{
         }
     }
 
+    public boolean isHorizontal(){
+        return horizontal;
+    }
+
     @Override
     public void draw(Graphics g){
         super.draw(g);

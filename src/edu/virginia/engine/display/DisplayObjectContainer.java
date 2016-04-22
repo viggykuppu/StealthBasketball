@@ -102,11 +102,6 @@ public class DisplayObjectContainer extends DisplayObject{
 			 * objects
 			 */
 			reverseTransformations(g2d);
-			for(DisplayObject child : children){
-				if(child != null){
-					g2d.draw(child.getHitbox());
-				}
-			}
 		} else {
 			Graphics2D g2d = (Graphics2D) g;
 			applyTransformations(g2d);

@@ -2,7 +2,7 @@ package edu.virginia.engine.display;
 
 import edu.virginia.engine.util.Direction;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.*;
 
 /**
@@ -14,18 +14,26 @@ public class GridGuardSprite extends GridSprite{
     double sightRadius = 9;
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
-    static double STUNLENGTH = 1; // determined in seconds
+    static double STUNLENGTH = 3; // determined in seconds
     boolean stunned;
+    ArrayList<GridSprite> aPath;
+    GridManager gridManager;
+    private ArrayList<String> stunAnim;
 
     private enum GridGuardState{
         playerVisible,lostPlayer,idle;
     }
 
-    public GridGuardSprite(String id, String imageFileName, ArrayList<String> stunAnimation, PlayerSprite player) {
+    public GridGuardSprite(String id, String imageFileName, PlayerSprite player) {
         super(id, imageFileName, GridSpriteTypes.Guard);
+        stunAnim = new ArrayList<>();
         this.player = player;
         this.stunned = false;
-        readAnimation("Stunned", stunAnimation, STUNLENGTH);
+        stunAnim.add("meg_stunned.png");
+        stunAnim.add("meg_stunned.png");
+        readAnimation("Stunned", stunAnim, STUNLENGTH);
+        aPath = new ArrayList<>();
+        gridManager = GridManager.getInstance();
     }
 
     public boolean canDetectPlayer(){
@@ -52,6 +60,15 @@ public class GridGuardSprite extends GridSprite{
             if (this.animate("Stunned")) {
                 stunned = false;
             }
+        }
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        super.draw(g);
+        Graphics2D g2d = (Graphics2D)g;
+        for (int i = 0; i < aPath.size(); i++) {
+            aPath.get(i).draw(g2d);
         }
     }
 
@@ -124,6 +141,27 @@ public class GridGuardSprite extends GridSprite{
         }
 
         Collections.reverse(path);
+
+        // generating the path from guard to player
+        // TODO take this out when done testing
+        aPath.clear();
+//        for (int i = 0; i < path.size(); i++) {
+//            GridSprite aSprite = new GridSprite("path", "coin.gif");
+//            aSprite.setGridPosition(path.get(i));
+//            Point normalPoint = gridManager.gridtoGamePoint(path.get(i));
+//            aSprite.setPosition(normalPoint);
+//            aPath.add(aSprite);
+//        }
+        GridSprite aSprite = new GridSprite("path", "x.png");
+        aSprite.setScaleX(.5);
+        aSprite.setScaleY(.5);
+        Point pivot = new Point(60, 60);
+        aSprite.setPivotPoint(pivot);
+        aSprite.setGridPosition(path.get(path.size()-1));
+        Point normalPoint = gridManager.gridtoGamePoint(path.get(path.size()-1));
+        aSprite.setPosition(normalPoint);
+        aPath.add(aSprite);
+
         //Code for checking path if you would like to do that
         resetAStarGrid();
         Point nextPosition;
