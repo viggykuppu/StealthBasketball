@@ -49,17 +49,34 @@ public class BallSprite extends PhysicsSprite {
         for (DisplayObject obj : spriteList) {
             if (!obj.equals(this)) {
                 GridSprite s = (GridSprite) obj;
+
+                //Check if our ball collides with this gridsprite
                 if (this.collidesWith(s)) {
+                    //If we are colliding with the player, let's do stuff here
                     if(s.getId().equals("Player")){
                         PlayerSprite player = (PlayerSprite) s;
+                        //If we don't have the ball, let gridmanager know to give us the ball
+                        //Also, we only want the ball back after it has:
+                        //a) collided with something else
+                        //b) stopped colliding with the player
                         if (player.getState() != PlayerSprite.PlayerState.NEUTRAL && !playerCollide) {
+                            System.out.println("oops");
                             GridManager.getInstance().removeBall = true;
+                            playerCollide = true;
                             break;
                         }
+                        //Let us know that we are currently colliding with the player
                         playerCollide = true;
                     } else {
+                        //If we're not, we can pick up the ball again!!
+                        print = true;
+                        System.out.println("no es colliding");
                         playerCollide = false;
                     }
+                    //Only check other collisions if the player doesn't have the ball, because when the player does
+                    //The ball does not have physics
+                    //In each collision we then binary search to determine the closest position where the ball
+                    //Is no longer in collision
                     if(GridManager.getInstance().player.getState() == PlayerSprite.PlayerState.NoBall){
                         if (s.getId().equals("Wall")) {
                             print = true;
@@ -87,28 +104,41 @@ public class BallSprite extends PhysicsSprite {
                 }
             }
         }
+        //Update our previous position, useful because when we collide, we can place our ball just before the collision
         p = this.getPosition();
         if(print)
             System.out.println("-------------");
     }
 
+    //Binary search methodology for getting the ball as close as possible to a colliding object
     public Point determineCollisionsPlacement(GridSprite g){
+        //Our last point of collision
         Point collision = this.getPosition();
+        //Set it to our previous location and see what happens, should not collide here
         this.setPosition(p);
         Point lastSuccess;
         if(this.collidesWith(g)){
+            //If it does collide, that's bad
             return p;
         } else {
+            //Else, we now find our last successful non-collision point
             lastSuccess = new Point(p.x,p.y);
+            //Keep track of where we currently are in our binary search
             Point current = new Point(p.x,p.y);
+            //Also want previous point in case we end up futile in our search
             Point previous;
-            boolean pC = false;
+            //Keep track of if our current point had a collision or not so we know which direction to
+            //Binary search
+            boolean previousCollision = false;
+            //Only do this 10 times at max to cap our while loop
             int i = 0;
             while(i < 10){
-                if(pC){
+                if(previousCollision){
+                    //Collision, so binary search b/t p & current
                     previous = new Point(current.x,current.y);
                     current = new Point((current.x+p.x)/2,(current.y+p.y)/2);
                 } else {
+                    //No Collision, so binary search b/t current & previous point of collision
                     previous = new Point(current.x,current.y);
                     current = new Point((current.x+collision.x)/2,(current.y+collision.y)/2);
                 }
@@ -116,17 +146,19 @@ public class BallSprite extends PhysicsSprite {
                 if(this.collidesWith(g)){
                     //Collision, so binary search b/t p & current which is pC = true
                     collision = new Point(current.x,current.y);
-                    pC = true;
+                    previousCollision = true;
                 } else {
-                    //No Collision, so binary search b/t current & point of collision which is pC = false
+                    //No Collision, so binary search b/t current & previous point of collision which is pC = false
                     lastSuccess = new Point(current.x,current.y);
-                    pC = false;
+                    previousCollision = false;
                 }
+                //If we got the same point twice, break
                 if(previous.x == current.x && previous.y == current.y){
                     break;
                 }
                 i++;
             }
+            //Ultimately return our last successful point of placement
             return lastSuccess;
         }
     }
