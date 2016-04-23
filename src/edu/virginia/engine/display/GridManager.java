@@ -83,6 +83,16 @@ public class GridManager extends DisplayObjectContainer{
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys){
 
         super.update(pressedKeys,heldKeys);
+        if(removeBall){
+            BallSprite ball = (BallSprite)this.getChild("Ball");
+            this.removeChild(ball);
+            removeBall = false;
+            ball.setvX(0);
+            ball.setvY(0);
+            ball.setPosition(new Point(ball.getPlayerOffset().x, ball.getPlayerOffset().y));
+            this.player.addChild(ball);
+            player.setState(PlayerSprite.PlayerState.NEUTRAL);
+        }
 
         deltaTime = (System.nanoTime() - frameTimer);
         frameTimer = System.nanoTime();
@@ -94,11 +104,7 @@ public class GridManager extends DisplayObjectContainer{
             }
         }
 
-        if(removeBall){
-            BallSprite ball = (BallSprite)this.getChild("Ball");
-            this.removeChild(ball);
-            removeBall = false;
-        }
+
     }
 
     void turnUpdate(){
