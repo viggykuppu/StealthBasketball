@@ -66,6 +66,10 @@ public class GridSprite extends AnimatedSprite {
                 }
             }
         }
+        if (this.getId().equals("Player")){
+            if (GridManager.getInstance().getSpriteAtGridPoint(destination,GridSpriteTypes.Hoop) != null)
+                GridManager.getInstance().levelFinished = true;
+        }
         return false;
     }
 
@@ -91,6 +95,10 @@ public class GridSprite extends AnimatedSprite {
                     GridManager.getInstance().levelFailed = true;
                 }
             }
+        }
+        if (this.getId().equals("Player")){
+            if (GridManager.getInstance().getSpriteAtGridPoint(destination,GridSpriteTypes.Hoop) != null)
+                GridManager.getInstance().levelFinished = true;
         }
         return false;
     }
