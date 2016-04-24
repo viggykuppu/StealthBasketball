@@ -101,9 +101,17 @@ public class StealthBasketball extends Game {
         game.start();
     }
 
+
+    //Sometimes if you hold your click too long you won't throw even though you think you didn't hold it too long
+    //Therefore, you know throw on release/click
+    //Fixes responsivesness issues
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent){
+        GridManager.getInstance().player.throwBall(mouseEvent.getX(),mouseEvent.getY());
+    }
+
     @Override
     public void mouseClicked(MouseEvent mouseEvent){
-        super.mouseClicked(mouseEvent);
         GridManager.getInstance().player.throwBall(mouseEvent.getX(),mouseEvent.getY());
     }
 

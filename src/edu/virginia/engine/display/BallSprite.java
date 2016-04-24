@@ -46,6 +46,7 @@ public class BallSprite extends PhysicsSprite {
         super.update(pressedKeys, heldKeys);
         ArrayList<DisplayObject> spriteList = gridManager.getChildren();
         boolean print = false;
+        boolean playerFlag = false;
         for (DisplayObject obj : spriteList) {
             if (!obj.equals(this)) {
                 GridSprite s = (GridSprite) obj;
@@ -53,49 +54,45 @@ public class BallSprite extends PhysicsSprite {
                 //Check if our ball collides with this gridsprite
                 if (this.collidesWith(s)) {
                     //If we are colliding with the player, let's do stuff here
-                    if(s.getId().equals("Player")){
+                    if (s.getId().equals("Player")) {
+                        playerFlag = true;
                         PlayerSprite player = (PlayerSprite) s;
                         //If we don't have the ball, let gridmanager know to give us the ball
                         //Also, we only want the ball back after it has:
                         //a) collided with something else
                         //b) stopped colliding with the player
                         if (player.getState() != PlayerSprite.PlayerState.NEUTRAL && !playerCollide) {
-                            System.out.println("oops");
+                            print = true;
+//                            System.out.println("caught ball");
                             GridManager.getInstance().removeBall = true;
                             playerCollide = true;
                             break;
                         }
                         //Let us know that we are currently colliding with the player
                         playerCollide = true;
-                    } else {
-                        //If we're not, we can pick up the ball again!!
-                        print = true;
-                        System.out.println("no es colliding");
-                        playerCollide = false;
                     }
+
                     //Only check other collisions if the player doesn't have the ball, because when the player does
                     //The ball does not have physics
                     //In each collision we then binary search to determine the closest position where the ball
                     //Is no longer in collision
-                    if(GridManager.getInstance().player.getState() == PlayerSprite.PlayerState.NoBall){
+                    if (GridManager.getInstance().player.getState() == PlayerSprite.PlayerState.NoBall) {
                         if (s.getId().equals("Wall")) {
-                            print = true;
+//                            print = true;
                             playerCollide = false;
                             Direction reflection = this.getCollisionNormal(s);
-                            System.out.println("wall hit " + reflection);
+//                            System.out.println("wall hit " + reflection);
                             this.reflect(reflection);
                             this.setPosition(this.determineCollisionsPlacement(s));
-                        } else if(s.getId().equals("Guard")){
-                            print = true;
+                        } else if (s.getId().equals("Guard")) {
+//                            print = true;
                             playerCollide = false;
                             Direction reflection = this.getCollisionNormal(s);
-                            System.out.println("Guard hit! " + reflection + this.getvX());
                             GridGuardSprite guard = (GridGuardSprite) s;
                             guard.setStun(true);
                             this.reflect(reflection);
                             this.setPosition(this.determineCollisionsPlacement(s));
-                            System.out.println(this.getvX());
-                        } else if(s.getId().equals("Hoop")){
+                        } else if (s.getId().equals("Hoop")) {
                             GridManager.getInstance().endLevel();
                             System.out.println("You won the level!!!");
                             break;
@@ -104,10 +101,13 @@ public class BallSprite extends PhysicsSprite {
                 }
             }
         }
+        if(!playerFlag){
+            playerCollide = playerFlag;
+        }
         //Update our previous position, useful because when we collide, we can place our ball just before the collision
         p = this.getPosition();
-        if(print)
-            System.out.println("-------------");
+//        if(print)
+//            System.out.println("-------------");
     }
 
     //Binary search methodology for getting the ball as close as possible to a colliding object
