@@ -155,7 +155,7 @@ public class PlayerSprite extends GridSprite {
             Point globalBallPosition = this.globalize(newBallPosition);
             myBall.setDuck(0);
             Point relativeP = new Point(x - globalBallPosition.x, y - globalBallPosition.y);
-            System.out.println(relativeP);
+//            System.out.println(relativeP);
             GridManager.getInstance().addChild(myBall);
             myBall.throwBall(relativeP.x, relativeP.y);
         }

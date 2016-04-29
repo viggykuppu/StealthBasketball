@@ -17,11 +17,11 @@ public class BallSprite extends PhysicsSprite {
 
     // static variables
     static int DRIBBLE_OFFSET = 30;
-
+    Point p;
     Point playerOffset = new Point(0, -10);
     Tween ballFollowPlayer;
     GridManager gridManager;
-    static int VELOCITY = 5;
+    static int VELOCITY = 4;
     boolean didCollide;
     boolean prevCollide; // this boolean exists solely to manage shouldCollide in loops
     boolean playerCollide;
@@ -44,92 +44,123 @@ public class BallSprite extends PhysicsSprite {
     @Override
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
         super.update(pressedKeys, heldKeys);
-        didCollide = false;
         ArrayList<DisplayObject> spriteList = gridManager.getChildren();
         boolean print = false;
+        boolean playerFlag = false;
         for (DisplayObject obj : spriteList) {
             if (!obj.equals(this)) {
                 GridSprite s = (GridSprite) obj;
+
+                //Check if our ball collides with this gridsprite
                 if (this.collidesWith(s)) {
-                    // collision confirmed
-                    didCollide = true;
+                    //If we are colliding with the player, let's do stuff here
                     if (s.getId().equals("Player")) {
+                        playerFlag = true;
+                        PlayerSprite player = (PlayerSprite) s;
+                        //If we don't have the ball, let gridmanager know to give us the ball
+                        //Also, we only want the ball back after it has:
+                        //a) collided with something else
+                        //b) stopped colliding with the player
+                        if (player.getState() != PlayerSprite.PlayerState.NEUTRAL && !playerCollide) {
+                            print = true;
+//                            System.out.println("caught ball");
+                            GridManager.getInstance().removeBall = true;
+                            playerCollide = true;
+                            break;
+                        }
+                        //Let us know that we are currently colliding with the player
                         playerCollide = true;
                     }
-                    // did prev frame not have a collision?
-                    if (prevCollide == false) {
-                        if (s.getId().equals("Player")) {
-                            PlayerSprite player = (PlayerSprite) s;
-                            if (player.getState() != PlayerSprite.PlayerState.NEUTRAL) {
-                                this.setvX(0);
-                                this.setvY(0);
-                                this.setPosition(new Point(this.getPlayerOffset().x,this.getPlayerOffset().y));
-                                GridManager.getInstance().player.addChild(this);
-                                player.setState(PlayerSprite.PlayerState.NEUTRAL);
-                                GridManager.getInstance().removeBall = true;
-                                playerCollide = true;
-                                break;
-                            }
+
+                    //Only check other collisions if the player doesn't have the ball, because when the player does
+                    //The ball does not have physics
+                    //In each collision we then binary search to determine the closest position where the ball
+                    //Is no longer in collision
+                    if (GridManager.getInstance().player.getState() == PlayerSprite.PlayerState.NoBall) {
+                        if (s.getId().equals("Wall")) {
+//                            print = true;
+                            playerCollide = false;
+                            Direction reflection = this.getCollisionNormal(s);
+//                            System.out.println("wall hit " + reflection);
+                            this.reflect(reflection);
+                            this.setPosition(this.determineCollisionsPlacement(s));
                         } else if (s.getId().equals("Guard")) {
-                            print = true;
+//                            print = true;
+                            playerCollide = false;
                             Direction reflection = this.getCollisionNormal(s);
-                            System.out.println("Guard hit! " + reflection);
                             GridGuardSprite guard = (GridGuardSprite) s;
                             guard.setStun(true);
                             this.reflect(reflection);
-                            break;
-                        } else if (s.getId().equals("Wall")) {
-                            print = true;
-                            // Probably hit a wall
-                            Direction reflection = this.getCollisionNormal(s);
-                            System.out.println("wall hit " + reflection);
-                            this.reflect(reflection);
-                            break;
+                            this.setPosition(this.determineCollisionsPlacement(s));
                         } else if (s.getId().equals("Hoop")) {
                             GridManager.getInstance().endLevel();
                             System.out.println("You won the level!!!");
-                        }
-                    } else if (playerCollide) {
-                        if (s.getId().equals("Guard")) {
-                            print = true;
-                            Direction reflection = this.getCollisionNormal(s);
-                            System.out.println("Guard hit! " + reflection);
-                            GridGuardSprite guard = (GridGuardSprite) s;
-                            guard.setStun(true);
-                            this.reflect(reflection);
                             break;
-                        } else if (s.getId().equals("Wall")) {
-                            print = true;
-                            // Probably hit a wall
-                            Direction reflection = this.getCollisionNormal(s);
-                            System.out.println("wall hit " + reflection);
-                            this.reflect(reflection);
-                            break;
-                        } else if (s.getId().equals("Hoop")) {
-                            GridManager.getInstance().endLevel();
-                            System.out.println("You won the level!!!");
                         }
                     }
                 }
             }
         }
-        if (getPosition().x >= gridManager.getGameX()) {
-            this.reflect(Direction.LEFT);
-        } else if (getPosition().x <= 0) {
-            this.reflect(Direction.RIGHT);
+        if(!playerFlag){
+            playerCollide = playerFlag;
         }
+        //Update our previous position, useful because when we collide, we can place our ball just before the collision
+        p = this.getPosition();
+//        if(print)
+//            System.out.println("-------------");
+    }
 
-        if (getPosition().y >= gridManager.getGameY()) {
-            this.reflect(Direction.UP);
-        } else if (getPosition().y <= 0) {
-            this.reflect(Direction.DOWN);
+    //Binary search methodology for getting the ball as close as possible to a colliding object
+    public Point determineCollisionsPlacement(GridSprite g){
+        //Our last point of collision
+        Point collision = this.getPosition();
+        //Set it to our previous location and see what happens, should not collide here
+        this.setPosition(p);
+        Point lastSuccess;
+        if(this.collidesWith(g)){
+            //If it does collide, that's bad
+            return p;
+        } else {
+            //Else, we now find our last successful non-collision point
+            lastSuccess = new Point(p.x,p.y);
+            //Keep track of where we currently are in our binary search
+            Point current = new Point(p.x,p.y);
+            //Also want previous point in case we end up futile in our search
+            Point previous;
+            //Keep track of if our current point had a collision or not so we know which direction to
+            //Binary search
+            boolean previousCollision = false;
+            //Only do this 10 times at max to cap our while loop
+            int i = 0;
+            while(i < 10){
+                if(previousCollision){
+                    //Collision, so binary search b/t p & current
+                    previous = new Point(current.x,current.y);
+                    current = new Point((current.x+p.x)/2,(current.y+p.y)/2);
+                } else {
+                    //No Collision, so binary search b/t current & previous point of collision
+                    previous = new Point(current.x,current.y);
+                    current = new Point((current.x+collision.x)/2,(current.y+collision.y)/2);
+                }
+                this.setPosition(current);
+                if(this.collidesWith(g)){
+                    //Collision, so binary search b/t p & current which is pC = true
+                    collision = new Point(current.x,current.y);
+                    previousCollision = true;
+                } else {
+                    //No Collision, so binary search b/t current & previous point of collision which is pC = false
+                    lastSuccess = new Point(current.x,current.y);
+                    previousCollision = false;
+                }
+                //If we got the same point twice, break
+                if(previous.x == current.x && previous.y == current.y){
+                    break;
+                }
+                i++;
+            }
+            //Ultimately return our last successful point of placement
+            return lastSuccess;
         }
-        if (print)
-            System.out.println("-------------");
-        // only if there is a frame where there is no collisions should this reset
-        prevCollide = didCollide;
-        // we should only turn playerCollide to false once all collisions are done
-        playerCollide = false;
     }
 
 
