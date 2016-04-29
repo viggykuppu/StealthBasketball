@@ -3,6 +3,8 @@ package edu.virginia.engine.display;
 import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -11,7 +13,7 @@ import java.util.*;
 public class GridGuardSprite extends GridSprite{
     PlayerSprite player;
     //This should be the distance^2
-    double sightRadius = 9;
+    double sightRadius = 500;
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
     static double STUNLENGTH = 3; // determined in seconds
@@ -37,12 +39,20 @@ public class GridGuardSprite extends GridSprite{
     }
 
     public boolean canDetectPlayer(){
-        double distance = this.getGridPosition().distanceSq(player.getGridPosition());
-        return distance <= this.sightRadius;
+        ArrayList<DisplayObject> collisions = this.checkRay(this.getPosition(),player.getPosition(),this.sightRadius);
+        System.out.println(collisions);
+        if(collisions.size() == 2 && collisions.contains(player)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void gridTurnUpdate(){
+        if(this.canDetectPlayer()){
+            this.updatePlayerLocation(player.getGridPosition());
+        }
         if (stunned) {
 
         }

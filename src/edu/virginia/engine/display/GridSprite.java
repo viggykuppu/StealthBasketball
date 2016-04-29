@@ -126,17 +126,20 @@ public class GridSprite extends AnimatedSprite {
         this.gridSpriteType = gridSpriteType;
     }
 
-    public ArrayList<DisplayObject> checkRay(Point start, Point end){
-
+    public ArrayList<DisplayObject> checkRay(Point start, Point end, double distance){
+        end = this.globalize(end);
+        start = this.globalize(start);
         Line2D ray = new Line2D.Float(start,end);
         Area rayArea = new Area(ray);
+        double distanceSq = distance*distance;
 
         ArrayList<DisplayObject> intersectingObjects = new ArrayList<>();
 
         for (DisplayObject o : GridManager.getInstance().getChildren()){
-            //TODO DO THIS
-            if (o.collidesWith(rayArea))
-                intersectingObjects.add(o);
+            if(start.distanceSq(o.getPosition()) <= distanceSq){
+                if (ray.intersects(o.getHitbox().getBounds()))
+                    intersectingObjects.add(o);
+            }
         }
 
         return intersectingObjects;
