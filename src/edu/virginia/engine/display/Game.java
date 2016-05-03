@@ -66,6 +66,11 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
         }
     }
 
+    @Override
+    public void setImage(String string){
+        super.setImage(string);
+    }
+
     /**
      * Stops the animation.
      */

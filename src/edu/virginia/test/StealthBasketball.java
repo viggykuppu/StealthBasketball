@@ -8,6 +8,7 @@ import edu.virginia.engine.util.LevelGenerator;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +20,10 @@ public class StealthBasketball extends Game {
     PlayerSprite player = new PlayerSprite("Player", ball);
     ArrayList<String> stunAnim = new ArrayList<>();
     private ArrayList<String> levels  = new ArrayList<String>();
+    private static StealthBasketball game;
+    private static Game g;
     private int levelIndex = -1;
+    public boolean gameStarted = false;
 
 
     //Instantiate all sprites prior to the nullChecker
@@ -38,6 +42,11 @@ public class StealthBasketball extends Game {
 
         GridManager.getInstance().startTurns();
    }
+
+    public StealthBasketball(boolean weird){
+        super("Stealth Basketball!", 1807, 1030);
+        this.setImage("Title Screen.png");
+    }
 
     /**
      * Engine will automatically call this update method once per frame and pass to us
@@ -98,7 +107,7 @@ public class StealthBasketball extends Game {
 
 
     public static void main(String[] args) {
-        StealthBasketball game = new StealthBasketball();
+        game = new StealthBasketball(true);
         game.start();
     }
 
@@ -108,12 +117,20 @@ public class StealthBasketball extends Game {
     //Fixes responsivesness issues
     @Override
     public void mouseReleased(MouseEvent mouseEvent){
-        GridManager.getInstance().player.throwBall(mouseEvent.getX(),mouseEvent.getY());
+        if(gameStarted){
+            GridManager.getInstance().player.throwBall(mouseEvent.getX(),mouseEvent.getY());
+        } else if(game != null){
+            game = new StealthBasketball();
+            game.start();
+            gameStarted = true;
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent){
-        GridManager.getInstance().player.throwBall(mouseEvent.getX(),mouseEvent.getY());
+        if(gameStarted){
+            GridManager.getInstance().player.throwBall(mouseEvent.getX(),mouseEvent.getY());
+        }
     }
 
 }
