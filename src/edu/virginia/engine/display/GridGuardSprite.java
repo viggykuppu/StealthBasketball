@@ -16,8 +16,8 @@ public class GridGuardSprite extends GridSprite{
     double sightRadius = 500;
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
-    static double STUNLENGTH = 3; // determined in seconds
-    static double WALKLENGTH = .5;
+    static double STUNLENGTH = 5; // determined in seconds
+    static double WALKLENGTH = 1.5;
     boolean stunned;
     boolean isWalking;
     ArrayList<GridSprite> aPath;
@@ -130,8 +130,82 @@ public class GridGuardSprite extends GridSprite{
         }
         isWalking = false;
         if (stunned) {
+
         }
         else if(guardState == GridGuardState.idle){
+
+        } else {
+            isWalking = true;
+            aStar(lastKnownPlayerLocation);
+        }
+    }
+
+    @Override
+    public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
+        super.update(pressedKeys, heldKeys);
+        if (stunned) {
+            switch (guardOrientation) {
+                case UP:
+                    if (this.timeAnimate(STUNLENGTH)) {
+                        stunned = false;
+                    } else {
+                        this.setImage(ko_back);
+                    }
+                    break;
+                case DOWN:
+                    if (this.timeAnimate(STUNLENGTH)) {
+                        stunned = false;
+                    } else {
+                        this.setImage(ko_front);
+                    }
+                    break;
+                case LEFT:
+                    if (this.timeAnimate(STUNLENGTH)) {
+                        stunned = false;
+                    } else {
+                        this.setImage(ko_left);
+                    }
+                    break;
+                case RIGHT:
+                    if (this.timeAnimate(STUNLENGTH)) {
+                        stunned = false;
+                    } else {
+                        this.setImage(ko_right);
+                    }
+                    break;
+            }
+        } else if (isWalking) {
+            switch (guardOrientation) {
+                case UP:
+                    if (this.timeAnimates(WALKLENGTH)) {
+                        this.setImage(walk_back_2);
+                    } else {
+                        this.setImage(walk_back_1);
+                    }
+                    break;
+                case DOWN:
+                    if (this.timeAnimates(WALKLENGTH)) {
+                        this.setImage(walk_front_2);
+                    } else {
+                        this.setImage(walk_front_1);
+                    }
+                    break;
+                case LEFT:
+                    if (this.timeAnimates(WALKLENGTH)) {
+                        this.setImage(walk_left_2);
+                    } else {
+                        this.setImage(walk_left_1);
+                    }
+                    break;
+                case RIGHT:
+                    if (this.timeAnimates(WALKLENGTH)) {
+                        this.setImage(walk_right_2);
+                    } else {
+                        this.setImage(walk_right_1);
+                    }
+                    break;
+            }
+        } else {
             switch (guardOrientation) {
                 case UP:
                     this.setImage(idle_back);
@@ -145,57 +219,6 @@ public class GridGuardSprite extends GridSprite{
                 case RIGHT:
                     this.setImage(idle_right);
                     break;
-            }
-        } else {
-            isWalking = true;
-            aStar(lastKnownPlayerLocation);
-        }
-    }
-
-    @Override
-    public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
-        super.update(pressedKeys, heldKeys);
-        if (stunned) {
-            switch (guardOrientation) {
-                case UP:
-                    if (this.animate("front_ko")) {
-                        stunned = false;
-                    }
-                    break;
-                case DOWN:
-                    if (this.animate("back_ko")) {
-                        stunned = false;
-                    }
-                    break;
-                case LEFT:
-                    if (this.animate("left_ko")) {
-                        stunned = false;
-                    }
-                    break;
-                case RIGHT:
-                    if (this.animate("right_ko")) {
-                        stunned = false;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            if (isWalking) {
-                switch (guardOrientation) {
-                    case UP:
-                        this.animate("walk_back");
-                        break;
-                    case DOWN:
-                        this.animate("walk_front");
-                        break;
-                    case LEFT:
-                        this.animate("walk_left");
-                        break;
-                    case RIGHT:
-                        this.animate("walk_right");
-                        break;
-                }
             }
         }
     }
