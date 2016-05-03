@@ -30,7 +30,7 @@ public class LevelGenerator {
     public Point screenSize = new Point(1000,500);
 
     private BallSprite ball = new BallSprite("Ball", "coin.gif");
-    private PlayerSprite player = new PlayerSprite("Player", "vignesh.png", ball);
+    private PlayerSprite player = new PlayerSprite("Player", ball);
     private HoopSprite hoop = new HoopSprite("Hoop","hoop.png");
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
     private ArrayList<TeleporterSprite> teleporters = new ArrayList<>();

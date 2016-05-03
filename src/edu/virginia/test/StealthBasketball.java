@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class StealthBasketball extends Game {
 
     BallSprite ball = new BallSprite("Ball", "coin.gif");
-    PlayerSprite player = new PlayerSprite("Player", "mario.png", ball);
+    PlayerSprite player = new PlayerSprite("Player", ball);
     ArrayList<String> stunAnim = new ArrayList<>();
     private ArrayList<String> levels  = new ArrayList<String>();
     private int levelIndex = -1;
