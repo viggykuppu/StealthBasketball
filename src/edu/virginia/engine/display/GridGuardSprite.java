@@ -1,5 +1,6 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.tween.TweenJuggler;
 import edu.virginia.engine.util.Direction;
 
 import java.awt.*;
@@ -21,6 +22,7 @@ public class GridGuardSprite extends GridSprite{
     ArrayList<GridSprite> aPath;
     GridManager gridManager;
     private ArrayList<String> stunAnim;
+    private long teleportTimer = System.nanoTime();
 
     private enum GridGuardState{
         playerVisible,lostPlayer,idle;
@@ -151,10 +153,10 @@ public class GridGuardSprite extends GridSprite{
 
         Collections.reverse(path);
 
-        for(Point po : path){
-            System.out.print("("+po.x + ","+po.y+") ->");
-        }
-        System.out.println();
+//        for(Point po : path){
+//            System.out.print("("+po.x + ","+po.y+") ->");
+//        }
+//        System.out.println();
 
         // generating the path from guard to player
         // TODO take this out when done testing
@@ -184,14 +186,27 @@ public class GridGuardSprite extends GridSprite{
         } else {
             nextPosition = path.get(1);
         }
-        if(nextPosition.x > this.getGridPosition().x){
-            moveOnGrid(1,0,500);
-        } else if(nextPosition.x < this.getGridPosition().x){
-            moveOnGrid(-1,0,500);
-        } else if(nextPosition.y > this.getGridPosition().y){
-            moveOnGrid(0,1,500);
-        } else if(nextPosition.y < this.getGridPosition().y){
-            moveOnGrid(0,-1,500);
+        GridSprite gtp = GridManager.getInstance().sprites[nextPosition.x][nextPosition.y].getSprite(GridSpriteTypes.Teleporter);
+        if(gtp != null){
+            TeleporterSprite tp = (TeleporterSprite) gtp;
+            if(System.nanoTime() - teleportTimer > 2*GridManager.getInstance().getTurnLength()*1000*1000){
+                boolean hi = GridManager.getInstance().swapSprites(gridPosition,nextPosition,getGridSpriteType());
+                if (hi) {
+                    gridPosition.x = nextPosition.x;
+                    gridPosition.y = nextPosition.y;
+                    teleportTimer = System.nanoTime();
+                }
+            }
+        } else {
+            if(nextPosition.x > this.getGridPosition().x){
+                moveOnGrid(1,0,500);
+            } else if(nextPosition.x < this.getGridPosition().x){
+                moveOnGrid(-1,0,500);
+            } else if(nextPosition.y > this.getGridPosition().y){
+                moveOnGrid(0,1,500);
+            } else if(nextPosition.y < this.getGridPosition().y){
+                moveOnGrid(0,-1,500);
+            }
         }
     }
 
