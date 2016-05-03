@@ -40,7 +40,6 @@ public class GridGuardSprite extends GridSprite{
 
     public boolean canDetectPlayer(){
         ArrayList<DisplayObject> collisions = this.checkRay(this.getPosition(),player.getPosition(),this.sightRadius);
-        System.out.println(collisions);
         if(collisions.size() == 2 && collisions.contains(player)){
             return true;
         } else {
@@ -151,6 +150,11 @@ public class GridGuardSprite extends GridSprite{
         }
 
         Collections.reverse(path);
+
+        for(Point po : path){
+            System.out.print("("+po.x + ","+po.y+") ->");
+        }
+        System.out.println();
 
         // generating the path from guard to player
         // TODO take this out when done testing

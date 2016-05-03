@@ -311,6 +311,15 @@ public class GridManager extends DisplayObjectContainer{
         }
     }
 
+    public void addTeleporter(Point t1, Point t2){
+        GridCell starter = sprites[t1.x][t1.y];
+        GridCell ender = sprites[t2.x][t2.y];
+        starter.neighbors.put(Direction.TELEPORTER,ender);
+        ender.neighbors.put(Direction.TELEPORTER,starter);
+
+
+    }
+
 
     public void addWall(Point initial, Direction direction){
         GridCell original = sprites[initial.x][initial.y];
