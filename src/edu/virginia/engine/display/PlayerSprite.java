@@ -208,7 +208,7 @@ public class PlayerSprite extends GridSprite {
         for (DisplayObject g : GridManager.getInstance().getChildren()) {
             if (g.getClass().equals(GridGuardSprite.class)){
                 GridGuardSprite guard = (GridGuardSprite) g;
-                if (collidesWith(guard)){
+                if (this.collidesWith(guard)){
                     GridManager.getInstance().levelFailed = true;
                 }
             }

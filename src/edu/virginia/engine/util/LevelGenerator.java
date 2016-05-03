@@ -89,6 +89,9 @@ public class LevelGenerator {
                     teleporters.get(secondIndex).setPartner(teleporters.get(firstIndex));
                     GridManager.getInstance().addToGrid(teleporters.get(firstIndex),teleporters.get(firstIndex).getGridPosition().x,teleporters.get(firstIndex).getGridPosition().y);
                     GridManager.getInstance().addToGrid(teleporters.get(secondIndex),teleporters.get(secondIndex).getGridPosition().x,teleporters.get(secondIndex).getGridPosition().y);
+                    Point t1 = new Point(teleporters.get(firstIndex).getGridPosition().x,teleporters.get(firstIndex).getGridPosition().y);
+                    Point t2 = new Point(teleporters.get(secondIndex).getGridPosition().x,teleporters.get(secondIndex).getGridPosition().y);
+                    GridManager.getInstance().addTeleporter(t1,t2);
                 }
             }
 
@@ -123,7 +126,7 @@ public class LevelGenerator {
         switch(s){
             case "G":
                 GridGuardSprite guard = new GridGuardSprite("Guard", player);
-                guard.setPivotPoint(new Point(34, 46));
+                guard.setPivotPoint(new Point(45, 57));
                 guard.setGridPosition(location);
                 guards.add(guard);
                 break;
