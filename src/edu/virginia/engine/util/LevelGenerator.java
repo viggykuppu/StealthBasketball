@@ -122,7 +122,7 @@ public class LevelGenerator {
     public void handleToken(String s, Point location){
         switch(s){
             case "G":
-                GridGuardSprite guard = new GridGuardSprite("Guard", "meg.png", player);
+                GridGuardSprite guard = new GridGuardSprite("Guard", player);
                 guard.setPivotPoint(new Point(34, 46));
                 guard.setGridPosition(location);
                 guards.add(guard);

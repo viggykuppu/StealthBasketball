@@ -17,30 +17,105 @@ public class GridGuardSprite extends GridSprite{
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
     static double STUNLENGTH = 3; // determined in seconds
+    static double WALKLENGTH = .5;
     boolean stunned;
+    boolean isWalking;
     ArrayList<GridSprite> aPath;
     GridManager gridManager;
-    private ArrayList<String> stunAnim;
+    private Direction guardOrientation;
 
     private enum GridGuardState{
         playerVisible,lostPlayer,idle;
     }
 
-    public GridGuardSprite(String id, String imageFileName, PlayerSprite player) {
-        super(id, imageFileName, GridSpriteTypes.Guard);
-        stunAnim = new ArrayList<>();
+    // just the idling anims
+    private static String idle_back = "guard/Guard_idle_back.png";
+    private static String idle_front = "guard/guard_front_idle.png";
+    private static String idle_left = "guard/Guard_idle_left.png";
+    private static String idle_right = "guard/Guard_idle_right.png";
+
+    // the ko anims
+    private ArrayList<String> back_ko;
+    private static String ko_back = "guard/Guard_ko_back.png";
+    private ArrayList<String> front_ko;
+    private static String ko_front = "guard/Guard_ko_front.png";
+    private ArrayList<String> left_ko;
+    private static String ko_left = "guard/Guard_ko_left.png";
+    private ArrayList<String> right_ko;
+    private static String ko_right = "guard/Guard_ko_right.png";
+
+    // guard walking
+    private ArrayList<String> walk_back;
+    private static String walk_back_1 = "guard/Guard_walk_back_1.png";
+    private static String walk_back_2 = "guard/Guard_walk_back_2.png";
+
+    private ArrayList<String> walk_front;
+    private static String walk_front_1 = "guard/Guard_walk_front_1.png";
+    private static String walk_front_2 = "guard/Guard_walk_front_2.png";
+
+    private ArrayList<String> walk_left;
+    private static String walk_left_1 = "guard/Guard_walk_left_1.png";
+    private static String walk_left_2 = "guard/Guard_walk_left_2.png";
+
+    private ArrayList<String> walk_right;
+    private static String walk_right_1 = "guard/Guard_walk_right_1.png";
+    private static String walk_right_2 = "guard/Guard_walk_right_2.png";
+
+    public GridGuardSprite(String id, PlayerSprite player) {
+        super(id, idle_right, GridSpriteTypes.Guard);
         this.player = player;
         this.stunned = false;
-        stunAnim.add("meg_stunned.png");
-        stunAnim.add("meg_stunned.png");
-        readAnimation("Stunned", stunAnim, STUNLENGTH);
+        isWalking = false;
+        this.guardOrientation = Direction.RIGHT;
+        // initialize all the stun anims
+        back_ko = new ArrayList<>();
+        back_ko.add(ko_back);
+        back_ko.add(ko_back);
+        readAnimation("back_ko", back_ko, STUNLENGTH);
+
+        front_ko = new ArrayList<>();
+        front_ko.add(ko_front);
+        front_ko.add(ko_front);
+        readAnimation("front_ko", front_ko, STUNLENGTH);
+
+        left_ko = new ArrayList<>();
+        left_ko.add(ko_left);
+        left_ko.add(ko_left);
+        readAnimation("left_ko", left_ko, STUNLENGTH);
+
+        right_ko = new ArrayList<>();
+        right_ko.add(ko_right);
+        right_ko.add(ko_right);
+        readAnimation("right_ko", right_ko, STUNLENGTH);
+
+        // initialize guard walking anims
+        walk_back = new ArrayList<>();
+        walk_back.add(walk_back_1);
+        walk_back.add(walk_back_2);
+        readAnimation("walk_back", walk_back, WALKLENGTH);
+
+        walk_front = new ArrayList<>();
+        walk_front.add(walk_front_1);
+        walk_front.add(walk_front_2);
+        readAnimation("walk_front", walk_front, WALKLENGTH);
+
+        walk_left = new ArrayList<>();
+        walk_left.add(walk_left_1);
+        walk_left.add(walk_left_2);
+        readAnimation("walk_left", walk_left, WALKLENGTH);
+
+        walk_right = new ArrayList<>();
+        walk_right.add(walk_right_1);
+        walk_right.add(walk_right_2);
+        readAnimation("walk_right", walk_right, WALKLENGTH);
+
         aPath = new ArrayList<>();
         gridManager = GridManager.getInstance();
     }
 
     public boolean canDetectPlayer(){
         ArrayList<DisplayObject> collisions = this.checkRay(this.getPosition(),player.getPosition(),this.sightRadius);
-        System.out.println(collisions);
+        //System.out.println(collisions);
         if(collisions.size() == 2 && collisions.contains(player)){
             return true;
         } else {
@@ -53,12 +128,26 @@ public class GridGuardSprite extends GridSprite{
         if(this.canDetectPlayer()){
             this.updatePlayerLocation(player.getGridPosition());
         }
+        isWalking = false;
         if (stunned) {
-
         }
         else if(guardState == GridGuardState.idle){
-
+            switch (guardOrientation) {
+                case UP:
+                    this.setImage(idle_back);
+                    break;
+                case DOWN:
+                    this.setImage(idle_front);
+                    break;
+                case LEFT:
+                    this.setImage(idle_left);
+                    break;
+                case RIGHT:
+                    this.setImage(idle_right);
+                    break;
+            }
         } else {
+            isWalking = true;
             aStar(lastKnownPlayerLocation);
         }
     }
@@ -67,8 +156,46 @@ public class GridGuardSprite extends GridSprite{
     public void update(ArrayList<Integer> pressedKeys, ArrayList<Integer> heldKeys) {
         super.update(pressedKeys, heldKeys);
         if (stunned) {
-            if (this.animate("Stunned")) {
-                stunned = false;
+            switch (guardOrientation) {
+                case UP:
+                    if (this.animate("front_ko")) {
+                        stunned = false;
+                    }
+                    break;
+                case DOWN:
+                    if (this.animate("back_ko")) {
+                        stunned = false;
+                    }
+                    break;
+                case LEFT:
+                    if (this.animate("left_ko")) {
+                        stunned = false;
+                    }
+                    break;
+                case RIGHT:
+                    if (this.animate("right_ko")) {
+                        stunned = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            if (isWalking) {
+                switch (guardOrientation) {
+                    case UP:
+                        this.animate("walk_back");
+                        break;
+                    case DOWN:
+                        this.animate("walk_front");
+                        break;
+                    case LEFT:
+                        this.animate("walk_left");
+                        break;
+                    case RIGHT:
+                        this.animate("walk_right");
+                        break;
+                }
             }
         }
     }
@@ -182,12 +309,16 @@ public class GridGuardSprite extends GridSprite{
         }
         if(nextPosition.x > this.getGridPosition().x){
             moveOnGrid(1,0,500);
+            guardOrientation = Direction.RIGHT;
         } else if(nextPosition.x < this.getGridPosition().x){
             moveOnGrid(-1,0,500);
+            guardOrientation = Direction.LEFT;
         } else if(nextPosition.y > this.getGridPosition().y){
             moveOnGrid(0,1,500);
+            guardOrientation = Direction.DOWN;
         } else if(nextPosition.y < this.getGridPosition().y){
             moveOnGrid(0,-1,500);
+            guardOrientation = Direction.UP;
         }
     }
 
