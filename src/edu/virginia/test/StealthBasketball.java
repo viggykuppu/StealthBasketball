@@ -120,6 +120,7 @@ public class StealthBasketball extends Game {
         if(gameStarted){
             GridManager.getInstance().player.throwBall(mouseEvent.getX(),mouseEvent.getY());
         } else if(game != null){
+            game.exitGame();
             game = new StealthBasketball();
             game.start();
             game.gameStarted = true;
