@@ -122,7 +122,7 @@ public class StealthBasketball extends Game {
         } else if(game != null){
             game = new StealthBasketball();
             game.start();
-            gameStarted = true;
+            game.gameStarted = true;
         }
     }
 
