@@ -350,4 +350,6 @@ public class BallSprite extends PhysicsSprite {
     public void setPlayerOffset(Point playerOffset) {
         this.playerOffset = playerOffset;
     }
+
+    public boolean getDribbleUp() { return this.dribbleUp; }
 }

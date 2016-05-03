@@ -15,7 +15,9 @@ public class AnimatedSprite extends Sprite {
 	private boolean halted;
 
 	private long startTime;
+	private long startAnimsTime;
 	private long allotedTime;
+	private long allotedAnimsTime;
 
 
 	public AnimatedSprite(String id, String defaultImg) {
@@ -26,6 +28,7 @@ public class AnimatedSprite extends Sprite {
 		currentFrame = -1;
 		animationCounter = 0;
 		animations.add(super.readImage(defaultImg));
+		startAnimsTime = 0;
 	}
 
 
@@ -67,7 +70,54 @@ public class AnimatedSprite extends Sprite {
 		return ret;
 	}
 
+	// just acts as a timer and does not actually update sprite
+	public boolean timeAnimate(double time) {
+		boolean ret = false;
+		if (this.halted == false) {
+			if (startTime == 0) {
+				startTime = System.nanoTime();
+				allotedTime = (long)(time *
+						1000000000);
+			}
+			// return the animation based on the elapsed time
+			long math = System.nanoTime() - startTime;
+			if (System.nanoTime() - startTime < allotedTime) {
 
+			}
+			else {
+				ret = true;
+				startTime = 0;
+			}
+
+		}
+		return ret;
+	}
+
+	// basically false if one anim 1, true if anim 2
+	// only works for animations of length 2
+	public boolean timeAnimates(double time) {
+		boolean ret = false;
+		if (this.halted == false) {
+			if (startAnimsTime == 0) {
+				startAnimsTime = System.nanoTime();
+				allotedAnimsTime = (long)(time *
+						1000000000);
+			}
+			// return the animation based on the elapsed time
+			long math = System.nanoTime() - startAnimsTime;
+			if (System.nanoTime() - startAnimsTime < allotedAnimsTime / 2) {
+
+			}
+			else if (System.nanoTime() - startAnimsTime > allotedAnimsTime){
+				ret = true;
+				startAnimsTime = 0;
+			} else {
+				ret = true;
+			}
+
+		}
+		return ret;
+	}
 	/*
 		If you want your animation looped (w/o using default sprite), use this version
 	 */

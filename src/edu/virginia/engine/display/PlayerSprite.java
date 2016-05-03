@@ -24,20 +24,67 @@ public class PlayerSprite extends GridSprite {
     Direction dunkDir;
     GridManager gridManager;
     private boolean movedBall;
+    private Direction playerOrientation;
 
     private long teleportTimer = System.nanoTime();
+    private static double DRIBBLE_ANIM_SPD = .45;
+    // Player images defined up here for abstraction
+    private static String idle_left = "player/player_idle_left.png";
+    private static String idle_right = "player/player_idle_right.png";
+    private static String idle_back = "player/player_idle_back.png";
+    private static String idle_front = "player/player_idle_front_1.png";
+
+    //player dribbling
+    private ArrayList<String> dribble_left;
+    private static String dribble_left_1 = "player/player_dribble_left_1.png";
+    private static String dribble_left_2 = "player/player_dribble_left_2.png";
+
+    private ArrayList<String> dribble_right;
+    private static String dribble_right_1 = "player/player_dribble_right_1.png";
+    private static String dribble_right_2 = "player/player_dribble_right_2.png";
+
+    private ArrayList<String> dribble_back;
+    private static String dribble_back_1 = "player/player_dribble_back_1.png";
+    private static String dribble_back_2 = "player/player_dribble_back_2.png";
+
+    private ArrayList<String> dribble_front;
+    private static String dribble_front_1 = "player/player_dribble_front_1.png";
+    private static String dribble_front_2 = "player/player_dribble_front_2.png";
+
 
     public enum PlayerState {
         NEUTRAL, DUNKING, NoBall, THROWING
     }
 
-        public PlayerSprite(String id, String imageFileName, BallSprite myBall) {
-            super(id, imageFileName,GridSpriteTypes.Player);
+        public PlayerSprite(String id, BallSprite myBall) {
+            super(id, idle_left,GridSpriteTypes.Player);
+            playerOrientation = Direction.LEFT;
             gridManager = GridManager.getInstance();
             this.myBall = myBall;
             this.pingEffect = new PlayerPingEffect("Ping1",this);
             gridManager.setPlayer(this);
             this.addChild(myBall);
+
+            // initialize the dribble anims
+            dribble_left = new ArrayList<>();
+            dribble_left.add(dribble_left_1);
+            dribble_left.add(dribble_left_2);
+            this.readAnimation("dribble_left", dribble_left, DRIBBLE_ANIM_SPD);
+
+            dribble_right = new ArrayList<>();
+            dribble_right.add(dribble_right_1);
+            dribble_right.add(dribble_right_2);
+            this.readAnimation("dribble_right", dribble_right, DRIBBLE_ANIM_SPD);
+
+            dribble_back = new ArrayList<>();
+            dribble_back.add(dribble_back_1);
+            dribble_back.add(dribble_back_2);
+            this.readAnimation("dribble_back", dribble_back, DRIBBLE_ANIM_SPD);
+
+            dribble_front = new ArrayList<>();
+            dribble_front.add(dribble_front_1);
+            dribble_front.add(dribble_front_2);
+            this.readAnimation("dribble_front", dribble_front, DRIBBLE_ANIM_SPD);
         }
 
     @Override
@@ -70,24 +117,86 @@ public class PlayerSprite extends GridSprite {
 
                 if (pressedKeys.contains(KeyEvent.VK_W)) {
                     moveOnGrid(0, -1, 500);
+                    playerOrientation = Direction.UP;
                 } else if (pressedKeys.contains(KeyEvent.VK_S)) {
                     moveOnGrid(0, 1, 500);
+                    playerOrientation = Direction.DOWN;
                 } else if (pressedKeys.contains(KeyEvent.VK_A)) {
                     moveOnGrid(-1, 0, 500);
+                    playerOrientation = Direction.LEFT;
                 } else if (pressedKeys.contains(KeyEvent.VK_D)) {
                     moveOnGrid(1, 0, 500);
+                    playerOrientation = Direction.RIGHT;
                 }
+            }
+            // orient the correct player sprite
+            switch (playerOrientation) {
+                case UP:
+                    if (myBall.getDribbleUp()) {
+                        this.setImage(dribble_back.get(0));
+                    } else {
+                        this.setImage(dribble_back.get(1));
+                    }
+                    break;
+                case DOWN:
+                    if (myBall.getDribbleUp()) {
+                        this.setImage(dribble_front.get(0));
+                    } else {
+                        this.setImage(dribble_front.get(1));
+                    }
+                    break;
+                case LEFT:
+                    if (myBall.getDribbleUp()) {
+                        this.setImage(dribble_left.get(0));
+                    } else {
+                        this.setImage(dribble_left.get(1));
+                    }
+                    break;
+                case RIGHT:
+                    if (myBall.getDribbleUp()) {
+                        this.setImage(dribble_right.get(0));
+                    } else {
+                        this.setImage(dribble_right.get(1));
+                    }
+                    break;
+                default:
+                    if (myBall.getDribbleUp()) {
+                        this.setImage(dribble_left.get(0));
+                    } else {
+                        this.setImage(dribble_left.get(1));
+                    }
+                    break;
             }
         } else if (state == PlayerState.NoBall) {
 
             if (pressedKeys.contains(KeyEvent.VK_W)) {
                 moveOnGrid(0, -1, 500);
+                playerOrientation = Direction.UP;
             } else if (pressedKeys.contains(KeyEvent.VK_S)) {
                 moveOnGrid(0, 1, 500);
+                playerOrientation = Direction.DOWN;
             } else if (pressedKeys.contains(KeyEvent.VK_A)) {
                 moveOnGrid(-1, 0, 500);
+                playerOrientation = Direction.LEFT;
             } else if (pressedKeys.contains(KeyEvent.VK_D)) {
                 moveOnGrid(1, 0, 500);
+                playerOrientation = Direction.RIGHT;
+            }
+            switch (playerOrientation) {
+                case UP:
+                    this.setImage(idle_back);
+                    break;
+                case DOWN:
+                    this.setImage(idle_front);
+                    break;
+                case LEFT:
+                    this.setImage(idle_left);
+                    break;
+                case RIGHT:
+                    this.setImage(idle_right);
+                    break;
+                default:
+                    this.setImage(idle_left);
             }
         }
         if (GridManager.getInstance().getSpriteAtGridPoint(getGridPosition(),GridSpriteTypes.Teleporter) != null){
