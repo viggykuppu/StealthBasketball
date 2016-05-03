@@ -209,7 +209,8 @@ public class PlayerSprite extends GridSprite {
             if (g.getClass().equals(GridGuardSprite.class)){
                 GridGuardSprite guard = (GridGuardSprite) g;
                 if (this.collidesWith(guard)){
-                    GridManager.getInstance().levelFailed = true;
+                    if (!guard.getStunned())
+                        GridManager.getInstance().levelFailed = true;
                 }
             }
             if (g.getClass().equals(TeleporterSprite.class)) {

@@ -90,7 +90,7 @@ public class GridSprite extends AnimatedSprite {
             }
         }
         if(this.getId().equals("Guard")){
-            if(GridManager.getInstance().getSpriteAtGridPoint(destination) != null){
+            if(GridManager.getInstance().getSpriteAtGridPoint(destination,GridSpriteTypes.Player) != null){
                 if(GridManager.getInstance().getSpriteAtGridPoint(destination,GridSpriteTypes.Player).getId().equals("Player")){
                     GridManager.getInstance().levelFailed = true;
                 }

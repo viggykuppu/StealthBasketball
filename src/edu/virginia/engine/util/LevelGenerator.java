@@ -27,9 +27,9 @@ import java.util.Scanner;
 
 public class LevelGenerator {
 
-    public Point screenSize = new Point(1000,500);
+    public Point screenSize = new Point(1800,1000);
 
-    private BallSprite ball = new BallSprite("Ball", "coin.gif");
+    private BallSprite ball = new BallSprite("Ball", "Basketball.png");
     private PlayerSprite player = new PlayerSprite("Player", ball);
     private HoopSprite hoop = new HoopSprite("Hoop","hoop.png");
     private ArrayList<GridGuardSprite> guards = new ArrayList<GridGuardSprite>();
@@ -44,7 +44,7 @@ public class LevelGenerator {
 
     public void generateLevel(){
         player.setPivotPoint(new Point(player.getUnscaledWidth() / 2, player.getUnscaledHeight() / 2));
-        ball.setPivotPoint(new Point(28, 28));
+        ball.setPivotPoint(new Point(15, 15));
 
         //Parse level file
         int y = 0;

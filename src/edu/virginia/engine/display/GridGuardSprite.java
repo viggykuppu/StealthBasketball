@@ -383,6 +383,10 @@ public class GridGuardSprite extends GridSprite{
 
     public void setStun(boolean stunned) { this.stunned = stunned; }
 
+    public boolean getStunned(){
+        return stunned;
+    }
+
     public void updatePlayerLocation(Point position){
         this.guardState = GridGuardState.lostPlayer.playerVisible;
         this.lastKnownPlayerLocation = position;

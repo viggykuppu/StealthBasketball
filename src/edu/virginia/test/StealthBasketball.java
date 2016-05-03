@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class StealthBasketball extends Game {
 
-    BallSprite ball = new BallSprite("Ball", "coin.gif");
+    BallSprite ball = new BallSprite("Ball", "Basketball.png");
     PlayerSprite player = new PlayerSprite("Player", ball);
     ArrayList<String> stunAnim = new ArrayList<>();
     private ArrayList<String> levels  = new ArrayList<String>();
@@ -26,14 +26,15 @@ public class StealthBasketball extends Game {
     Sprite nullChecker = new Sprite("nullChecker", "coin.gif");
 
     public StealthBasketball() {
-        super("Stealth Basketball!", 1007, 530);
+        super("Stealth Basketball!", 1807, 1030);
         stunAnim.add("floryan,mark_stunned.png");
         stunAnim.add("floryan,mark_stunned.png");
         GridGuardSprite guard = new GridGuardSprite("Guard", player);
         levels.add("level1.csv");
         levels.add("level2.csv");
         levels.add("level3.csv");
-
+        levels.add("level4.csv");
+        levels.add("level5.csv");
 
         GridManager.getInstance().startTurns();
    }
