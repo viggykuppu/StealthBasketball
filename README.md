@@ -15,5 +15,5 @@ Goal:
 * Throw the ball into the hoop to win!
 
 Hint:
-* Knock Flory...the guard out by throwing the ball at him!
+* Knock the guard out by throwing the ball at him!
 Check /docs for relevant documents

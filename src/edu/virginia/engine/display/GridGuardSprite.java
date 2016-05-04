@@ -17,7 +17,7 @@ public class GridGuardSprite extends GridSprite{
     double sightRadius = 500;
     Point lastKnownPlayerLocation;
     GridGuardState guardState = GridGuardState.idle;
-    static double STUNLENGTH = 5; // determined in seconds
+    static double STUNLENGTH = 7; // determined in seconds
     static double WALKLENGTH = 1.5;
     boolean stunned;
     boolean isWalking;
@@ -117,7 +117,7 @@ public class GridGuardSprite extends GridSprite{
     }
 
     public boolean canDetectPlayer(){
-        ArrayList<DisplayObject> collisions = this.checkRay(this.getPosition(),player.getPosition(),this.sightRadius);
+        ArrayList<DisplayObject> collisions = this.checkRay(this.getPosition(),player.getPosition(),this.sightRadius*2);
         if(collisions.size() == 2 && collisions.contains(player)){
             return true;
         } else {
@@ -228,10 +228,6 @@ public class GridGuardSprite extends GridSprite{
     @Override
     public void draw(Graphics g) {
         super.draw(g);
-        Graphics2D g2d = (Graphics2D)g;
-        for (int i = 0; i < aPath.size(); i++) {
-            aPath.get(i).draw(g2d);
-        }
     }
 
     public void playerMissingBehavior(){
